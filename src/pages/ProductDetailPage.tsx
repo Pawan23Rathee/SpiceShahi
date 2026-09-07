@@ -78,9 +78,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           <div className="lg:col-span-6 space-y-4">
             <div className="relative aspect-4/3 sm:aspect-1/1 rounded-2xl overflow-hidden bg-[#FCFAF2] border border-[#E8E4D5] shadow-md group">
               <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                src={currentPack.imageUrl || product.imageUrl}
+                alt={`${product.name} — ${currentPack.size}`}
+                className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700"
               />
 
               {/* Badges on image */}

@@ -60,14 +60,14 @@ export const PRODUCTS: Product[] = [
       'FSSAI Certified: 20826007001593 • BS Global Enterprises'
     ],
     packSizes: [
-      { size: '100g Pouch', weightInGrams: 100, price: 40, originalPrice: 50 },
-      { size: '250g Pouch', weightInGrams: 250, price: 95, originalPrice: 120 },
-      { size: '500g Value Pack', weightInGrams: 500, price: 180, originalPrice: 230 }
+      { size: '100g Pouch', weightInGrams: 100, price: 50, originalPrice: 55, imageUrl: '/images/100g-coriander.png' },
+      { size: '250g Pouch', weightInGrams: 250, price: 120, originalPrice: 130, imageUrl: '/images/250g-coriander.png' },
+      { size: '500g Value Pack', weightInGrams: 500, price: 170, originalPrice: 190, imageUrl: '/images/250g-coriander.png' }
     ],
     heatLevel: 1,
     aromaIntensity: 5,
     badge: 'Flagship • Desi Khushboo',
-    imageUrl: '/images/coriander-pouch.jpg',
+    imageUrl: '/images/100g-coriander.png',
     origin: 'Bahadurgarh, Haryana (BS Global Enterprises)',
     inStock: true,
     featured: true,
@@ -98,14 +98,14 @@ export const PRODUCTS: Product[] = [
       'FSSAI Certified: 20826007001593 • BS Global Enterprises'
     ],
     packSizes: [
-      { size: '100g Pouch', weightInGrams: 100, price: 45, originalPrice: 55 },
-      { size: '250g Pouch', weightInGrams: 250, price: 105, originalPrice: 130 },
-      { size: '500g Value Pack', weightInGrams: 500, price: 200, originalPrice: 250 }
+      { size: '100g Pouch', weightInGrams: 100, price: 50, originalPrice: 55, imageUrl: '/images/100g-haldi.png' },
+      { size: '250g Pouch', weightInGrams: 250, price: 120, originalPrice: 130, imageUrl: '/images/250g-haldi.png' },
+      { size: '500g Value Pack', weightInGrams: 500, price: 180, originalPrice: 190, imageUrl: '/images/250g-haldi.png' }
     ],
     heatLevel: 1,
     aromaIntensity: 5,
     badge: 'Bestseller • High Curcumin',
-    imageUrl: '/images/turmeric-pouch.jpg',
+    imageUrl: '/images/100g-haldi.png',
     origin: 'Bahadurgarh, Haryana (BS Global Enterprises)',
     inStock: true,
     featured: true,
@@ -136,208 +136,18 @@ export const PRODUCTS: Product[] = [
       'FSSAI Certified: 20826007001593 • BS Global Enterprises'
     ],
     packSizes: [
-      { size: '100g Pouch', weightInGrams: 100, price: 50, originalPrice: 65 },
-      { size: '250g Pouch', weightInGrams: 250, price: 115, originalPrice: 145 },
-      { size: '500g Value Pack', weightInGrams: 500, price: 220, originalPrice: 280 }
+      { size: '100g Pouch', weightInGrams: 100, price: 55, originalPrice: 65, imageUrl: '/images/100g-mirch.png' },
+      { size: '250g Pouch', weightInGrams: 250, price: 150, originalPrice: 160, imageUrl: '/images/250g-mirch.png' },
+      { size: '500g Value Pack', weightInGrams: 500, price: 210, originalPrice: 220, imageUrl: '/images/250g-mirch.png' }
     ],
     heatLevel: 3,
     aromaIntensity: 4,
     badge: 'Popular • Vibrant Red & Rich Flavor',
-    imageUrl: '/images/chili-pouch.jpg',
+    imageUrl: '/images/100g-mirch.png',
     origin: 'Bahadurgarh, Haryana (BS Global Enterprises)',
     inStock: true,
     featured: true,
     curcuminOrOilContent: '100% Pure Dried Red Chillies'
-  },
-  {
-    id: 'shahi-garam-masala',
-    slug: 'shahi-garam-masala',
-    name: 'Royal Shahi Garam Masala (16 Spices)',
-    hindiName: 'शाही गरम मसाला (16 साबुत मसाले)',
-    category: 'blend',
-    categoryLabel: 'Signature Masala Blend',
-    tagline: 'Artisanal secret ratio roasted over slow wood flame before milling',
-    shortDesc: 'Handcrafted with green cardamom, black cardamom, cinnamon, mace, cloves, star anise, nutmeg, and stone flowers.',
-    fullDesc: 'A pinch transforms any ordinary meal into a royal banquet. SpiceShahi Shahi Garam Masala is our master blender’s signature recipe made with 16 royal whole spices. Each spice is individually toasted at precise temperatures to awaken its dormant oils before being gently blended. You only need half a teaspoon at the end of cooking to unleash a hypnotic, lingering aroma that fills your entire home.',
-    colorProfile: 'Deep toasted brown with glistening specks of whole spice oils.',
-    aromaNotes: 'Intoxicating, warm cinnamon, heady nutmeg, pungent cloves, and cooling green cardamom.',
-    culinaryUses: [
-      'Finishing touch on royal gravies: Shahi Paneer, Biryani, Dal Makhani',
-      'Sprinkled over hot pulao, khichdi, and curries right before serving',
-      'Rich vegetable kormas and slow-simmered stews',
-      'Stuffing for aloo parathas and festive snacks'
-    ],
-    qualityFeatures: [
-      'Crafted with 16 unadulterated whole spices — no salt or filler',
-      'Whole green cardamom pods and royal Ceylon cinnamon bark',
-      'Slow toasted to bring essential oils to the surface',
-      'Airtight foil seal prevents evaporation of delicate floral notes'
-    ],
-    packSizes: [
-      { size: '100g Tin Box', weightInGrams: 100, price: 140, originalPrice: 170 },
-      { size: '200g Gift Tin', weightInGrams: 200, price: 260, originalPrice: 320 },
-      { size: '500g Chef Pack', weightInGrams: 500, price: 590, originalPrice: 720 }
-    ],
-    heatLevel: 3,
-    aromaIntensity: 5,
-    badge: 'Master Blend • 16 Spices',
-    imageUrl: 'https://images.unsplash.com/photo-1532336414038-cf19250c5757?q=80&w=1000&auto=format&fit=crop',
-    origin: 'Hand-blended by SpiceShahi',
-    inStock: true,
-    featured: true,
-    curcuminOrOilContent: 'Zero Salt • 100% Spices'
-  },
-  {
-    id: 'roasted-jeera-powder',
-    slug: 'roasted-cumin-powder',
-    name: 'Bhuna Jeera Powder (Roasted Cumin)',
-    hindiName: 'भुना जीरा पाउडर (Roasted Jeera)',
-    category: 'single',
-    categoryLabel: 'Single Pure Spice',
-    tagline: 'Slow roasted on iron tawa for deep nutty crunch and digestive warmth',
-    shortDesc: 'Unjha whole cumin seeds slow dry-roasted until fragrant and coarsely ground for authentic crunch.',
-    fullDesc: 'Commercial cumin powder is often raw and bitter. SpiceShahi Bhuna Jeera is gently dry-roasted on thick iron griddles until each plump seed crackles, turns a golden cocoa brown, and releases its nuttiest aromatic oils. Ground into a rich, aromatic semi-coarse powder, it instantly elevates everyday yogurt, salads, buttermilk, and chaats.',
-    colorProfile: 'Rich toasted hickory brown with visible cracked roasted seed flecks.',
-    aromaNotes: 'Nutty, smoky, toasty, and deeply comforting savory fragrance.',
-    culinaryUses: [
-      'Dahi Vada, Boondi Raita, Cucumber Pachadi, and Chaats',
-      'Chilled Masala Chaas (buttermilk) and Jaljeera drinks',
-      'Tossed over roasted potatoes, salads, and seasonal fruits',
-      'Flavor enhancer for dals and stuffed breads'
-    ],
-    qualityFeatures: [
-      'Premium bold seeds from Unjha, Gujarat',
-      'Traditional slow tawa-roasting — ready to sprinkle instantly',
-      'Natural digestive carminative properties',
-      'Free from sand, husk, and synthetic preservatives'
-    ],
-    packSizes: [
-      { size: '100g Glass Jar', weightInGrams: 100, price: 90, originalPrice: 110 },
-      { size: '250g Jar Pack', weightInGrams: 250, price: 210, originalPrice: 250 },
-      { size: '500g Value Pack', weightInGrams: 500, price: 390, originalPrice: 470 }
-    ],
-    heatLevel: 1,
-    aromaIntensity: 5,
-    badge: 'Tawa Roasted • Digestive',
-    imageUrl: 'https://images.unsplash.com/photo-1509358271058-acd22cc93898?q=80&w=1000&auto=format&fit=crop',
-    origin: 'Unjha Mandi, Gujarat',
-    inStock: true,
-    featured: false,
-    curcuminOrOilContent: '100% Roasted Unjha Cumin'
-  },
-  {
-    id: 'tellicherry-black-pepper',
-    slug: 'black-pepper-powder',
-    name: 'Tellicherry Black Pepper Powder (Kali Mirch)',
-    hindiName: 'काली मिर्च पाउडर (Tellicherry)',
-    category: 'single',
-    categoryLabel: 'Single Pure Spice',
-    tagline: 'King of spices — bold berry pungency with sharp citrus bite',
-    shortDesc: 'Hand-picked extra bold Tellicherry peppercorns from Wayanad with high piperine content.',
-    fullDesc: 'Known globally as the finest peppercorn in existence, Tellicherry Black Pepper is harvested only when the berries are fully mature on the vine in Kerala’s rainforest ridges. SpiceShahi freshly pulverizes these high-piperine berries into a coarse black-sand grind that releases an intense spicy floral punch without muddy bitterness.',
-    colorProfile: 'Dark charcoal with dark gray flecks from whole pericarp berry skins.',
-    aromaNotes: 'Sharp, piney, fiery citrus and crushed resin bouquet.',
-    culinaryUses: [
-      'Seasoning eggs, grilled meats, mushrooms, and pastas',
-      'South Indian rasam, pongal, and herbal kada drinks',
-      'Soups, broths, and winter warming teas',
-      'Synergistic booster for turmeric curcumin absorption'
-    ],
-    qualityFeatures: [
-      'Wayanad Extra Bold Grade (TGSEB)',
-      'High natural Piperine content for optimal health benefits',
-      'Freshly ground in micro-batches to avoid oil oxidation',
-      'Unadulterated — zero papaya seed fillers'
-    ],
-    packSizes: [
-      { size: '100g Tin Shaker', weightInGrams: 100, price: 130, originalPrice: 160 },
-      { size: '250g Jar Pack', weightInGrams: 250, price: 310, originalPrice: 380 },
-      { size: '500g Value Pack', weightInGrams: 500, price: 590, originalPrice: 720 }
-    ],
-    heatLevel: 4,
-    aromaIntensity: 5,
-    badge: 'Tellicherry Bold • High Piperine',
-    imageUrl: 'https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?q=80&w=1000&auto=format&fit=crop',
-    origin: 'Wayanad, Kerala',
-    inStock: true,
-    featured: false,
-    curcuminOrOilContent: '5.2% Natural Piperine'
-  },
-  {
-    id: 'special-chaat-masala',
-    slug: 'special-chaat-masala',
-    name: 'SpiceShahi Chatpata Chaat Masala',
-    hindiName: 'चटपटा चाट मसाला',
-    category: 'blend',
-    categoryLabel: 'Signature Masala Blend',
-    tagline: 'Tangy amchur, black salt, and roasted spices for irresistible street-style zing',
-    shortDesc: 'A lip-smacking blend of sun-dried wild green mango, rock salt, asafoetida, mint, and toasted spices.',
-    fullDesc: 'Nothing compares to the mouthwatering tang of true Indian chaat. Our Chatpata Chaat Masala combines sun-dried unpasteurized amchur (green mango), mineral-rich Himalayan black salt (kala namak), crisp roasted cumin, ginger, and digestive hing. Sprinkled on fruits, bhel, or fried snacks, it creates an unforgettable sweet, sour, savory explosion.',
-    colorProfile: 'Warm buff tan with hints of pinkish Himalayan salt.',
-    aromaNotes: 'Tangy, sulfurous-savory, refreshing dried mint and roasted cumin.',
-    culinaryUses: [
-      'Sprinkled on fresh guava, watermelon, papaya, and fruit platters',
-      'Pani puri, sev puri, samosa chaat, and dahi bhalla',
-      'French fries, pakoras, paneer tikka, and roasted nuts',
-      'Lemonades, sodas, and mocktails'
-    ],
-    qualityFeatures: [
-      'Natural wild mango powder (Amchur) — not citric acid crystals',
-      'Real rock salt and black salt for genuine mineral punch',
-      'Zero MSG, synthetic colors, or chemical souring agents',
-      'Hygienically blended and moisture-proof packed'
-    ],
-    packSizes: [
-      { size: '100g Shaker Bottle', weightInGrams: 100, price: 85, originalPrice: 105 },
-      { size: '200g Jar Pack', weightInGrams: 200, price: 160, originalPrice: 195 },
-      { size: '500g Foodie Pack', weightInGrams: 500, price: 360, originalPrice: 430 }
-    ],
-    heatLevel: 2,
-    aromaIntensity: 4,
-    badge: 'Street-Food Magic • Tangy & Bold',
-    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop',
-    origin: 'Crafted in Delhi',
-    inStock: true,
-    featured: false,
-    curcuminOrOilContent: 'Real Amchur & Rock Salt'
-  },
-  {
-    id: 'royal-kasuri-methi',
-    slug: 'nagaur-kasuri-methi',
-    name: 'Nagauri Hand-Crushed Kasuri Methi',
-    hindiName: 'नागौरी कस्तूरी मेथी (Nagauri Kasuri Methi)',
-    category: 'whole',
-    categoryLabel: 'Whole & Hand-Crushed',
-    tagline: 'World-renowned Nagaur fenugreek leaves with enchanting herbal fragrance',
-    shortDesc: 'Crisp, shade-dried whole green fenugreek leaves from Nagaur, Rajasthan. Just rub between your palms for intoxicating aroma.',
-    fullDesc: 'Nagaur in Rajasthan is blessed with the ideal soil and dry desert winds that produce the sweetest, most aromatic fenugreek on Earth. SpiceShahi Kasuri Methi is carefully picked before flowering, washed in pure water, and dried in covered shaded aerators to preserve its chlorophyll green color and sweet-bitter maple-like aroma without harsh bitterness.',
-    colorProfile: 'Crisp emerald green leaves, completely free of brown stems and mud.',
-    aromaNotes: 'Enchanting maple-caramel sweetness, warm toasted herb perfume.',
-    culinaryUses: [
-      'Crushed over Butter Chicken, Paneer Tikka Masala, and Dal Makhani',
-      'Kneaded into Methi Thepla, Paratha, and Naan doughs',
-      'Tossed into dry aloo sabzi and bhindi preparations',
-      'Gravy garnishing for five-star aroma'
-    ],
-    qualityFeatures: [
-      'Genuine Nagaur GI crop — world benchmark for Kasuri Methi',
-      'Triple-cleaned to remove dirt, mud, and hard fibrous stalks',
-      'Shade-dried to keep natural green hue and essential oils',
-      'Ready to crush between palms directly into your hot dish'
-    ],
-    packSizes: [
-      { size: '50g Box', weightInGrams: 50, price: 65, originalPrice: 80 },
-      { size: '100g Airtight Jar', weightInGrams: 100, price: 120, originalPrice: 150 },
-      { size: '250g Kitchen Pack', weightInGrams: 250, price: 270, originalPrice: 330 }
-    ],
-    heatLevel: 1,
-    aromaIntensity: 5,
-    badge: 'GI Protected • Sweet Aroma',
-    imageUrl: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?q=80&w=1000&auto=format&fit=crop',
-    origin: 'Nagaur, Rajasthan',
-    inStock: true,
-    featured: false,
-    curcuminOrOilContent: '100% Shade-Dried Leaf'
   }
 ];
 
@@ -348,7 +158,7 @@ export const INSTAGRAM_REELS: InstagramReel[] = [
     caption: 'Discover how 100% pure dried turmeric roots are traditionally hand-beaten without heat machines to preserve healing curcumin and rich khushboo.',
     category: 'farm',
     categoryLabel: 'Purity Heritage',
-    thumbnailUrl: '/images/turmeric-pouch.jpg',
+    thumbnailUrl: '/images/100g-haldi.png',
     views: '124K',
     likes: '14.2K',
     instagramUrl: 'https://instagram.com/SpiceShahi',
@@ -361,7 +171,7 @@ export const INSTAGRAM_REELS: InstagramReel[] = [
     caption: 'Watch the aroma release! High-speed commercial mills heat past 90°C and vaporize essential oils. SpiceShahi stays cool and retains 100% natural aroma.',
     category: 'process',
     categoryLabel: 'Hand-Beaten',
-    thumbnailUrl: '/images/coriander-pouch.jpg',
+    thumbnailUrl: '/images/100g-coriander.png',
     views: '98K',
     likes: '11.8K',
     instagramUrl: 'https://instagram.com/SpiceShahi',
@@ -374,7 +184,7 @@ export const INSTAGRAM_REELS: InstagramReel[] = [
     caption: 'A simple test showing why SpiceShahi Red Chili Powder yields pure natural crimson brilliance without artificial dyes or brick dust.',
     category: 'recipe',
     categoryLabel: 'Purity Test',
-    thumbnailUrl: '/images/chili-pouch.jpg',
+    thumbnailUrl: '/images/100g-mirch.png',
     views: '245K',
     likes: '32.1K',
     instagramUrl: 'https://instagram.com/SpiceShahi',
@@ -409,11 +219,11 @@ export const INSTAGRAM_REELS: InstagramReel[] = [
   },
   {
     id: 'reel-6',
-    title: '16 Spices Roasting for Royal Shahi Garam Masala',
-    caption: 'Listen to the crackle of green cardamom, star anise, and whole mace as they gently toast over slow embers.',
+    title: 'Desi Khushboo Trio: Haldi, Dhaniya & Lal Mirch',
+    caption: 'See how SpiceShahi’s three flagship powders — turmeric, coriander, and red chili — stay pure, aromatic, and free from fillers.',
     category: 'process',
     categoryLabel: 'Aroma Atelier',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1532336414038-cf19250c5757?q=80&w=800&auto=format&fit=crop',
+    thumbnailUrl: '/images/250g-haldi.png',
     views: '188K',
     likes: '22.3K',
     instagramUrl: 'https://instagram.com/SpiceShahi',

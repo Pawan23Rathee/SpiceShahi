@@ -22,7 +22,7 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct }) => {
-  const featuredProducts = PRODUCTS.filter((p) => p.featured).slice(0, 4);
+  const featuredProducts = PRODUCTS.filter((p) => p.featured);
   const featuredReels = INSTAGRAM_REELS.slice(0, 3);
 
   return (
@@ -142,7 +142,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
           {/* Card 1: Mirch */}
           <div
-            onClick={() => onSelectProduct('kashmiri-lal-mirch')}
+            onClick={() => onSelectProduct('kashmiri-red-chili-powder')}
             className="bg-[#FCFAF2] p-4 rounded-xl border border-[#E8E4D5] flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer group"
           >
             <div className="w-16 h-16 bg-[#D35400] rounded-lg rotate-3 shrink-0 flex items-center justify-center text-white font-serif italic text-xl shadow-xs group-hover:rotate-0 transition-transform">
@@ -153,7 +153,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 Lal Mirch Powder
               </h4>
               <p className="text-xs text-[#5D6D7E]">Bright & Spicy</p>
-              <p className="text-[#96281B] font-bold mt-1 text-sm">₹180 / 250g</p>
+              <p className="text-[#96281B] font-bold mt-1 text-sm">₹150 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹160</span> / 250g</p>
             </div>
           </div>
 
@@ -170,7 +170,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 Haldi Powder
               </h4>
               <p className="text-xs text-[#5D6D7E]">Rich Curcumin</p>
-              <p className="text-[#96281B] font-bold mt-1 text-sm">₹140 / 250g</p>
+              <p className="text-[#96281B] font-bold mt-1 text-sm">₹120 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹130</span> / 250g</p>
             </div>
           </div>
 
@@ -187,7 +187,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 Dhaniya Powder
               </h4>
               <p className="text-xs text-[#5D6D7E]">Natural Aroma</p>
-              <p className="text-[#96281B] font-bold mt-1 text-sm">₹120 / 250g</p>
+              <p className="text-[#96281B] font-bold mt-1 text-sm">₹120 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹130</span> / 250g</p>
             </div>
           </div>
         </div>
@@ -342,7 +342,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredProducts.map((product) => (
             <ProductCard
               key={product.id}

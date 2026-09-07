@@ -15,10 +15,8 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high'>('featured');
 
   const categories = [
-    { id: 'all', label: 'All Spices & Masalas' },
-    { id: 'single', label: 'Pure Single Spices (Haldi, Mirch, Dhaniya)' },
-    { id: 'blend', label: 'Signature Masala Blends' },
-    { id: 'whole', label: 'Whole & Hand-Crushed' },
+    { id: 'all', label: 'All Spices' },
+    { id: 'single', label: 'Haldi, Mirch & Dhaniya' },
   ];
 
   const filteredProducts = useMemo(() => {
@@ -76,7 +74,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by spice name (Haldi, Chili, Garam Masala...)"
+                placeholder="Search by spice name (Haldi, Mirch, Dhaniya...)"
                 className="w-full pl-10 pr-9 py-2.5 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-xs sm:text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
               />
               {searchQuery && (

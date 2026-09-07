@@ -5,6 +5,7 @@ export interface PackSize {
   weightInGrams: number;
   price: number;
   originalPrice?: number;
+  imageUrl?: string;
 }
 
 export interface Product {

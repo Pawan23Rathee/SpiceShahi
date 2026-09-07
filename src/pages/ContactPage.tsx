@@ -233,11 +233,10 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                     className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] focus:outline-hidden focus:border-[#96281B]"
                   >
                     <option value="Fresh Home Spices Order">Fresh Home Spices Order</option>
-                    <option value="Lakadong Turmeric (High Curcumin)">Lakadong Turmeric (High Curcumin)</option>
-                    <option value="Kashmiri Chili Powder">Kashmiri Lal Mirch Powder</option>
-                    <option value="Royal Shahi Garam Masala">Royal Shahi Garam Masala</option>
+                    <option value="Turmeric Powder (Haldi)">Turmeric Powder (Haldi)</option>
+                    <option value="Red Chili Powder (Lal Mirch)">Red Chili Powder (Lal Mirch)</option>
+                    <option value="Coriander Powder (Dhaniya)">Coriander Powder (Dhaniya)</option>
                     <option value="Wholesale / Restaurant Bulk Supply">Wholesale / Restaurant Bulk Supply</option>
-                    <option value="Corporate & Wedding Spice Hampers">Corporate & Wedding Spice Hampers</option>
                     <option value="Other Questions">Other Questions</option>
                   </select>
                 </div>
