@@ -1,0 +1,6 @@
+{
+  "name": "SpiceShahi Spices & Masalas",
+  "description": "Pure, authentic, hand-beaten spices with authentic color and rich aroma from SpiceShahi. Desi Khushboo Coriander, Turmeric, and Red Chili Powders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

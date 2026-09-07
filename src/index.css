@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-display: "Cinzel", "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  --color-artistic-bg: #FCFAF2;
+  --color-artistic-slate: #2C3E50;
+  --color-artistic-muted: #5D6D7E;
+  --color-artistic-crimson: #96281B;
+  --color-artistic-orange: #D35400;
+  --color-artistic-gold: #F39C12;
+  --color-artistic-yellow: #F1C40F;
+  --color-artistic-green: #2D5A27;
+  --color-artistic-darkgreen: #1E3E1A;
+  --color-artistic-border: #E8E4D5;
+
+  --color-spice-red: #96281B;
+  --color-spice-darkred: #7D2116;
+  --color-spice-orange: #D35400;
+  --color-spice-amber: #F39C12;
+  --color-spice-turmeric: #F1C40F;
+  --color-spice-coriander: #2D5A27;
+  --color-spice-cream: #FCFAF2;
+  --color-spice-sand: #F7F3E8;
+  --color-spice-charcoal: #2C3E50;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  background-color: #FCFAF2;
+  color: #2C3E50;
+}
+
+h1, h2, h3, .font-heading {
+  font-family: var(--font-serif);
+}
+
+.font-brand {
+  font-family: var(--font-display);
+}
+
