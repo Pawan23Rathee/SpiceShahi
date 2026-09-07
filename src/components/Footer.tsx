@@ -100,7 +100,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   SpiceShahi
                 </span>
                 <span className="text-[10px] tracking-wider uppercase text-[#F1C40F] font-semibold">
-                  BS Global Enterprises
+                  SRS Global Enterprises
                 </span>
               </div>
             </div>
@@ -298,7 +298,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom Bar */}
         <div className="pt-8 mt-4 border-t border-slate-600 text-center sm:flex sm:justify-between sm:items-center text-xs text-slate-400">
-          <p>© {new Date().getFullYear()} SpiceShahi (BS Global Enterprises). All rights reserved.</p>
+          <p>© {new Date().getFullYear()} SpiceShahi (SRS Global Enterprises). All rights reserved.</p>
           <div className="mt-4 sm:mt-0 flex items-center justify-center space-x-6 font-serif italic">
             <span>Pure Spices, Real Aroma</span>
             <span>Hand-Beaten Desi Khushboo</span>

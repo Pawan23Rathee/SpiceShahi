@@ -6,7 +6,7 @@ export const DISPLAY_EMAIL = 'Contact@spiceshahi.in';
 export const DISPLAY_INSTAGRAM = '@SpiceShahi';
 export const DISPLAY_INSTAGRAM_URL = 'https://instagram.com/SpiceShahi';
 export const DISPLAY_ADDRESS = 'Gali no 6, ward no 13, Arya nagar, Bahadurgarh, Haryana - 124507';
-export const DISPLAY_COMPANY = 'BS GLOBAL ENTERPRISES';
+export const DISPLAY_COMPANY = 'SRS Global Enterprises';
 export const DISPLAY_FSSAI = '20826007001593';
 export const DISPLAY_PHONE = '+91 83072 15421';
 export const DISPLAY_ALT_PHONE = '+91 99964 77484';
@@ -57,7 +57,7 @@ export const PRODUCTS: Product[] = [
       '100% Pure Coriander Seeds (Dhaniya)',
       'Hand-Beaten — Never processed with heat machines',
       'Zero Additives, Preservatives or Synthetic Fillers',
-      'FSSAI Certified: 20826007001593 • BS Global Enterprises'
+      'FSSAI Certified: 20826007001593 • SRS Global Enterprises'
     ],
     packSizes: [
       { size: '100g Pouch', weightInGrams: 100, price: 50, originalPrice: 55, imageUrl: '/images/100g-coriander.png' },
@@ -68,7 +68,7 @@ export const PRODUCTS: Product[] = [
     aromaIntensity: 5,
     badge: 'Flagship • Desi Khushboo',
     imageUrl: '/images/100g-coriander.png',
-    origin: 'Bahadurgarh, Haryana (BS Global Enterprises)',
+    origin: 'Bahadurgarh, Haryana (SRS Global Enterprises)',
     inStock: true,
     featured: true,
     curcuminOrOilContent: '100% Pure Coriander Seeds'
@@ -95,7 +95,7 @@ export const PRODUCTS: Product[] = [
       '100% Pure Dried Turmeric Roots (Haldi)',
       'Hand-Beaten — Retains natural healing Curcumin and essential oils',
       'No Additives, Artificial Color or Polish',
-      'FSSAI Certified: 20826007001593 • BS Global Enterprises'
+      'FSSAI Certified: 20826007001593 • SRS Global Enterprises'
     ],
     packSizes: [
       { size: '100g Pouch', weightInGrams: 100, price: 50, originalPrice: 55, imageUrl: '/images/100g-haldi.png' },
@@ -106,7 +106,7 @@ export const PRODUCTS: Product[] = [
     aromaIntensity: 5,
     badge: 'Bestseller • High Curcumin',
     imageUrl: '/images/100g-haldi.png',
-    origin: 'Bahadurgarh, Haryana (BS Global Enterprises)',
+    origin: 'Bahadurgarh, Haryana (SRS Global Enterprises)',
     inStock: true,
     featured: true,
     curcuminOrOilContent: '100% Pure Dried Turmeric Roots'
@@ -133,7 +133,7 @@ export const PRODUCTS: Product[] = [
       '100% Pure Dried Red Chillies (Lal Mirch)',
       'Hand-Beaten — Preserves natural capsanthin red pigment & oils',
       'Zero Artificial Colors, Brick Dust, or Chemical Dyes',
-      'FSSAI Certified: 20826007001593 • BS Global Enterprises'
+      'FSSAI Certified: 20826007001593 • SRS Global Enterprises'
     ],
     packSizes: [
       { size: '100g Pouch', weightInGrams: 100, price: 55, originalPrice: 65, imageUrl: '/images/100g-mirch.png' },
@@ -144,7 +144,7 @@ export const PRODUCTS: Product[] = [
     aromaIntensity: 4,
     badge: 'Popular • Vibrant Red & Rich Flavor',
     imageUrl: '/images/100g-mirch.png',
-    origin: 'Bahadurgarh, Haryana (BS Global Enterprises)',
+    origin: 'Bahadurgarh, Haryana (SRS Global Enterprises)',
     inStock: true,
     featured: true,
     curcuminOrOilContent: '100% Pure Dried Red Chillies'

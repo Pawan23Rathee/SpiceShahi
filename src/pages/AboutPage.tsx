@@ -106,7 +106,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               Over the last two decades, commercial food manufacturing replaced quality with cost cutting: bleaching spices, extracting precious essential oils to sell separately, and using synthetic red and yellow powders.
             </p>
             <p className="text-[#5D6D7E] leading-relaxed text-sm sm:text-base">
-              <strong className="text-[#2C3E50]">SpiceShahi</strong> (BS Global Enterprises) was established in Bahadurgarh, Haryana to change that forever. We forge direct ties with farmers who still cultivate native heirloom seeds with love and pride, delivering authentic hand-beaten masalas to modern homes.
+              <strong className="text-[#2C3E50]">SpiceShahi</strong> (SRS Global Enterprises) was established in Bahadurgarh, Haryana to change that forever. We forge direct ties with farmers who still cultivate native heirloom seeds with love and pride, delivering authentic hand-beaten masalas to modern homes.
             </p>
 
             <div className="p-4 rounded-xl bg-white border border-[#E8E4D5] text-[#2C3E50] text-sm font-medium flex items-center gap-3">

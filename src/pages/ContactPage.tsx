@@ -281,7 +281,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                 Registered Office & Operations
               </span>
               <h3 className="font-serif italic font-bold text-xl text-[#2C3E50] mt-0.5">
-                SpiceShahi (BS Global Enterprises)
+                SpiceShahi (SRS Global Enterprises)
               </h3>
               <p className="text-xs text-[#5D6D7E] mt-1">
                 {DISPLAY_ADDRESS} • FSSAI Lic: 20826007001593
