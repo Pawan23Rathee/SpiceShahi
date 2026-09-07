@@ -153,7 +153,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 Lal Mirch Powder
               </h4>
               <p className="text-xs text-[#5D6D7E]">Bright & Spicy</p>
-              <p className="text-[#96281B] font-bold mt-1 text-sm">₹150 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹160</span> / 250g</p>
+              {/* <p className="text-[#96281B] font-bold mt-1 text-sm">₹150 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹160</span> / 250g</p> */}
             </div>
           </div>
 
@@ -170,7 +170,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 Haldi Powder
               </h4>
               <p className="text-xs text-[#5D6D7E]">Rich Curcumin</p>
-              <p className="text-[#96281B] font-bold mt-1 text-sm">₹120 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹130</span> / 250g</p>
+              {/* <p className="text-[#96281B] font-bold mt-1 text-sm">₹120 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹130</span> / 250g</p> */}
             </div>
           </div>
 
@@ -187,7 +187,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 Dhaniya Powder
               </h4>
               <p className="text-xs text-[#5D6D7E]">Natural Aroma</p>
-              <p className="text-[#96281B] font-bold mt-1 text-sm">₹120 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹130</span> / 250g</p>
+              {/* <p className="text-[#96281B] font-bold mt-1 text-sm">₹120 <span className="text-[11px] text-[#5D6D7E] line-through font-medium">₹130</span> / 250g</p> */}
             </div>
           </div>
         </div>
