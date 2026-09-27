@@ -15,6 +15,7 @@ import {
   Award,
   ChevronRight,
   CheckCircle2,
+  Building2,
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -381,7 +382,45 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         {ENABLE_WHATSAPP && <WhatsAppHomeCTA className="mt-6" />}
       </section>
 
-      {/* 6. INSTAGRAM REELS & VIDEOS PREVIEW - Artistic Slate */}
+      {/* 6. GROW WITH SPICESHAHI - DISTRIBUTOR & WHOLESALE PROGRAM */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-linear-to-r from-[#2C3E50] via-[#243342] to-[#1a252f] rounded-3xl p-8 sm:p-12 text-white border border-[#F1C40F]/30 shadow-2xl relative overflow-hidden">
+          <div className="relative z-10 max-w-3xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F1C40F]/15 text-[#F1C40F] border border-[#F1C40F]/30 text-[11px] font-bold uppercase tracking-widest">
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Grow With SpiceShahi</span>
+            </div>
+
+            <h2 className="font-serif italic font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+              Become a SpiceShahi Distributor
+            </h2>
+
+            <p className="text-sm sm:text-base text-slate-200 leading-relaxed max-w-2xl">
+              Bring authentic SpiceShahi spices to customers in your city. Partner with us for wholesale and distribution opportunities. Enjoy protected territory allocations, high dealer trade margins, and direct mill dispatches from Bahadurgarh.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <button
+                id="home-distributor-cta-btn"
+                onClick={() => onNavigate('distributor')}
+                className="px-7 py-3.5 rounded-xl bg-[#96281B] hover:bg-[#7D2116] text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer"
+              >
+                <span>Become a Distributor</span>
+                <ArrowRight className="w-4 h-4 text-[#F1C40F]" />
+              </button>
+
+              <button
+                onClick={() => onNavigate('distributor')}
+                className="px-6 py-3.5 rounded-xl border border-white/40 hover:border-white text-white hover:bg-white/10 font-bold text-xs uppercase tracking-widest transition-all cursor-pointer"
+              >
+                <span>Wholesale Enquiry</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. INSTAGRAM REELS & VIDEOS PREVIEW - Artistic Slate */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-[#2C3E50] rounded-2xl p-8 sm:p-12 text-white overflow-hidden relative border border-[#E8E4D5]/20">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 relative z-10">

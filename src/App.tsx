@@ -26,6 +26,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { AccountPage } from './pages/AccountPage';
+import { DistributorPage } from './pages/DistributorPage';
 import { AiChatbotDrawer } from './components/AiChatbotDrawer';
 import { FloatingAiChatButton } from './components/FloatingAiChatButton';
 import { ProductVariantModal } from './components/ProductVariantModal';
@@ -76,9 +77,15 @@ function AppContent() {
           'register',
           'forgot-password',
           'account',
+          'distributor',
+          'wholesale',
         ].includes(rawRoute)
       ) {
-        setCurrentPage(rawRoute as Page);
+        if (rawRoute === 'wholesale' || rawRoute === 'distributor') {
+          setCurrentPage('distributor');
+        } else {
+          setCurrentPage(rawRoute as Page);
+        }
         if (rawRoute === 'product-detail' && parts[1]) {
           setSelectedProductSlug(parts[1]);
         }
@@ -232,6 +239,10 @@ function AppContent() {
 
         {currentPage === 'account' && (
           <AccountPage onNavigate={navigateTo} />
+        )}
+
+        {currentPage === 'distributor' && (
+          <DistributorPage onNavigate={navigateTo} />
         )}
       </main>
 

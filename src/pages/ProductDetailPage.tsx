@@ -338,7 +338,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   <WhatsAppOrderButton
                     productName={product.name}
                     packSize={currentPack.size}
-                    price={currentPack.price * quantity}
+                    price={currentPack.price}
+                    quantity={quantity}
                     variant="detail"
                     className="w-full"
                   />

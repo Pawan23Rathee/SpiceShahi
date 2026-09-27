@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
-import { Order, StoreSettings, Customer, SavedAddress } from '../src/types';
+import { Order, StoreSettings, Customer, SavedAddress, DistributorEnquiry, DistributorEnquiryStatus } from '../src/types';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,6 +10,7 @@ const DATA_DIR = path.resolve(__dirname, '../data');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 const CUSTOMERS_FILE = path.join(DATA_DIR, 'customers.json');
+const DISTRIBUTOR_ENQUIRIES_FILE = path.join(DATA_DIR, 'distributor_enquiries.json');
 
 // In-memory password reset tokens: token -> { email, expiresAt }
 export const passwordResetTokens = new Map<string, { email: string; expiresAt: number }>();
@@ -360,4 +361,107 @@ export function getCustomerCart(customerId: string): any[] {
 
 export function saveCustomerCart(customerId: string, cart: any[]): void {
   updateCustomer(customerId, { cart } as any);
+}
+
+// -------------------------------------------------------------
+// Distributor & Wholesale Enquiries Storage
+// -------------------------------------------------------------
+export function getDistributorEnquiries(): DistributorEnquiry[] {
+  ensureDataDir();
+  try {
+    if (fs.existsSync(DISTRIBUTOR_ENQUIRIES_FILE)) {
+      const data = fs.readFileSync(DISTRIBUTOR_ENQUIRIES_FILE, 'utf-8');
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('Error reading distributor enquiries file:', err);
+  }
+  return [];
+}
+
+export function saveDistributorEnquiries(enquiries: DistributorEnquiry[]): void {
+  ensureDataDir();
+  fs.writeFileSync(DISTRIBUTOR_ENQUIRIES_FILE, JSON.stringify(enquiries, null, 2), 'utf-8');
+}
+
+export function getDistributorEnquiryById(id: string): DistributorEnquiry | undefined {
+  const enquiries = getDistributorEnquiries();
+  return enquiries.find((e) => e.id.toLowerCase() === id.toLowerCase());
+}
+
+export function generateNextDistributorId(): string {
+  const enquiries = getDistributorEnquiries();
+  const currentMax = enquiries.reduce((max, e) => {
+    const numPart = parseInt(e.id.replace(/\D/g, ''), 10);
+    return !isNaN(numPart) && numPart > max ? numPart : max;
+  }, 1000);
+  return `DIST-${currentMax + 1}`;
+}
+
+export function createDistributorEnquiry(data: {
+  name: string;
+  businessName: string;
+  mobile: string;
+  email: string;
+  city: string;
+  state: string;
+  pincode: string;
+  businessType: string;
+  yearsInBusiness?: string;
+  currentCategories?: string;
+  monthlyRequirement?: string;
+  preferredTerritory?: string;
+  fmcgExperience: 'Yes' | 'No' | string;
+  message?: string;
+}): DistributorEnquiry {
+  const enquiries = getDistributorEnquiries();
+  const id = generateNextDistributorId();
+  const now = new Date().toISOString();
+
+  const newEnquiry: DistributorEnquiry = {
+    id,
+    name: data.name.trim(),
+    businessName: data.businessName.trim(),
+    mobile: data.mobile.trim(),
+    email: data.email.trim().toLowerCase(),
+    city: data.city.trim(),
+    state: data.state.trim(),
+    pincode: data.pincode.trim(),
+    businessType: data.businessType.trim(),
+    yearsInBusiness: data.yearsInBusiness?.trim() || '',
+    currentCategories: data.currentCategories?.trim() || '',
+    monthlyRequirement: data.monthlyRequirement?.trim() || '',
+    preferredTerritory: data.preferredTerritory?.trim() || data.city.trim(),
+    fmcgExperience: data.fmcgExperience,
+    message: data.message?.trim() || '',
+    status: 'NEW',
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  enquiries.unshift(newEnquiry); // newest first
+  saveDistributorEnquiries(enquiries);
+  return newEnquiry;
+}
+
+export function updateDistributorEnquiryStatus(
+  id: string,
+  status: DistributorEnquiryStatus,
+  adminNotes?: string
+): DistributorEnquiry | undefined {
+  const enquiries = getDistributorEnquiries();
+  const idx = enquiries.findIndex((e) => e.id.toLowerCase() === id.toLowerCase());
+  if (idx === -1) return undefined;
+
+  enquiries[idx].status = status;
+  enquiries[idx].updatedAt = new Date().toISOString();
+  if (adminNotes !== undefined) {
+    enquiries[idx].adminNotes = adminNotes;
+  }
+
+  saveDistributorEnquiries(enquiries);
+  return enquiries[idx];
 }

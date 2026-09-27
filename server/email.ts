@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
-import { Order } from '../src/types.js';
+import { Order, DistributorEnquiry } from '../src/types.js';
 import { generateInvoicePdf, getInvoiceFileName, getInvoiceFilePath } from './invoice.js';
 import { updateOrder } from './storage.js';
 
@@ -634,4 +634,230 @@ export async function dispatchOrderPaidEmails(
   } finally {
     inFlightDispatches.delete(order.id);
   }
+}
+
+/**
+ * Dispatch B2B distributor enquiry notification to contact@spiceshahi.in & admin
+ */
+export async function sendDistributorNotificationEmail(enquiry: DistributorEnquiry): Promise<boolean> {
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'contact@spiceshahi.in';
+  const targetEmail = 'contact@spiceshahi.in';
+  const recipients = Array.from(new Set([targetEmail, adminEmail].map((e) => e.trim()).filter(Boolean))).join(', ');
+
+  const subject = `New SpiceShahi Distributor Enquiry - ${enquiry.businessName}`;
+
+  const textContent = `
+SPICESHAHI NEW DISTRIBUTOR & WHOLESALE ENQUIRY
+==================================================
+Reference ID: ${enquiry.id}
+Date: ${new Date(enquiry.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+
+APPLICANT DETAILS:
+- Contact Person: ${enquiry.name}
+- Business Name: ${enquiry.businessName}
+- Mobile: ${enquiry.mobile}
+- Email: ${enquiry.email}
+
+LOCATION:
+- City: ${enquiry.city}
+- State: ${enquiry.state}
+- Pincode: ${enquiry.pincode}
+- Preferred Territory: ${enquiry.preferredTerritory || enquiry.city}
+
+BUSINESS PROFILE:
+- Business Type: ${enquiry.businessType}
+- Years in Business: ${enquiry.yearsInBusiness || 'Not specified'}
+- Current Product Categories: ${enquiry.currentCategories || 'None'}
+- Expected Monthly Requirement: ${enquiry.monthlyRequirement || 'Not specified'}
+- Distributes Food/FMCG: ${enquiry.fmcgExperience}
+
+ADDITIONAL MESSAGE / NOTES:
+${enquiry.message || 'None provided'}
+
+STATUS: ${enquiry.status}
+Please review this application in the SpiceShahi Admin Dashboard.
+==================================================
+`;
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FCFAF2; color: #2C3E50; margin: 0; padding: 20px; }
+    .card { max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #E8E4D5; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .header { background: #96281B; color: #ffffff; padding: 24px; text-align: center; }
+    .header h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
+    .badge { display: inline-block; background: #F1C40F; color: #2C3E50; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-top: 8px; text-transform: uppercase; }
+    .content { padding: 28px; font-size: 14px; line-height: 1.6; }
+    .grid { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .grid td { padding: 10px 12px; border-bottom: 1px solid #F2EFE6; font-size: 13px; }
+    .grid td.label { font-weight: 600; color: #5D6D7E; width: 40%; background: #FAF8F2; }
+    .grid td.value { font-weight: 700; color: #2C3E50; }
+    .section-title { font-size: 15px; font-weight: 700; color: #96281B; margin-top: 24px; margin-bottom: 8px; border-bottom: 2px solid #F1C40F; padding-bottom: 4px; display: inline-block; }
+    .message-box { background: #FCFAF2; border-left: 4px solid #D35400; padding: 14px; border-radius: 4px; margin-top: 8px; font-style: italic; }
+    .footer { background: #2C3E50; color: #FCFAF2; padding: 16px; text-align: center; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h1>SpiceShahi B2B Wholesale Portal</h1>
+      <span class="badge">New Distributor Enquiry • ${enquiry.id}</span>
+    </div>
+    <div class="content">
+      <p>A new prospective business partner has submitted a distributor enquiry for SpiceShahi Pure Spices & Masalas.</p>
+
+      <div class="section-title">Applicant & Contact Information</div>
+      <table class="grid">
+        <tr><td class="label">Contact Name:</td><td class="value">${enquiry.name}</td></tr>
+        <tr><td class="label">Business Name:</td><td class="value">${enquiry.businessName}</td></tr>
+        <tr><td class="label">Mobile Number:</td><td class="value"><a href="tel:${enquiry.mobile}" style="color: #96281B;">${enquiry.mobile}</a> (<a href="https://wa.me/91${enquiry.mobile.replace(/\D/g, '')}" style="color: #2D5A27; font-weight: bold;">WhatsApp</a>)</td></tr>
+        <tr><td class="label">Email Address:</td><td class="value"><a href="mailto:${enquiry.email}" style="color: #96281B;">${enquiry.email}</a></td></tr>
+      </table>
+
+      <div class="section-title">Location & Territory</div>
+      <table class="grid">
+        <tr><td class="label">City / District:</td><td class="value">${enquiry.city}</td></tr>
+        <tr><td class="label">State:</td><td class="value">${enquiry.state}</td></tr>
+        <tr><td class="label">Pincode:</td><td class="value">${enquiry.pincode}</td></tr>
+        <tr><td class="label">Preferred Territory:</td><td class="value">${enquiry.preferredTerritory || enquiry.city}</td></tr>
+      </table>
+
+      <div class="section-title">Business Profile & Capacity</div>
+      <table class="grid">
+        <tr><td class="label">Business Type:</td><td class="value">${enquiry.businessType}</td></tr>
+        <tr><td class="label">Years in Business:</td><td class="value">${enquiry.yearsInBusiness || 'Not specified'}</td></tr>
+        <tr><td class="label">Current Product Lines:</td><td class="value">${enquiry.currentCategories || 'None'}</td></tr>
+        <tr><td class="label">Expected Monthly Volume:</td><td class="value">${enquiry.monthlyRequirement || 'To be discussed'}</td></tr>
+        <tr><td class="label">FMCG/Food Experience:</td><td class="value">${enquiry.fmcgExperience}</td></tr>
+      </table>
+
+      <div class="section-title">Applicant Message</div>
+      <div class="message-box">${enquiry.message || 'No additional message provided.'}</div>
+    </div>
+    <div class="footer">
+      SpiceShahi Management Console • Bahadurgarh, Haryana • SRS Global Enterprises
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  return sendEmail({
+    to: recipients,
+    subject,
+    text: textContent,
+    html: htmlContent,
+  });
+}
+
+/**
+ * Dispatch B2B acknowledgement email to the distributor applicant
+ */
+export async function sendDistributorAcknowledgementEmail(enquiry: DistributorEnquiry): Promise<boolean> {
+  const subject = `SpiceShahi Distributor Application Received - ${enquiry.businessName} (${enquiry.id})`;
+
+  const textContent = `
+Dear ${enquiry.name},
+
+Thank you for your interest in partnering with SpiceShahi Spices & Masalas (SRS Global Enterprises, Bahadurgarh, Haryana).
+
+We have received your distributor enquiry with Reference ID: ${enquiry.id}.
+
+SUMMARY OF DETAILS RECEIVED:
+- Business Name: ${enquiry.businessName}
+- Preferred Territory: ${enquiry.preferredTerritory || enquiry.city}
+- Business Type: ${enquiry.businessType}
+- Expected Monthly Requirement: ${enquiry.monthlyRequirement || 'Under discussion'}
+
+WHAT HAPPENS NEXT:
+1. Territory Verification: Our sales and distribution desk is currently reviewing the territory exclusivity for ${enquiry.city}, ${enquiry.state}.
+2. Direct Contact: A senior representative from our Bahadurgarh processing mill will get in touch with you via call or WhatsApp within 24 to 48 business hours.
+3. Margin & Wholesale Catalog: Upon verification, you will receive our wholesale price list, minimum order quantities (MOQ), and retailer marketing collateral kit.
+
+If you have urgent questions, you can connect directly with our mill sales desk at +91 83072 15421 or email contact@spiceshahi.in.
+
+Warm Regards,
+SpiceShahi Distribution Team
+SRS Global Enterprises
+Bahadurgarh, Haryana - 124507
+https://spiceshahi.in
+`;
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FCFAF2; color: #2C3E50; margin: 0; padding: 20px; }
+    .card { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #E8E4D5; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .header { background: #96281B; color: #ffffff; padding: 28px 24px; text-align: center; }
+    .header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+    .header p { margin: 6px 0 0; font-size: 13px; color: #F1C40F; }
+    .content { padding: 28px; font-size: 14px; line-height: 1.6; }
+    .ref-box { background: #FCFAF2; border: 1px solid #E8E4D5; border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .ref-title { font-size: 11px; text-transform: uppercase; color: #5D6D7E; font-weight: 700; letter-spacing: 0.5px; }
+    .ref-id { font-size: 20px; color: #96281B; font-weight: 800; margin-top: 4px; }
+    .step-box { background: #FAF8F2; border-left: 3px solid #F1C40F; padding: 12px 16px; border-radius: 4px; margin-bottom: 12px; }
+    .step-box h4 { margin: 0 0 4px; font-size: 13px; color: #2C3E50; }
+    .step-box p { margin: 0; font-size: 12px; color: #5D6D7E; }
+    .footer { background: #2C3E50; color: #FCFAF2; padding: 20px; text-align: center; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h1>SpiceShahi Spices & Masalas</h1>
+      <p>Pure Spices, Real Aroma • Bahadurgarh, Haryana</p>
+    </div>
+    <div class="content">
+      <p>Dear <strong>${enquiry.name}</strong>,</p>
+      <p>Thank you for expressing interest in bringing pure, traditionally cold-ground SpiceShahi spices to your market through <strong>${enquiry.businessName}</strong>.</p>
+      
+      <div class="ref-box">
+        <div class="ref-title">Application Reference Number</div>
+        <div class="ref-id">${enquiry.id}</div>
+        <div style="font-size: 12px; color: #5D6D7E; margin-top: 4px;">Target Territory: <strong>${enquiry.preferredTerritory || enquiry.city}, ${enquiry.state}</strong></div>
+      </div>
+
+      <h3 style="color: #96281B; font-size: 15px; margin-bottom: 12px;">Next Steps in the Evaluation Process:</h3>
+      
+      <div class="step-box">
+        <h4>1. Territory Availability Verification</h4>
+        <p>Our Bahadurgarh team is currently assessing dealer territory exclusivity to protect distributor margins.</p>
+      </div>
+
+      <div class="step-box">
+        <h4>2. Direct Consultation</h4>
+        <p>A relationship manager will reach out via call or WhatsApp within 24 to 48 hours to discuss trade terms.</p>
+      </div>
+
+      <div class="step-box">
+        <h4>3. Wholesale Catalog & Onboarding</h4>
+        <p>Upon approval, you will receive our B2B wholesale pricing structure, display collaterals, and sample batch kits.</p>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 13px; color: #5D6D7E;">
+        For direct urgent coordination, please feel free to reach our wholesale desk at <a href="tel:+918307215421" style="color: #96281B; font-weight: bold;">+91 83072 15421</a> or reply directly to this email.
+      </p>
+    </div>
+    <div class="footer">
+      <strong>SRS Global Enterprises (SpiceShahi)</strong><br>
+      Bahadurgarh, Haryana - 124507 • FSSAI License: 20826007001593<br>
+      <a href="https://spiceshahi.in" style="color: #F1C40F; text-decoration: none;">www.spiceshahi.in</a>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  return sendEmail({
+    to: enquiry.email,
+    subject,
+    text: textContent,
+    html: htmlContent,
+  });
 }

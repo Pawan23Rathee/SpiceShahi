@@ -3,7 +3,7 @@ import { Page } from '../types';
 import { useCart } from '../context/CartContext';
 import { INDIAN_STATES } from '../data/indianStates';
 import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppCartHelp } from '../components/WhatsAppComponents';
+import { WhatsAppCartHelp, WhatsAppCartOrderButton } from '../components/WhatsAppComponents';
 import {
   ShoppingBag,
   ArrowRight,
@@ -244,7 +244,28 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
               </button>
 
               {ENABLE_WHATSAPP && (
-                <WhatsAppCartHelp totalItems={totalItems} grandTotal={grandTotal} />
+                <WhatsAppCartOrderButton
+                  items={items.map((i) => ({
+                    name: i.name,
+                    packSize: i.packSize,
+                    quantity: i.quantity,
+                    price: i.price,
+                  }))}
+                  subtotal={subtotal}
+                />
+              )}
+
+              {ENABLE_WHATSAPP && (
+                <WhatsAppCartHelp
+                  totalItems={totalItems}
+                  grandTotal={grandTotal}
+                  items={items.map((i) => ({
+                    name: i.name,
+                    packSize: i.packSize,
+                    quantity: i.quantity,
+                    price: i.price,
+                  }))}
+                />
               )}
 
               <div className="text-center pt-2">

@@ -14,7 +14,8 @@ export type Page =
   | 'login'
   | 'register'
   | 'account'
-  | 'forgot-password';
+  | 'forgot-password'
+  | 'distributor';
 
 export interface PackSize {
   size: string;
@@ -187,4 +188,28 @@ export interface AdminUser {
   username: string;
   token: string;
   expiresAt: number;
+}
+
+export type DistributorEnquiryStatus = 'NEW' | 'CONTACTED' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED';
+
+export interface DistributorEnquiry {
+  id: string; // e.g. "DIST-1001"
+  name: string;
+  businessName: string;
+  mobile: string;
+  email: string;
+  city: string;
+  state: string;
+  pincode: string;
+  businessType: string;
+  yearsInBusiness?: string;
+  currentCategories?: string;
+  monthlyRequirement?: string;
+  preferredTerritory?: string;
+  fmcgExperience: 'Yes' | 'No' | string;
+  message?: string;
+  status: DistributorEnquiryStatus;
+  createdAt: string;
+  updatedAt: string;
+  adminNotes?: string;
 }

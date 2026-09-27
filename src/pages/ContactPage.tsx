@@ -24,7 +24,7 @@ interface ContactPageProps {
   onNavigate: (page: Page) => void;
 }
 
-export const ContactPage: React.FC<ContactPageProps> = () => {
+export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -185,6 +185,26 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                     Bahadurgarh, Haryana - 124507 • SRS Global Enterprises
                   </p>
                 </div>
+              </div>
+
+              {/* B2B Wholesale & Distributor Card */}
+              <div className="p-5 rounded-2xl bg-linear-to-r from-[#2C3E50] to-[#1a252f] text-white border border-[#F1C40F]/30 space-y-3">
+                <span className="text-[10px] uppercase font-bold text-[#F1C40F] tracking-widest block">
+                  B2B & Wholesale Partnerships
+                </span>
+                <h3 className="font-serif italic font-bold text-lg text-white">
+                  Interested in Becoming a Distributor?
+                </h3>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Partner with SpiceShahi in your city. Apply online for exclusive territory dealership, trade margins, and bulk supply.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('distributor')}
+                  className="px-4 py-2 bg-[#96281B] hover:bg-[#7D2116] text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer"
+                >
+                  Apply for Dealership →
+                </button>
               </div>
             </div>
           </div>

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "DIST-1001",
+    "name": "Vikram Singh",
+    "businessName": "Singh Kirana & Wholesale Traders",
+    "mobile": "9876543210",
+    "email": "vikram@singhtraders.com",
+    "city": "Rohtak",
+    "state": "Haryana",
+    "pincode": "124001",
+    "businessType": "Distributor",
+    "yearsInBusiness": "3 - 5 Years",
+    "currentCategories": "Edible Oils, Rice, Pulses",
+    "monthlyRequirement": "250 - 500 kg",
+    "preferredTerritory": "Rohtak & Jhajjar District",
+    "fmcgExperience": "Yes",
+    "message": "Looking for exclusive distribution rights for SpiceShahi haldi and dhaniya in Rohtak.",
+    "status": "CONTACTED",
+    "createdAt": "2026-09-27T15:59:21.367Z",
+    "updatedAt": "2026-09-27T15:59:21.388Z",
+    "adminNotes": "Spoke with Mr. Vikram Singh. Verified Rohtak territory. Sending sample batch kit."
+  }
+]

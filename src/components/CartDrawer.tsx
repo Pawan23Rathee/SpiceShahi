@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { INDIAN_STATES } from '../data/indianStates';
 import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppCartHelp } from './WhatsAppComponents';
+import { WhatsAppCartHelp, WhatsAppCartOrderButton } from './WhatsAppComponents';
 import {
   X,
   Plus,
@@ -256,7 +256,28 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
                 </button>
 
                 {ENABLE_WHATSAPP && (
-                  <WhatsAppCartHelp totalItems={totalItems} grandTotal={grandTotal} />
+                  <WhatsAppCartOrderButton
+                    items={items.map((i) => ({
+                      name: i.name,
+                      packSize: i.packSize,
+                      quantity: i.quantity,
+                      price: i.price,
+                    }))}
+                    subtotal={subtotal}
+                  />
+                )}
+
+                {ENABLE_WHATSAPP && (
+                  <WhatsAppCartHelp
+                    totalItems={totalItems}
+                    grandTotal={grandTotal}
+                    items={items.map((i) => ({
+                      name: i.name,
+                      packSize: i.packSize,
+                      quantity: i.quantity,
+                      price: i.price,
+                    }))}
+                  />
                 )}
 
                 <button

@@ -29,18 +29,24 @@ import {
   clearTestOrders,
   getCustomerCart,
   saveCustomerCart,
+  getDistributorEnquiries,
+  getDistributorEnquiryById,
+  createDistributorEnquiry,
+  updateDistributorEnquiryStatus,
 } from './server/storage.js';
 import {
   dispatchOrderPaidEmails,
   sendCustomerOrderConfirmationEmail,
   sendAdminOrderNotificationEmail,
+  sendDistributorNotificationEmail,
+  sendDistributorAcknowledgementEmail,
 } from './server/email.js';
 import {
   generateInvoicePdf,
   getInvoiceFileName,
   getInvoiceFilePath,
 } from './server/invoice.js';
-import { Order, OrderItem, CustomerDetails, OrderStatus, PaymentStatus } from './src/types.js';
+import { Order, OrderItem, CustomerDetails, OrderStatus, PaymentStatus, DistributorEnquiry, DistributorEnquiryStatus } from './src/types.js';
 import { ai, SYSTEM_INSTRUCTION, getFallbackResponse } from './server/ai.js';
 
 dotenv.config();
@@ -981,6 +987,173 @@ async function startServer() {
       return res.status(404).json({ error: 'Order not found' });
     }
     res.json(updated);
+  });
+
+  // -------------------------------------------------------------
+  // API: Public Distributor Enquiry Submission
+  // -------------------------------------------------------------
+  app.post('/api/distributor/enquiry', async (req: Request, res: Response) => {
+    try {
+      const {
+        name,
+        businessName,
+        mobile,
+        email,
+        city,
+        state,
+        pincode,
+        businessType,
+        yearsInBusiness,
+        currentCategories,
+        monthlyRequirement,
+        preferredTerritory,
+        fmcgExperience,
+        message,
+      } = req.body;
+
+      // Validate required fields
+      if (!name || !businessName || !mobile || !email || !city || !state || !pincode || !businessType) {
+        return res.status(400).json({
+          error: 'Please complete all required fields (Name, Business Name, Mobile, Email, City, State, PIN Code, and Business Type).',
+        });
+      }
+
+      // Validate email format
+      const emailTrim = email.trim().toLowerCase();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailTrim)) {
+        return res.status(400).json({ error: 'Please provide a valid email address.' });
+      }
+
+      // Validate mobile number (at least 10 digits)
+      const cleanMobile = mobile.replace(/\D/g, '');
+      if (cleanMobile.length < 10) {
+        return res.status(400).json({ error: 'Please provide a valid 10-digit mobile number.' });
+      }
+
+      // Create enquiry in storage with status NEW
+      const newEnquiry = createDistributorEnquiry({
+        name,
+        businessName,
+        mobile,
+        email: emailTrim,
+        city,
+        state,
+        pincode,
+        businessType,
+        yearsInBusiness,
+        currentCategories,
+        monthlyRequirement,
+        preferredTerritory,
+        fmcgExperience: fmcgExperience || 'No',
+        message,
+      });
+
+      // Broadcast real-time SSE notification to connected admin console
+      broadcastToAdmin('new-distributor-enquiry', {
+        title: '💼 New Distributor Application',
+        message: `${newEnquiry.businessName} (${newEnquiry.name}) applied for ${newEnquiry.city}, ${newEnquiry.state}`,
+        enquiryId: newEnquiry.id,
+        businessName: newEnquiry.businessName,
+        city: newEnquiry.city,
+        state: newEnquiry.state,
+        timestamp: newEnquiry.createdAt,
+      });
+
+      // Send transactional emails: Admin Notification & Applicant Acknowledgement
+      // (Using server-side email infrastructure, failures are caught gracefully)
+      Promise.allSettled([
+        sendDistributorNotificationEmail(newEnquiry),
+        sendDistributorAcknowledgementEmail(newEnquiry),
+      ]).then((results) => {
+        results.forEach((r, idx) => {
+          if (r.status === 'rejected') {
+            console.error(`[Distributor Email] Dispatch failed (${idx === 0 ? 'Admin' : 'Applicant'}):`, r.reason);
+          }
+        });
+      });
+
+      res.status(201).json({
+        success: true,
+        enquiryId: newEnquiry.id,
+        message: 'Your distributor enquiry has been submitted successfully! Our team will review your application and reach out within 24 to 48 hours.',
+      });
+    } catch (err: any) {
+      console.error('Error submitting distributor enquiry:', err);
+      res.status(500).json({ error: err.message || 'Failed to submit distributor enquiry.' });
+    }
+  });
+
+  // -------------------------------------------------------------
+  // API: Admin Distributor Enquiries List with Filters
+  // -------------------------------------------------------------
+  app.get('/api/admin/distributor-enquiries', requireAdmin, (req: Request, res: Response) => {
+    let enquiries = getDistributorEnquiries();
+    const { status, state, businessType, search } = req.query;
+
+    if (status && status !== 'ALL') {
+      enquiries = enquiries.filter((e) => e.status === status);
+    }
+
+    if (state && state !== 'ALL') {
+      enquiries = enquiries.filter((e) => e.state.toLowerCase() === String(state).toLowerCase());
+    }
+
+    if (businessType && businessType !== 'ALL') {
+      enquiries = enquiries.filter((e) => e.businessType.toLowerCase() === String(businessType).toLowerCase());
+    }
+
+    if (search && typeof search === 'string') {
+      const q = search.toLowerCase().trim();
+      enquiries = enquiries.filter(
+        (e) =>
+          e.id.toLowerCase().includes(q) ||
+          e.name.toLowerCase().includes(q) ||
+          e.businessName.toLowerCase().includes(q) ||
+          e.mobile.includes(q) ||
+          e.email.toLowerCase().includes(q) ||
+          e.city.toLowerCase().includes(q) ||
+          e.state.toLowerCase().includes(q) ||
+          (e.preferredTerritory && e.preferredTerritory.toLowerCase().includes(q))
+      );
+    }
+
+    res.json({
+      enquiries,
+      total: enquiries.length,
+    });
+  });
+
+  // -------------------------------------------------------------
+  // API: Admin Get Single Distributor Enquiry
+  // -------------------------------------------------------------
+  app.get('/api/admin/distributor-enquiries/:id', requireAdmin, (req: Request, res: Response) => {
+    const enquiry = getDistributorEnquiryById(req.params.id);
+    if (!enquiry) {
+      return res.status(404).json({ error: 'Distributor enquiry not found.' });
+    }
+    res.json(enquiry);
+  });
+
+  // -------------------------------------------------------------
+  // API: Admin Update Distributor Enquiry Status
+  // -------------------------------------------------------------
+  app.patch('/api/admin/distributor-enquiries/:id/status', requireAdmin, (req: Request, res: Response) => {
+    const { status, adminNotes } = req.body;
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required.' });
+    }
+
+    const updated = updateDistributorEnquiryStatus(req.params.id, status as DistributorEnquiryStatus, adminNotes);
+    if (!updated) {
+      return res.status(404).json({ error: 'Distributor enquiry not found.' });
+    }
+
+    res.json({
+      success: true,
+      enquiry: updated,
+      message: `Enquiry ${updated.id} status updated to ${updated.status}.`,
+    });
   });
 
   // -------------------------------------------------------------

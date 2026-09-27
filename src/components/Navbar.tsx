@@ -33,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
     { label: 'Home', page: 'home' },
     { label: 'About Us', page: 'about' },
     { label: 'Products', page: 'products' },
+    { label: 'Become a Distributor', page: 'distributor' },
     { label: 'AI Sommelier', page: 'ai-sommelier' },
     { label: 'Reels & Gallery', page: 'gallery' },
     { label: 'Contact Us', page: 'contact' },

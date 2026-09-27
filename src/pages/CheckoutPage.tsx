@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { platformService } from '../services';
 import { INDIAN_STATES, getStateFromPincode } from '../data/indianStates';
 import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppCheckoutHelp } from '../components/WhatsAppComponents';
+import { WhatsAppCheckoutHelp, WhatsAppCheckoutDirectButton } from '../components/WhatsAppComponents';
 import {
   ShieldCheck,
   Truck,
@@ -824,7 +824,30 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             </div>
 
             {ENABLE_WHATSAPP && (
-              <WhatsAppCheckoutHelp className="mt-3" />
+              <WhatsAppCheckoutDirectButton
+                customerDetails={{
+                  fullName: activeAddress.fullName,
+                  mobile: activeAddress.mobile,
+                  addressLine1: [activeAddress.addressLine1, activeAddress.addressLine2, activeAddress.landmark].filter(Boolean).join(', '),
+                  city: activeAddress.city,
+                  state: activeAddress.state,
+                  pincode: activeAddress.pincode,
+                }}
+                items={items.map((i) => ({
+                  name: i.name,
+                  packSize: i.packSize,
+                  quantity: i.quantity,
+                  price: i.price,
+                }))}
+                subtotal={subtotal}
+                deliveryCharge={deliveryCharge}
+                grandTotal={grandTotal}
+                className="mt-3"
+              />
+            )}
+
+            {ENABLE_WHATSAPP && (
+              <WhatsAppCheckoutHelp className="mt-2" />
             )}
           </div>
         </div>
