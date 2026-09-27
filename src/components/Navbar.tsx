@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
           <div className="flex items-center gap-2 mx-auto sm:mx-0">
             <span className="inline-block w-2 h-2 rounded-full bg-[#F1C40F] animate-pulse"></span>
             <span className="font-medium tracking-wide">
-              Fresh Harvest Batch • 100% Cold-Ground & Pure • Delivery: Haryana ₹50 / Rest of India ₹100
+              SRS Global Enterprises • 100% Cold-Ground & Pure 
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4 text-xs text-[#F1C40F]/90">

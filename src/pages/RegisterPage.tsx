@@ -111,7 +111,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
 
         {/* Continue with Google */}
         <div>
-          <button
+          {/* <button
             type="button"
             onClick={() => setShowGoogleModal(true)}
             className="w-full py-3 px-4 bg-white hover:bg-stone-50 text-[#2C3E50] border border-[#E8E4D5] rounded-xl font-semibold text-xs sm:text-sm shadow-xs flex items-center justify-center gap-3 transition-colors cursor-pointer"
@@ -135,7 +135,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
               />
             </svg>
             <span>Continue with Google</span>
-          </button>
+          </button> */}
 
           <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">

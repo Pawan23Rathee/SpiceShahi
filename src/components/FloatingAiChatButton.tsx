@@ -9,7 +9,7 @@ export const FloatingAiChatButton: React.FC<FloatingAiChatButtonProps> = ({ onOp
   const [showBubble, setShowBubble] = useState(true);
 
   return (
-    <div className="fixed bottom-8 left-8 z-40 flex flex-col items-start group">
+    <div className="fixed bottom-8 right-8 z-40 flex flex-col items-end group">
       {/* Mini Tooltip / Prompt Bubble */}
       {showBubble && (
         <div className="mb-3 ml-1 max-w-[240px] bg-white border border-[#E8E4D5] shadow-2xl rounded-2xl p-3 text-xs text-[#2C3E50] animate-in fade-in slide-in-from-bottom-2 duration-300 relative">
