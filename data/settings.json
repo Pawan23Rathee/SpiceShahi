@@ -1,0 +1,15 @@
+{
+  "haryanaDeliveryCharge": 50,
+  "outsideHaryanaDeliveryCharge": 100,
+  "freeDeliveryThreshold": 0,
+  "brandName": "SpiceShahi Spices & Masalas",
+  "tagline": "Pure Spices, Real Aroma",
+  "companyName": "SRS Global Enterprises",
+  "fssaiNumber": "20826007001593",
+  "contactPhone": "+91 83072 15421",
+  "contactEmail": "Contact@spiceshahi.in",
+  "address": "Gali no 6, ward no 13, Arya nagar, Bahadurgarh, Haryana - 124507",
+  "enableSoundAlerts": true,
+  "adminNotificationPhone": "+91 83072 15421",
+  "testPaymentModeAllowed": true
+}

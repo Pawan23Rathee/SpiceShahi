@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Page, Product } from '../types';
-import { PRODUCTS, getWhatsAppBuyUrl, getWhatsAppGeneralUrl } from '../data/products';
+import { Page, Product, PackSize } from '../types';
+import { PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
+import { useCart } from '../context/CartContext';
 import {
-  MessageCircle,
   ArrowLeft,
   CheckCircle2,
   Sparkles,
@@ -13,6 +13,10 @@ import {
   Heart,
   Share2,
   Check,
+  ShoppingBag,
+  Plus,
+  Minus,
+  ArrowRight,
 } from 'lucide-react';
 
 interface ProductDetailPageProps {
@@ -25,17 +29,20 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   onNavigate,
 }) => {
   const product = PRODUCTS.find((p) => p.slug === productSlug) || PRODUCTS[0];
+  const { addToCart } = useCart();
   const [selectedPackIndex, setSelectedPackIndex] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>(1);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
 
   // Reset pack selection when product changes
   useEffect(() => {
     setSelectedPackIndex(0);
+    setQuantity(1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [productSlug]);
 
-  const currentPack = product.packSizes[selectedPackIndex] || product.packSizes[0];
-  const buyWhatsAppUrl = getWhatsAppBuyUrl(product.name, currentPack.size, currentPack.price);
+  const currentPack: PackSize = product.packSizes[selectedPackIndex] || product.packSizes[0];
 
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 
@@ -45,6 +52,17 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     }
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product, currentPack, quantity);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 2000);
+  };
+
+  const handleBuyNow = () => {
+    addToCart(product, currentPack, quantity);
+    onNavigate('checkout');
   };
 
   return (
@@ -76,17 +94,17 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left: Large Product Image Gallery */}
           <div className="lg:col-span-6 space-y-4">
-            <div className="relative aspect-4/3 sm:aspect-1/1 rounded-2xl overflow-hidden bg-[#FCFAF2] border border-[#E8E4D5] shadow-md group">
+            <div className="relative aspect-4/3 sm:aspect-1/1 rounded-3xl overflow-hidden bg-[#FCFAF2] border border-[#E8E4D5] shadow-lg group">
               <img
                 src={currentPack.imageUrl || product.imageUrl}
                 alt={`${product.name} — ${currentPack.size}`}
-                className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-700"
               />
 
               {/* Badges on image */}
               {product.badge && (
                 <div className="absolute top-4 left-4">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-serif italic font-bold px-3 py-1.5 rounded-sm bg-[#96281B] text-white shadow-md">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-serif italic font-bold px-3 py-1.5 rounded-md bg-[#96281B] text-white shadow-md">
                     <Sparkles className="w-3.5 h-3.5 text-[#F1C40F]" />
                     {product.badge}
                   </span>
@@ -94,16 +112,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               )}
 
               {product.curcuminOrOilContent && (
-                <div className="absolute bottom-4 left-4 bg-[#2C3E50]/90 backdrop-blur-xs text-[#FCFAF2] px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10">
+                <div className="absolute bottom-4 left-4 bg-[#2C3E50]/90 backdrop-blur-xs text-[#FCFAF2] px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-white/10 shadow-sm">
                   {product.curcuminOrOilContent}
                 </div>
               )}
             </div>
 
             {/* Farm Origin Strip */}
-            <div className="p-4 rounded-xl bg-white border border-[#E8E4D5] flex items-center justify-between text-xs text-[#5D6D7E]">
+            <div className="p-4 rounded-2xl bg-white border border-[#E8E4D5] flex items-center justify-between text-xs text-[#5D6D7E] shadow-xs">
               <span className="font-medium">Origin: <strong className="text-[#2C3E50]">{product.origin}</strong></span>
-              <span className="text-[#2D5A27] font-bold">100% Traceable Single Origin</span>
+              <span className="text-[#2D5A27] font-bold flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                100% Traceable Single Origin
+              </span>
             </div>
           </div>
 
@@ -183,10 +204,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
             {/* Pack Size Selector */}
             <div className="space-y-3">
-              <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#2C3E50] block">
+              <label className="text-[11px] uppercase font-bold tracking-[0.18em] text-[#2C3E50] block">
                 Select Pack Size:
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-3 gap-3">
                 {product.packSizes.map((pack, idx) => {
                   const isSelected = selectedPackIndex === idx;
                   return (
@@ -194,9 +215,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       key={pack.size}
                       id={`pack-size-btn-${idx}`}
                       onClick={() => setSelectedPackIndex(idx)}
-                      className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
+                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-[#96281B] bg-[#96281B]/5 ring-1 ring-[#96281B]'
+                          ? 'border-[#96281B] bg-[#96281B]/5 ring-2 ring-[#96281B] shadow-sm'
                           : 'border-[#E8E4D5] bg-white hover:border-[#96281B]/40'
                       }`}
                     >
@@ -215,23 +236,25 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </div>
             </div>
 
-            {/* Price Display & Buy on WhatsApp Action */}
-            <div className="bg-white p-5 rounded-xl border border-[#E8E4D5] space-y-4 shadow-xs">
+            {/* Price Display & E-commerce Checkout Action */}
+            <div className="bg-white p-6 rounded-2xl border border-[#E8E4D5] space-y-5 shadow-xs">
               <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xs text-[#5D6D7E]">Total Price for {currentPack.size}</span>
+                  <span className="text-xs text-[#5D6D7E]">Price for {currentPack.size}</span>
                   <div className="flex items-baseline gap-2 mt-0.5">
                     <span className="font-serif italic font-bold text-3xl text-[#2C3E50]">
-                      ₹{currentPack.price}
+                      ₹{currentPack.price * quantity}
                     </span>
                     {currentPack.originalPrice && (
                       <span className="text-sm text-[#5D6D7E] line-through">
-                        ₹{currentPack.originalPrice}
+                        ₹{currentPack.originalPrice * quantity}
                       </span>
                     )}
-                    <span className="text-xs font-bold text-[#2D5A27] bg-[#2D5A27]/10 px-2 py-0.5 rounded-sm border border-[#2D5A27]/20">
-                      Save ₹{(currentPack.originalPrice || currentPack.price) - currentPack.price}
-                    </span>
+                    {currentPack.originalPrice && (
+                      <span className="text-xs font-bold text-[#2D5A27] bg-[#2D5A27]/10 px-2 py-0.5 rounded border border-[#2D5A27]/20">
+                        Save ₹{((currentPack.originalPrice - currentPack.price) * quantity)}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -240,120 +263,160 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     <Check className="w-3.5 h-3.5" />
                     In Stock
                   </span>
-                  <span className="text-[11px] text-[#5D6D7E]">Ships in 24 Hours</span>
+                  <span className="text-[11px] text-[#5D6D7E]">Dispatches in 24 hrs</span>
                 </div>
               </div>
 
-              {/* Main CTA Button: Buy Now via WhatsApp */}
-              <a
-                id="product-detail-whatsapp-buy-btn"
-                href={buyWhatsAppUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 px-6 rounded-lg bg-[#2D5A27] hover:bg-[#1E3E1A] text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-md shadow-[#2D5A27]/20 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
-              >
-                <MessageCircle className="w-5 h-5 fill-current" />
-                <span>Buy Now via WhatsApp</span>
-              </a>
+              {/* Quantity Stepper & Buttons */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold text-[#2C3E50] uppercase tracking-wider">
+                    Quantity:
+                  </span>
+                  <div className="flex items-center border border-[#E8E4D5] rounded-xl bg-[#FCFAF2]">
+                    <button
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      className="p-2.5 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-l-xl transition-colors"
+                      title="Decrease"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="px-4 text-sm font-bold text-[#2C3E50]">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => setQuantity((q) => q + 1)}
+                      className="p-2.5 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-r-xl transition-colors"
+                      title="Increase"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
 
-              <p className="text-[11px] text-center text-[#5D6D7E]">
-                Opens WhatsApp with pre-filled message: "Order {product.name} ({currentPack.size})". Fast checkout!
-              </p>
+                {/* Primary Actions: Add to Cart & Buy Now */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <button
+                    id="detail-add-to-cart-btn"
+                    onClick={handleAddToCart}
+                    className={`py-3.5 px-6 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer ${
+                      justAdded
+                        ? 'bg-[#2D5A27] text-white'
+                        : 'bg-[#96281B] hover:bg-[#7D2116] text-white shadow-[#96281B]/20'
+                    }`}
+                  >
+                    {justAdded ? (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Added to Cart!</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag className="w-4 h-4" />
+                        <span>Add to Cart</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    id="detail-buy-now-btn"
+                    onClick={handleBuyNow}
+                    className="py-3.5 px-6 rounded-xl bg-[#2C3E50] hover:bg-[#1a252f] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+                  >
+                    <span>Buy Now</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Delivery info snippet */}
+              <div className="p-3 bg-[#FCFAF2] rounded-xl border border-[#E8E4D5] text-xs text-[#5D6D7E] flex items-center justify-between">
+                <span className="flex items-center gap-1.5 font-medium text-[#2C3E50]">
+                  <Truck className="w-4 h-4 text-[#D35400]" />
+                  State Delivery:
+                </span>
+                <span>Haryana ₹50 • Rest of India ₹100</span>
+              </div>
             </div>
 
-            {/* Assurances */}
-            <div className="grid grid-cols-2 gap-2 text-xs text-[#5D6D7E] pt-2">
-              <div className="flex items-center gap-2">
-                <Truck className="w-4 h-4 text-[#D35400]" />
-                <span>Doorstep Delivery Across India</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#2D5A27]" />
-                <span>100% Purity Replacement Guarantee</span>
+            {/* Quality Features List */}
+            <div className="space-y-2 pt-2">
+              <h3 className="text-xs uppercase tracking-wider text-[#2C3E50] font-bold">
+                Purity Hallmarks:
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {product.qualityFeatures.map((feat, i) => (
+                  <div key={i} className="flex items-start gap-2 text-xs text-[#5D6D7E]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#2D5A27] shrink-0 mt-0.5" />
+                    <span>{feat}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Detailed Information Tabs / Specifications */}
+      {/* Description & Culinary Uses Tabbed Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl border border-[#E8E4D5] p-6 sm:p-10 shadow-xs space-y-8">
+        <div className="bg-white rounded-3xl p-8 border border-[#E8E4D5] shadow-xs space-y-8">
           <div>
-            <h2 className="font-serif italic font-bold text-2xl text-[#2C3E50] mb-3">
-              About This Pure Spice
+            <span className="text-[10px] uppercase tracking-widest text-[#D35400] font-bold block mb-1">
+              Heritage Method
+            </span>
+            <h2 className="font-serif italic font-bold text-2xl text-[#2C3E50]">
+              The Story of {product.name}
             </h2>
-            <p className="text-sm sm:text-base text-[#5D6D7E] leading-relaxed">
+            <p className="text-sm text-[#5D6D7E] leading-relaxed mt-3">
               {product.fullDesc}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-[#E8E4D5]">
-            {/* Color & Aroma Profile */}
-            <div className="space-y-4">
-              <h3 className="font-serif italic font-bold text-lg text-[#2C3E50] flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#F1C40F]" />
-                <span>Color & Aroma Profile</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-[#E8E4D5]">
+            <div className="space-y-3">
+              <h3 className="font-serif font-bold text-lg text-[#2C3E50]">
+                Culinary Uses & Pairings
               </h3>
-              <div className="space-y-2 text-sm text-[#2C3E50]">
-                <div className="p-3.5 rounded-lg bg-[#FCFAF2] border border-[#E8E4D5]">
-                  <p className="font-bold text-[10px] uppercase text-[#D35400] tracking-widest mb-1">
-                    Visual Color
-                  </p>
-                  <p className="text-xs text-[#5D6D7E]">{product.colorProfile}</p>
-                </div>
-                <div className="p-3.5 rounded-lg bg-[#FCFAF2] border border-[#E8E4D5]">
-                  <p className="font-bold text-[10px] uppercase text-[#F1C40F] tracking-widest mb-1">
-                    Khushboo & Aroma
-                  </p>
-                  <p className="text-xs text-[#5D6D7E]">{product.aromaNotes}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Culinary Uses */}
-            <div className="space-y-4">
-              <h3 className="font-serif italic font-bold text-lg text-[#2C3E50] flex items-center gap-2">
-                <Flame className="w-5 h-5 text-[#96281B]" />
-                <span>Recommended Culinary Uses</span>
-              </h3>
-              <ul className="space-y-2.5 text-xs sm:text-sm text-[#5D6D7E]">
-                {product.culinaryUses.map((use, i) => (
-                  <li key={i} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#2D5A27] shrink-0 mt-0.5" />
+              <ul className="space-y-2 text-xs text-[#5D6D7E]">
+                {product.culinaryUses.map((use, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#96281B] mt-1.5 shrink-0" />
                     <span>{use}</span>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
 
-          {/* Quality Features List */}
-          <div className="pt-6 border-t border-[#E8E4D5]">
-            <h3 className="font-serif italic font-bold text-lg text-[#2C3E50] mb-4">
-              Quality & Lab Benchmarks
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {product.qualityFeatures.map((feat, i) => (
-                <div
-                  key={i}
-                  className="p-4 rounded-lg bg-[#FCFAF2] border border-[#E8E4D5] text-xs text-[#2C3E50] font-medium flex items-center gap-2.5"
-                >
-                  <span className="w-2 h-2 rounded-full bg-[#96281B] shrink-0" />
-                  <span>{feat}</span>
-                </div>
-              ))}
+            <div className="space-y-3">
+              <h3 className="font-serif font-bold text-lg text-[#2C3E50]">
+                Color & Sensory Profile
+              </h3>
+              <div className="p-4 rounded-xl bg-[#FCFAF2] border border-[#E8E4D5] space-y-2 text-xs">
+                <p>
+                  <strong className="text-[#2C3E50]">Color Profile:</strong>{' '}
+                  <span className="text-[#5D6D7E]">{product.colorProfile}</span>
+                </p>
+                <p>
+                  <strong className="text-[#2C3E50]">Aroma Bouquet:</strong>{' '}
+                  <span className="text-[#5D6D7E]">{product.aromaNotes}</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Related Products */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="font-serif italic font-bold text-2xl text-[#2C3E50]">
-            More Pure Spices to Pair With
-          </h2>
+      {/* Related Spices */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-[10px] uppercase tracking-widest text-[#D35400] font-bold">
+              Pair Together
+            </span>
+            <h2 className="font-serif italic font-bold text-2xl text-[#2C3E50]">
+              Complete Your Shahi Spice Rack
+            </h2>
+          </div>
           <button
             onClick={() => onNavigate('products')}
             className="text-xs font-bold text-[#96281B] hover:underline uppercase tracking-wider"

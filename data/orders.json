@@ -1,0 +1,43 @@
+[
+  {
+    "id": "SS1025",
+    "orderNumber": "SS1025",
+    "customerId": "cust_pawan",
+    "customer": {
+      "fullName": "Pawan Rathee",
+      "mobile": "8307215421",
+      "email": "ratheepawan23@gmail.com",
+      "addressLine1": "house 107, Araya nagar",
+      "addressLine2": "",
+      "city": "Bahadurgarh",
+      "state": "Haryana",
+      "pincode": "124507",
+      "country": "India"
+    },
+    "items": [
+      {
+        "productId": "kashmiri-red-chili",
+        "name": "SpiceShahi Desi Khushboo Red Chili Powder (Lal Mirch)",
+        "hindiName": "देसी खुशबू लाल मिर्च पाउडर (Lal Mirch)",
+        "packSize": "100g Pouch",
+        "weightInGrams": 100,
+        "price": 55,
+        "quantity": 1,
+        "subtotal": 55,
+        "imageUrl": "/images/100g-mirch.png"
+      }
+    ],
+    "subtotal": 55,
+    "deliveryCharge": 50,
+    "deliveryState": "Haryana",
+    "grandTotal": 105,
+    "paymentMethod": "ONLINE_RAZORPAY",
+    "paymentStatus": "PAID",
+    "orderStatus": "CONFIRMED",
+    "razorpayOrderId": "order_TgupNiAF6Jst2f",
+    "razorpayPaymentId": "pay_TgupvlTd3ko2V4",
+    "razorpaySignature": "821855ef09c5387d0664d11f9e3f8ce60048e7cd3245724c382f11fdcbb3ccf8",
+    "createdAt": "2026-09-27T03:38:43.283Z",
+    "updatedAt": "2026-09-27T03:39:32.078Z"
+  }
+]

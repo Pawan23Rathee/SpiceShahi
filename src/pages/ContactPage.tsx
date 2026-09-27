@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { Page } from '../types';
 import {
-  DISPLAY_WHATSAPP,
   DISPLAY_EMAIL,
   DISPLAY_INSTAGRAM,
   DISPLAY_INSTAGRAM_URL,
   DISPLAY_ADDRESS,
-  getWhatsAppContactUrl,
-  getWhatsAppGeneralUrl,
+  DISPLAY_PHONE,
+  DISPLAY_ALT_PHONE,
 } from '../data/products';
 import {
-  MessageCircle,
   Phone,
   Mail,
   MapPin,
@@ -19,7 +17,6 @@ import {
   CheckCircle2,
   Clock,
   Sparkles,
-  Building2,
 } from 'lucide-react';
 
 interface ContactPageProps {
@@ -30,10 +27,12 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    email: '',
     interest: 'Fresh Home Spices Order',
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,17 +40,11 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
       return;
     }
 
-    const whatsappUrl = getWhatsAppContactUrl(
-      formData.name,
-      formData.phone,
-      formData.interest,
-      formData.message || 'I would like more information on SpiceShahi spices.'
-    );
-
-    setSubmitted(true);
-
-    // Open WhatsApp in new window as requested
-    window.open(whatsappUrl, '_blank');
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }, 400);
   };
 
   return (
@@ -63,10 +56,10 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
             We'd Love to Hear from You
           </span>
           <h1 className="font-serif italic font-bold text-4xl sm:text-5xl text-[#2C3E50] tracking-tight">
-            Contact & WhatsApp Support
+            Customer Care & <span className="text-[#96281B]">Support</span>
           </h1>
           <p className="text-base text-[#5D6D7E] leading-relaxed">
-            Have questions about our pure hand-beaten spices, need a custom pack size, or interested in bulk supply? Reach out anytime.
+            Have questions about our pure, traditionally crafted spices, need custom pack sizes, or interested in wholesale supply? Reach out to our customer care team anytime.
           </p>
         </div>
       </section>
@@ -80,30 +73,49 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
               Direct Contact Information
             </h2>
             <p className="text-sm text-[#5D6D7E] leading-relaxed">
-              We respond promptly to every inquiry. WhatsApp is our quickest channel for same-day dispatch and order assistance.
+              We respond promptly to every inquiry. Call or email us for order status, custom grinding requests, and distributor opportunities.
             </p>
 
             {/* Quick Cards */}
             <div className="space-y-4">
-              {/* WhatsApp Card */}
-              <div className="p-5 rounded-xl bg-white border border-[#E8E4D5] shadow-xs hover:border-[#2D5A27] transition-colors flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-[#2D5A27]/10 border border-[#2D5A27]/20 text-[#2D5A27] flex items-center justify-center shrink-0">
-                  <MessageCircle className="w-6 h-6 fill-current" />
+              {/* Phone Hotline Card */}
+              <div className="p-5 rounded-xl bg-white border border-[#E8E4D5] shadow-xs hover:border-[#96281B] transition-colors flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-[#96281B]/10 border border-[#96281B]/20 text-[#96281B] flex items-center justify-center shrink-0">
+                  <Phone className="w-6 h-6" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-[10px] uppercase font-bold text-[#2D5A27] tracking-widest">
-                    WhatsApp Hotline (Fastest)
+                  <h3 className="text-[10px] uppercase font-bold text-[#96281B] tracking-widest">
+                    Customer Hotline
                   </h3>
                   <a
-                    href={getWhatsAppGeneralUrl('Hi SpiceShahi! I have an inquiry from your contact page.')}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-base font-bold text-[#2C3E50] hover:text-[#2D5A27] underline underline-offset-4 block mt-0.5"
+                    href={`tel:${DISPLAY_PHONE}`}
+                    className="text-base font-bold text-[#2C3E50] hover:text-[#96281B] underline underline-offset-4 block mt-0.5"
                   >
-                    {DISPLAY_WHATSAPP}
+                    {DISPLAY_PHONE}
                   </a>
                   <p className="text-xs text-[#5D6D7E] mt-1">
-                    Available Mon - Sat, 9:00 AM - 8:00 PM IST
+                    Alt: {DISPLAY_ALT_PHONE} • Mon - Sat, 9:00 AM - 8:00 PM IST
+                  </p>
+                </div>
+              </div>
+
+              {/* Email Card */}
+              <div className="p-5 rounded-xl bg-white border border-[#E8E4D5] shadow-xs hover:border-[#D35400] transition-colors flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-[#F1C40F]/10 border border-[#F1C40F]/30 text-[#D35400] flex items-center justify-center shrink-0">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-[10px] uppercase font-bold text-[#D35400] tracking-widest">
+                    Official Email
+                  </h3>
+                  <a
+                    href={`mailto:${DISPLAY_EMAIL}`}
+                    className="text-base font-bold text-[#2C3E50] hover:text-[#D35400] underline underline-offset-4 block mt-0.5"
+                  >
+                    {DISPLAY_EMAIL}
+                  </a>
+                  <p className="text-xs text-[#5D6D7E] mt-1">
+                    For corporate gifting, online order assistance, and wholesale inquiries.
                   </p>
                 </div>
               </div>
@@ -126,28 +138,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                     {DISPLAY_INSTAGRAM}
                   </a>
                   <p className="text-xs text-[#5D6D7E] mt-1">
-                    Follow reels, recipe guides, and harvest updates.
-                  </p>
-                </div>
-              </div>
-
-              {/* Email Card */}
-              <div className="p-5 rounded-xl bg-white border border-[#E8E4D5] shadow-xs hover:border-[#D35400] transition-colors flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-[#F1C40F]/10 border border-[#F1C40F]/30 text-[#D35400] flex items-center justify-center shrink-0">
-                  <Mail className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-[10px] uppercase font-bold text-[#D35400] tracking-widest">
-                    Official Email
-                  </h3>
-                  <a
-                    href={`mailto:${DISPLAY_EMAIL}`}
-                    className="text-base font-bold text-[#2C3E50] hover:text-[#D35400] underline underline-offset-4 block mt-0.5"
-                  >
-                    {DISPLAY_EMAIL}
-                  </a>
-                  <p className="text-xs text-[#5D6D7E] mt-1">
-                    For corporate gifting, wholesale orders, and inquiries.
+                    Follow farm reels, cooking tips, and seasonal spice harvests.
                   </p>
                 </div>
               </div>
@@ -159,13 +150,13 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-[10px] uppercase font-bold text-[#96281B] tracking-widest">
-                    Trading Depot & Farm Mills
+                    Manufacturing Unit & Trading Depot
                   </h3>
                   <p className="text-sm font-semibold text-[#2C3E50] mt-0.5 leading-snug">
                     {DISPLAY_ADDRESS}
                   </p>
                   <p className="text-xs text-[#5D6D7E] mt-1">
-                    Visitors welcome by appointment on weekday mornings.
+                    Bahadurgarh, Haryana - 124507 • SRS Global Enterprises
                   </p>
                 </div>
               </div>
@@ -180,93 +171,126 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                   Send an Inquiry
                 </span>
                 <h3 className="font-serif italic font-bold text-2xl text-[#2C3E50] mt-2">
-                  Write to Us Directly
+                  Write to Our Bahadurgarh Team
                 </h3>
                 <p className="text-xs text-[#5D6D7E] mt-1">
-                  Submitting this form redirects to WhatsApp with your details pre-filled for immediate response.
+                  Leave your query below and our team will get in touch with you shortly.
                 </p>
               </div>
 
-              {submitted && (
-                <div className="mb-6 p-4 rounded-xl bg-[#2D5A27]/10 border border-[#2D5A27]/30 text-[#2D5A27] text-xs flex items-center gap-2.5">
-                  <CheckCircle2 className="w-5 h-5 text-[#2D5A27] shrink-0" />
-                  <span>Opening WhatsApp with your inquiry! If it didn’t launch automatically, tap the WhatsApp button below.</span>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
-                    Your Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Ramesh Sharma"
-                    className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
-                    Your Phone / WhatsApp Number *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+91 98765 43210"
-                    className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
-                    Inquiry Type
-                  </label>
-                  <select
-                    value={formData.interest}
-                    onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                    className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] focus:outline-hidden focus:border-[#96281B]"
+              {submitted ? (
+                <div className="p-6 rounded-xl bg-[#2D5A27]/10 border border-[#2D5A27]/30 text-[#2D5A27] text-center space-y-3">
+                  <CheckCircle2 className="w-10 h-10 text-[#2D5A27] mx-auto" />
+                  <h4 className="font-bold text-lg text-[#2C3E50]">Thank You! Your Inquiry is Received</h4>
+                  <p className="text-xs text-[#5D6D7E]">
+                    Our support team has logged your inquiry and will contact you via phone or email at {formData.phone || formData.email} shortly.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFormData({
+                        name: '',
+                        phone: '',
+                        email: '',
+                        interest: 'Fresh Home Spices Order',
+                        message: '',
+                      });
+                    }}
+                    className="px-5 py-2 rounded-lg bg-[#96281B] text-white text-xs font-bold uppercase tracking-wider"
                   >
-                    <option value="Fresh Home Spices Order">Fresh Home Spices Order</option>
-                    <option value="Turmeric Powder (Haldi)">Turmeric Powder (Haldi)</option>
-                    <option value="Red Chili Powder (Lal Mirch)">Red Chili Powder (Lal Mirch)</option>
-                    <option value="Coriander Powder (Dhaniya)">Coriander Powder (Dhaniya)</option>
-                    <option value="Wholesale / Restaurant Bulk Supply">Wholesale / Restaurant Bulk Supply</option>
-                    <option value="Other Questions">Other Questions</option>
-                  </select>
+                    Send Another Message
+                  </button>
                 </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
+                      Your Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="e.g. Pawan Rathee"
+                      className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
-                    Your Message
-                  </label>
-                  <textarea
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Tell us what quantities or spices you are looking for..."
-                    className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
-                  />
-                </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="+91 83072 15421"
+                        className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
+                      />
+                    </div>
 
-                <button
-                  type="submit"
-                  id="contact-submit-whatsapp-btn"
-                  className="w-full py-3.5 px-6 rounded-lg bg-[#2D5A27] hover:bg-[#1E3E1A] text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer"
-                >
-                  <MessageCircle className="w-5 h-5 fill-current" />
-                  <span>Send via WhatsApp</span>
-                </button>
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="you@domain.com"
+                        className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
+                      />
+                    </div>
+                  </div>
 
-                <p className="text-[11px] text-center text-[#5D6D7E]">
-                  By submitting, your message is transferred into WhatsApp for quick direct resolution.
-                </p>
-              </form>
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
+                      Inquiry Type
+                    </label>
+                    <select
+                      value={formData.interest}
+                      onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
+                      className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] focus:outline-hidden focus:border-[#96281B]"
+                    >
+                      <option value="Fresh Home Spices Order">Fresh Home Spices Order</option>
+                      <option value="Turmeric Powder (Haldi)">Turmeric Powder (Haldi)</option>
+                      <option value="Red Chili Powder (Lal Mirch)">Red Chili Powder (Lal Mirch)</option>
+                      <option value="Coriander Powder (Dhaniya)">Coriander Powder (Dhaniya)</option>
+                      <option value="Wholesale / Restaurant Bulk Supply">Wholesale / Restaurant Bulk Supply</option>
+                      <option value="Other Questions">Other Questions</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#2C3E50] uppercase tracking-widest mb-1">
+                      Your Message
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      placeholder="Tell us what quantities or spices you are looking for..."
+                      className="w-full px-4 py-3 bg-[#FCFAF2] border border-[#E8E4D5] rounded-lg text-sm text-[#2C3E50] placeholder-[#5D6D7E]/60 focus:outline-hidden focus:border-[#96281B]"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3.5 px-6 rounded-lg bg-[#96281B] hover:bg-[#7D2116] text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>{isSubmitting ? 'Sending...' : 'Submit Inquiry'}</span>
+                  </button>
+
+                  <p className="text-[11px] text-center text-[#5D6D7E]">
+                    Your inquiry is sent directly to SRS Global Enterprises / SpiceShahi Bahadurgarh.
+                  </p>
+                </form>
+              )}
             </div>
           </div>
         </div>

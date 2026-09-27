@@ -1,0 +1,27 @@
+[
+  {
+    "id": "cust_pawan",
+    "email": "ratheepawan23@gmail.com",
+    "fullName": "Pawan Rathee",
+    "mobile": "8307215421",
+    "savedAddresses": [
+      {
+        "id": "addr_pawan_home",
+        "label": "Home",
+        "fullName": "Pawan Rathee",
+        "mobile": "8307215421",
+        "addressLine1": "house 107, Araya nagar",
+        "addressLine2": "",
+        "landmark": "",
+        "city": "Bahadurgarh",
+        "state": "Haryana",
+        "pincode": "124507",
+        "country": "India",
+        "isDefault": true,
+        "createdAt": "2026-09-27T03:38:43.000Z"
+      }
+    ],
+    "createdAt": "2026-09-27T03:38:43.000Z",
+    "updatedAt": "2026-09-27T03:39:32.000Z"
+  }
+]

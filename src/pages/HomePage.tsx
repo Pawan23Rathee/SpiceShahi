@@ -1,11 +1,10 @@
 import React from 'react';
 import { Page, Product } from '../types';
-import { PRODUCTS, INSTAGRAM_REELS, TRUST_BADGES, getWhatsAppGeneralUrl } from '../data/products';
+import { PRODUCTS, INSTAGRAM_REELS, TRUST_BADGES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { ReelCard } from '../components/ReelCard';
 import {
   ArrowRight,
-  MessageCircle,
   Sparkles,
   ShieldCheck,
   Sun,
@@ -64,16 +63,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                   View Products
                 </button>
 
-                <a
-                  id="hero-whatsapp-btn"
-                  href={getWhatsAppGeneralUrl('Hi SpiceShahi! I want to order fresh pure spices for my home.')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-4 rounded-lg bg-[#2D5A27] text-white font-bold text-sm flex items-center gap-2 hover:bg-[#1E3E1A] transition-all cursor-pointer shadow-sm"
+                <button
+                  id="hero-ai-sommelier-btn"
+                  onClick={() => onNavigate('ai-sommelier')}
+                  className="px-6 py-4 rounded-lg bg-[#2C3E50] text-[#FCFAF2] font-bold text-sm flex items-center gap-2 hover:bg-[#1E2B37] transition-all cursor-pointer shadow-sm"
                 >
-                  <MessageCircle className="w-4 h-4 fill-current" />
-                  <span>WhatsApp Order</span>
-                </a>
+                  <Sparkles className="w-4 h-4 text-[#F1C40F]" />
+                  <span>AI Spice Advisor</span>
+                </button>
               </div>
             </div>
 
@@ -97,13 +94,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
                   <div className="relative z-10 text-white space-y-2 text-center">
                     <span className="text-[10px] uppercase font-bold tracking-[0.2em] px-3 py-1 bg-white/15 rounded-full backdrop-blur-xs">
-                      Hand-Beaten Desi Khushboo
+                      Pure Cold-Ground Spices
                     </span>
                     <h3 className="font-serif italic font-bold text-2xl sm:text-3xl text-white">
                       SpiceShahi Purity
                     </h3>
                     <p className="text-xs text-white/80 max-w-[200px] mx-auto leading-relaxed">
-                      100% natural, hand-beaten without machines to lock in volatile oils
+                      100% natural, slow-ground to preserve volatile oils and sacred color
                     </p>
                     <button
                       onClick={() => onSelectProduct('turmeric-powder')}
@@ -204,7 +201,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               The SpiceShahi Farm-to-Home Promise
             </h2>
             <p className="text-sm text-[#5D6D7E] mt-2 leading-relaxed">
-              Unlike industrial spices that sit in warehouses for years losing their oils and color, SpiceShahi brings you freshly prepared, hand-beaten spices packed with nature's richness.
+              Unlike industrial spices that sit in warehouses for years losing their oils and color, SpiceShahi brings you freshly prepared, slow-ground spices packed with nature's richness.
             </p>
           </div>
 
@@ -251,7 +248,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               In most modern grocery aisles, spices have been stripped of their precious essential oils through intense high-speed factory heat, dyed with chemical pigments, and bulked up with husk fillers.
             </p>
             <p className="text-sm sm:text-base text-[#5D6D7E] leading-relaxed">
-              At <strong className="text-[#2C3E50]">SpiceShahi</strong>, we are on a mission to restore the authentic soul of Indian cooking. We source pristine crops directly from ethical farmers. We follow the time-honored tradition of hand-beaten spices without machine heat so the volatile aroma compounds remain alive right until they hit your hot pan.
+              At <strong className="text-[#2C3E50]">SpiceShahi</strong>, we are on a mission to restore the authentic soul of Indian cooking. We source pristine crops directly from ethical farmers. We follow the time-honored tradition of carefully ground spices without harsh machine heat so the volatile aroma compounds remain alive right until they hit your hot pan.
             </p>
 
             <div className="space-y-2.5 pt-2">
@@ -261,7 +258,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               </div>
               <div className="flex items-center gap-3 text-sm text-[#2C3E50] font-medium">
                 <CheckCircle2 className="w-4 h-4 text-[#2D5A27] shrink-0" />
-                <span>Traditional hand-beaten process preserving natural volatile oils</span>
+                <span>Traditional slow-grinding process preserving natural volatile oils</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-[#2C3E50] font-medium">
                 <CheckCircle2 className="w-4 h-4 text-[#2D5A27] shrink-0" />
@@ -291,14 +288,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             <div className="relative rounded-2xl overflow-hidden shadow-xl border border-[#E8E4D5]">
               <img
                 src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?q=80&w=1000&auto=format&fit=crop"
-                alt="Traditional hand spices"
+                alt="Traditional spices"
                 className="w-full h-[440px] object-cover"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/75 via-transparent to-transparent flex items-end p-8">
                 <div className="text-white space-y-1">
                   <p className="font-serif italic font-bold text-xl">Handcrafted Desi Heritage</p>
                   <p className="text-xs text-[#FCFAF2]/80">
-                    Traditional hand-beating methods protect delicate natural oils and ensure authentic desi khushboo in every pinch.
+                    Traditional slow-grinding methods protect delicate natural oils and ensure authentic desi khushboo in every pinch.
                   </p>
                 </div>
               </div>
@@ -352,26 +349,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           ))}
         </div>
 
-        {/* Quick WhatsApp Order Banner - Artistic Flair */}
+        {/* Quick Custom Combo & Bulk Inquiries Banner */}
         <div className="mt-12 bg-[#96281B] rounded-2xl p-8 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-[#7D2116]">
           <div className="space-y-2 text-center md:text-left">
             <h3 className="font-serif italic font-bold text-2xl sm:text-3xl text-white">
               Want a Custom Spice Combo or Bulk Pack?
             </h3>
             <p className="text-sm text-[#FCFAF2]/80 max-w-xl">
-              Message us directly on WhatsApp! We curate family combos, wedding favors, and grocery shop bulk supplies.
+              Order directly online or contact our Bahadurgarh headquarters! We curate family combos, wedding favors, and grocery shop bulk supplies with Haryana (₹50) and Pan-India (₹100) shipping.
             </p>
           </div>
 
-          <a
-            href={getWhatsAppGeneralUrl('Hi SpiceShahi! I am interested in custom spice combos and bulk packs.')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-7 py-3.5 rounded-full bg-[#2D5A27] hover:bg-[#1E3E1A] text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shrink-0 transition-transform hover:scale-105"
+          <button
+            onClick={() => onNavigate('contact')}
+            className="px-7 py-3.5 rounded-full bg-[#FCFAF2] hover:bg-white text-[#96281B] font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shrink-0 transition-transform hover:scale-105 cursor-pointer"
           >
-            <MessageCircle className="w-4 h-4 fill-current text-white" />
-            <span>Chat on WhatsApp</span>
-          </a>
+            <span>Contact Customer Support</span>
+          </button>
         </div>
       </section>
 
@@ -387,7 +381,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 Watch Our Instagram Reels
               </h2>
               <p className="text-sm text-slate-300 mt-1">
-                See our farm visits, hand-beaten process, purity experiments, and mouthwatering recipes.
+                See our farm visits, slow-grinding process, purity experiments, and mouthwatering recipes.
               </p>
             </div>
 

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Page } from '../types';
 import {
-  getWhatsAppGeneralUrl,
-  DISPLAY_WHATSAPP,
   DISPLAY_EMAIL,
   DISPLAY_INSTAGRAM,
   DISPLAY_INSTAGRAM_URL,
   DISPLAY_ADDRESS,
+  DISPLAY_PHONE,
+  DISPLAY_ALT_PHONE,
 } from '../data/products';
 import {
-  MessageCircle,
   Instagram,
   Mail,
   MapPin,
@@ -18,6 +17,7 @@ import {
   CheckCircle,
   ArrowRight,
   Sparkles,
+  Truck,
 } from 'lucide-react';
 
 interface FooterProps {
@@ -74,12 +74,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#243342] border border-slate-600 flex items-center justify-center text-[#25D366]">
-              <MessageCircle className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-lg bg-[#243342] border border-slate-600 flex items-center justify-center text-[#F1C40F]">
+              <Truck className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#FCFAF2]">Direct WhatsApp Care</p>
-              <p className="text-xs text-slate-300">Instant answers & orders</p>
+              <p className="text-sm font-semibold text-[#FCFAF2]">Fast Dispatch</p>
+              <p className="text-xs text-slate-300">Haryana ₹50 • India ₹100</p>
             </div>
           </div>
         </div>
@@ -105,18 +105,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </div>
             </div>
             <p className="text-sm text-slate-300 leading-relaxed">
-              SpiceShahi is dedicated to reviving the sacred purity and enchanting natural aroma of Indian spices. Handcrafted using time-honored traditions, each blend is hand-beaten to preserve natural taste, deep aroma, nutrition, and true essence.
+              SpiceShahi is dedicated to reviving the sacred purity and enchanting natural aroma of Indian spices. Carefully sourced and traditionally inspired, each blend is ground with care to preserve natural taste, deep aroma, nutrition, and true essence.
             </p>
             <div className="flex items-center gap-3 pt-2">
-              <a
-                href={getWhatsAppGeneralUrl('Hi SpiceShahi! I would like to order pure spices.')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-[#2D5A27]/40 border border-[#2D5A27] text-white flex items-center justify-center hover:bg-[#2D5A27] transition-all"
-                title="WhatsApp Us"
-              >
-                <MessageCircle className="w-5 h-5 fill-current" />
-              </a>
               <a
                 href={DISPLAY_INSTAGRAM_URL}
                 target="_blank"
@@ -133,68 +124,109 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               >
                 <Mail className="w-5 h-5" />
               </a>
+              <a
+                href={`tel:${DISPLAY_PHONE.replace(/\s+/g, '')}`}
+                className="w-10 h-10 rounded-lg bg-green-500/20 border border-green-500/40 text-green-300 flex items-center justify-center hover:bg-green-600 hover:text-white transition-all"
+                title="Call Customer Care"
+              >
+                <Phone className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="lg:col-span-2 space-y-4">
             <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#F1C40F]">
-              Quick Navigation
+              Explore
             </h4>
-            <ul className="space-y-2.5 text-sm text-slate-300">
+            <ul className="space-y-2 text-sm text-slate-300">
               <li>
                 <button
-                  onClick={() => {
-                    onNavigate('home');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="hover:text-[#F1C40F] transition-colors cursor-pointer"
+                  onClick={() => onNavigate('home')}
+                  className="hover:text-[#F1C40F] transition-colors"
                 >
                   Home
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    onNavigate('about');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="hover:text-[#F1C40F] transition-colors cursor-pointer"
+                  onClick={() => onNavigate('about')}
+                  className="hover:text-[#F1C40F] transition-colors"
                 >
-                  About Our Brand
+                  Our Heritage
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    onNavigate('products');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="hover:text-[#F1C40F] transition-colors cursor-pointer"
+                  onClick={() => onNavigate('products')}
+                  className="hover:text-[#F1C40F] transition-colors"
                 >
-                  All Spices & Masalas
+                  Shop Spices
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    onNavigate('gallery');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="hover:text-[#F1C40F] transition-colors cursor-pointer"
+                  onClick={() => onNavigate('ai-sommelier')}
+                  className="hover:text-[#F1C40F] transition-colors"
                 >
-                  Instagram Reels & Farm
+                  AI Sommelier
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => {
-                    onNavigate('contact');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="hover:text-[#F1C40F] transition-colors cursor-pointer"
+                  onClick={() => onNavigate('gallery')}
+                  className="hover:text-[#F1C40F] transition-colors"
                 >
-                  Contact & Bulk Orders
+                  Video Reels
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('contact')}
+                  className="hover:text-[#F1C40F] transition-colors"
+                >
+                  Contact Us
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Customer Support & Account */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#F1C40F]">
+              Customer Care
+            </h4>
+            <ul className="space-y-2 text-sm text-slate-300">
+              <li>
+                <button
+                  onClick={() => onNavigate('account')}
+                  className="hover:text-[#F1C40F] transition-colors text-left"
+                >
+                  My Account & Orders
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('cart')}
+                  className="hover:text-[#F1C40F] transition-colors text-left"
+                >
+                  View Spice Cart
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('contact')}
+                  className="hover:text-[#F1C40F] transition-colors text-left"
+                >
+                  Shipping & Inquiries
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('admin')}
+                  className="hover:text-[#F1C40F] transition-colors text-left"
+                >
+                  Admin Management
                 </button>
               </li>
             </ul>
@@ -211,23 +243,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <span className="text-slate-300 leading-snug">{DISPLAY_ADDRESS}</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#25D366] shrink-0" />
+                <Phone className="w-4 h-4 text-green-400 shrink-0" />
                 <a
-                  href={`tel:+${DISPLAY_WHATSAPP.replace(/[^0-9]/g, '')}`}
+                  href={`tel:${DISPLAY_PHONE.replace(/\s+/g, '')}`}
                   className="hover:text-[#F1C40F] transition-colors"
                 >
-                  {DISPLAY_WHATSAPP}
-                </a>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0 fill-current" />
-                <a
-                  href={getWhatsAppGeneralUrl('Hi SpiceShahi! I have a question about spices.')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green-400 hover:text-green-300 underline underline-offset-4"
-                >
-                  Chat on WhatsApp Directly
+                  {DISPLAY_PHONE}
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
@@ -249,59 +270,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </li>
             </ul>
           </div>
-
-          {/* Newsletter / Spice Tips */}
-          <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-[#F1C40F]">
-              Spice Tales & Batches
-            </h4>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Subscribe to receive traditional masala secrets, seasonal harvest alerts, and purity testing guides.
-            </p>
-
-            {isSubscribed ? (
-              <div className="p-3 bg-[#2D5A27]/40 border border-[#2D5A27] rounded-xl text-green-300 text-xs flex items-center gap-2">
-                <CheckCircle className="w-4 h-4" />
-                <span>Thank you! You are subscribed to SpiceShahi updates.</span>
-              </div>
-            ) : (
-              <form onSubmit={handleSubscribe} className="space-y-2">
-                <div className="flex">
-                  <input
-                    type="email"
-                    required
-                    value={subscribedEmail}
-                    onChange={(e) => setSubscribedEmail(e.target.value)}
-                    placeholder="Your email address"
-                    className="w-full px-3 py-2 text-xs rounded-l-lg bg-[#243342] border border-slate-600 text-white placeholder-slate-400 focus:outline-hidden focus:border-[#F1C40F]"
-                  />
-                  <button
-                    type="submit"
-                    className="px-3 py-2 bg-[#96281B] hover:bg-[#7D2116] text-white rounded-r-lg text-xs font-semibold flex items-center justify-center transition-colors cursor-pointer"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-                <p className="text-[11px] text-slate-400">
-                  No spam. Only fragrant culinary inspiration.
-                </p>
-              </form>
-            )}
-
-            <div className="pt-2">
-              <span className="inline-block text-[11px] font-bold text-[#F1C40F] border border-[#F1C40F]/30 bg-[#F1C40F]/10 rounded-md px-2.5 py-1 uppercase tracking-wider">
-                FSSAI Lic: 20826007001593 • 100% Food Grade
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 mt-4 border-t border-slate-600 text-center sm:flex sm:justify-between sm:items-center text-xs text-slate-400">
+        <div className="border-t border-slate-700 pt-8 mt-4 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <p>© {new Date().getFullYear()} SpiceShahi (SRS Global Enterprises). All rights reserved.</p>
-          <div className="mt-4 sm:mt-0 flex items-center justify-center space-x-6 font-serif italic">
-            <span>Pure Spices, Real Aroma</span>
-            <span>Hand-Beaten Desi Khushboo</span>
+          <div className="flex items-center gap-6">
+            <span>FSSAI Lic. 20826007001593</span>
+            <span>Bahadurgarh, Haryana</span>
+            <span>100% Pure Spices</span>
           </div>
         </div>
       </div>
