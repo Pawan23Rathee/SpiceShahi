@@ -32,6 +32,14 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ order, settings, onClo
         )}
 
         <div className="flex items-center gap-3">
+          <a
+            href={`/api/orders/${order.id}/invoice-pdf`}
+            download={`SpiceShahi-Invoice-${order.orderNumber}.pdf`}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#2C3E50] hover:bg-[#1a252f] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
+          >
+            <Download className="w-4 h-4 text-[#F1C40F]" />
+            <span>Download PDF</span>
+          </a>
           <button
             onClick={handlePrint}
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#96281B] hover:bg-[#7D2116] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
@@ -64,6 +72,9 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ order, settings, onClo
               </p>
               <p className="text-[11px] text-[#5D6D7E]">
                 Arya Nagar, Bahadurgarh, Haryana - 124507
+              </p>
+              <p className="text-[11px] text-[#96281B] font-semibold mt-0.5">
+                contact@spiceshahi.in • Website: https://spiceshahi.in
               </p>
             </div>
           </div>

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Page, Product, PackSize } from '../types';
 import { PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
+import { getFriendlyToastText } from '../components/ProductVariantModal';
 import { useCart } from '../context/CartContext';
+import { platformService } from '../services';
+import { ENABLE_WHATSAPP } from '../config/features';
+import { WhatsAppOrderButton } from '../components/WhatsAppComponents';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -39,23 +43,25 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   useEffect(() => {
     setSelectedPackIndex(0);
     setQuantity(1);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    platformService.scrollTo(0);
   }, [productSlug]);
 
   const currentPack: PackSize = product.packSizes[selectedPackIndex] || product.packSizes[0];
 
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
 
-  const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+  const handleShare = async () => {
+    const url = typeof window !== 'undefined' ? window.location.href : 'https://spiceshahi.in';
+    const success = await platformService.copyToClipboard(url);
+    if (success) {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     }
   };
 
   const handleAddToCart = () => {
-    addToCart(product, currentPack, quantity);
+    const toastMsg = getFriendlyToastText(product, currentPack);
+    addToCart(product, currentPack, quantity, { customToast: toastMsg });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 2000);
   };
@@ -327,6 +333,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
+
+                {ENABLE_WHATSAPP && (
+                  <WhatsAppOrderButton
+                    productName={product.name}
+                    packSize={currentPack.size}
+                    price={currentPack.price * quantity}
+                    variant="detail"
+                    className="w-full"
+                  />
+                )}
               </div>
 
               {/* Delivery info snippet */}

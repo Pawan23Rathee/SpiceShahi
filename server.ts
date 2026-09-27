@@ -31,9 +31,15 @@ import {
   saveCustomerCart,
 } from './server/storage.js';
 import {
-  sendOrderConfirmationEmail,
-  sendAdminOrderNotification,
+  dispatchOrderPaidEmails,
+  sendCustomerOrderConfirmationEmail,
+  sendAdminOrderNotificationEmail,
 } from './server/email.js';
+import {
+  generateInvoicePdf,
+  getInvoiceFileName,
+  getInvoiceFilePath,
+} from './server/invoice.js';
 import { Order, OrderItem, CustomerDetails, OrderStatus, PaymentStatus } from './src/types.js';
 import { ai, SYSTEM_INSTRUCTION, getFallbackResponse } from './server/ai.js';
 
@@ -776,13 +782,11 @@ async function startServer() {
 
       broadcastToAdmin('new-order', notificationPayload);
 
-      // Send real order confirmation email to customer's registered email
-      if (updated) {
-        sendOrderConfirmationEmail(updated).catch((err) =>
-          console.error('Failed to send order confirmation email:', err)
-        );
-        sendAdminOrderNotification(updated).catch((err) =>
-          console.error('Failed to send admin order notification:', err)
+      // Dispatch official confirmation email with PDF invoice to customer & admin
+      // strictly only after server-side payment verification succeeds and order is PAID
+      if (updated && updated.paymentStatus === 'PAID') {
+        dispatchOrderPaidEmails(updated).catch((err) =>
+          console.error('[Payment Verify] Failed to dispatch order paid emails & invoice:', err)
         );
       }
 
@@ -818,6 +822,29 @@ async function startServer() {
       return res.status(404).json({ error: 'Order not found' });
     }
     res.json(order);
+  });
+
+  // -------------------------------------------------------------
+  // API: Download Official Tax Invoice PDF
+  // -------------------------------------------------------------
+  app.get('/api/orders/:id/invoice-pdf', async (req: Request, res: Response) => {
+    try {
+      const order = getOrderById(req.params.id);
+      if (!order) {
+        return res.status(404).json({ error: 'Order not found' });
+      }
+
+      const fileName = getInvoiceFileName(order.orderNumber);
+      const pdfBuffer = await generateInvoicePdf(order, true);
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      res.setHeader('Cache-Control', 'no-cache');
+      res.send(pdfBuffer);
+    } catch (err: any) {
+      console.error('Error generating PDF invoice:', err);
+      res.status(500).json({ error: 'Failed to generate PDF invoice.' });
+    }
   });
 
   // -------------------------------------------------------------

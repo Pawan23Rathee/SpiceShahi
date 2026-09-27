@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Product, PackSize } from '../types';
 import { useCart } from '../context/CartContext';
+import { ENABLE_WHATSAPP } from '../config/features';
+import { WhatsAppOrderButton } from './WhatsAppComponents';
 import {
   Eye,
   Flame,
   Sparkles,
   Check,
   ShoppingBag,
-  Plus,
-  Minus,
-  CheckCircle2,
 } from 'lucide-react';
 
 interface ProductCardProps {
@@ -18,18 +17,14 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProduct }) => {
-  const { addToCart } = useCart();
+  const { openVariantModal } = useCart();
   const [selectedPackIndex, setSelectedPackIndex] = useState<number>(0);
-  const [quantity, setQuantity] = useState<number>(1);
-  const [justAdded, setJustAdded] = useState(false);
 
   const currentPack: PackSize = product.packSizes[selectedPackIndex] || product.packSizes[0];
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleOpenVariantModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    addToCart(product, currentPack, quantity);
-    setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 1800);
+    openVariantModal(product, selectedPackIndex);
   };
 
   return (
@@ -163,61 +158,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
             </div>
           </div>
 
-          {/* Quantity selector & Add to Cart button */}
-          <div className="flex items-center gap-2">
-            {/* Quantity Stepper */}
-            <div className="flex items-center border border-[#E8E4D5] rounded-xl bg-white shrink-0">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantity((q) => Math.max(1, q - 1));
-                }}
-                className="p-2 hover:bg-[#FCFAF2] text-[#2C3E50] rounded-l-xl transition-colors"
-                title="Decrease"
-              >
-                <Minus className="w-3.5 h-3.5" />
-              </button>
-              <span className="px-2.5 text-xs font-bold text-[#2C3E50] min-w-[20px] text-center">
-                {quantity}
-              </span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuantity((q) => q + 1);
-                }}
-                className="p-2 hover:bg-[#FCFAF2] text-[#2C3E50] rounded-r-xl transition-colors"
-                title="Increase"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Add to Cart Button */}
+          {/* Add to Cart button (Opens modern variant popup / bottom sheet) */}
+          <div>
             <button
               id={`add-to-cart-${product.slug}`}
               type="button"
-              onClick={handleAddToCart}
-              className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer ${
-                justAdded
-                  ? 'bg-[#2D5A27] text-white'
-                  : 'bg-[#96281B] hover:bg-[#7D2116] text-white shadow-[#96281B]/20'
-              }`}
+              onClick={handleOpenVariantModal}
+              className="w-full py-2.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md bg-[#96281B] hover:bg-[#7D2116] text-white shadow-[#96281B]/20 cursor-pointer active:scale-[0.99]"
             >
-              {justAdded ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Added!</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>Add to Cart</span>
-                </>
-              )}
+              <ShoppingBag className="w-4 h-4" />
+              <span>Add to Cart</span>
             </button>
           </div>
+
+          {/* Optional Direct WhatsApp Ordering Button */}
+          {ENABLE_WHATSAPP && (
+            <div>
+              <WhatsAppOrderButton
+                productName={product.name}
+                packSize={currentPack.size}
+                price={currentPack.price}
+              />
+            </div>
+          )}
 
           {/* Secondary Action: View Product Details */}
           <div className="pt-1">

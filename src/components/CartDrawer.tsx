@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { INDIAN_STATES } from '../data/indianStates';
+import { ENABLE_WHATSAPP } from '../config/features';
+import { WhatsAppCartHelp } from './WhatsAppComponents';
 import {
   X,
   Plus,
@@ -252,6 +254,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigate }) => {
                   <span>Proceed to Checkout</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
+
+                {ENABLE_WHATSAPP && (
+                  <WhatsAppCartHelp totalItems={totalItems} grandTotal={grandTotal} />
+                )}
 
                 <button
                   onClick={handleViewCart}

@@ -1,13 +1,12 @@
 import { Product, InstagramReel, TrustBadge } from '../types';
 
-export const DISPLAY_EMAIL = 'Contact@spiceshahi.in';
+export const DISPLAY_EMAIL = 'contact@spiceshahi.in';
 export const DISPLAY_INSTAGRAM = '@SpiceShahi';
 export const DISPLAY_INSTAGRAM_URL = 'https://instagram.com/SpiceShahi';
 export const DISPLAY_ADDRESS = 'Gali no 6, ward no 13, Arya nagar, Bahadurgarh, Haryana - 124507';
 export const DISPLAY_COMPANY = 'SRS Global Enterprises';
 export const DISPLAY_FSSAI = '20826007001593';
 export const DISPLAY_PHONE = '+91 83072 15421';
-export const DISPLAY_ALT_PHONE = '+91 99964 77484';
 
 export const PRODUCTS: Product[] = [
   {

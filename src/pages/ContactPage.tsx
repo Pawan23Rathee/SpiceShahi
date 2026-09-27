@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Page } from '../types';
+import { ENABLE_WHATSAPP, WHATSAPP_CONFIG } from '../config/features';
+import { WhatsAppIcon } from '../components/WhatsAppComponents';
 import {
   DISPLAY_EMAIL,
   DISPLAY_INSTAGRAM,
   DISPLAY_INSTAGRAM_URL,
   DISPLAY_ADDRESS,
   DISPLAY_PHONE,
-  DISPLAY_ALT_PHONE,
 } from '../data/products';
 import {
   Phone,
@@ -94,10 +95,35 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                     {DISPLAY_PHONE}
                   </a>
                   <p className="text-xs text-[#5D6D7E] mt-1">
-                    Alt: {DISPLAY_ALT_PHONE} • Mon - Sat, 9:00 AM - 8:00 PM IST
+                    Mon - Sat, 9:00 AM - 8:00 PM IST
                   </p>
                 </div>
               </div>
+
+              {/* Optional WhatsApp Support Card */}
+              {ENABLE_WHATSAPP && (
+                <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-200 shadow-xs hover:border-emerald-500 transition-colors flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                    <WhatsAppIcon className="w-6 h-6" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-[10px] uppercase font-bold text-emerald-800 tracking-widest">
+                      WhatsApp Orders & Support
+                    </h3>
+                    <a
+                      href={WHATSAPP_CONFIG.getWhatsAppUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-base font-bold text-emerald-950 hover:text-emerald-700 underline underline-offset-4 block mt-0.5"
+                    >
+                      {WHATSAPP_CONFIG.displayPhone}
+                    </a>
+                    <p className="text-xs text-emerald-800 mt-1">
+                      Direct WhatsApp chat with our Bahadurgarh processing depot.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Email Card */}
               <div className="p-5 rounded-xl bg-white border border-[#E8E4D5] shadow-xs hover:border-[#D35400] transition-colors flex items-start gap-4">

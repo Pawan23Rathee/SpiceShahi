@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Page, CustomerDetails, SavedAddress } from '../types';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { platformService } from '../services';
 import { INDIAN_STATES, getStateFromPincode } from '../data/indianStates';
+import { ENABLE_WHATSAPP } from '../config/features';
+import { WhatsAppCheckoutHelp } from '../components/WhatsAppComponents';
 import {
   ShieldCheck,
   Truck,
@@ -256,7 +259,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
     if (!validateAddress()) {
       setErrorMessage('Please correct the highlighted fields in your delivery address.');
-      window.scrollTo({ top: 100, behavior: 'smooth' });
+      platformService.scrollTo(100);
       return;
     }
 
@@ -819,6 +822,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
               <ShieldCheck className="w-4 h-4 text-[#2D5A27]" />
               <span>100% Encrypted & Authenticated Transaction</span>
             </div>
+
+            {ENABLE_WHATSAPP && (
+              <WhatsAppCheckoutHelp className="mt-3" />
+            )}
           </div>
         </div>
       </div>

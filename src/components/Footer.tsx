@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Page } from '../types';
+import { ENABLE_WHATSAPP } from '../config/features';
+import { WhatsAppFooterItem } from './WhatsAppComponents';
 import {
   DISPLAY_EMAIL,
   DISPLAY_INSTAGRAM,
   DISPLAY_INSTAGRAM_URL,
   DISPLAY_ADDRESS,
   DISPLAY_PHONE,
-  DISPLAY_ALT_PHONE,
 } from '../data/products';
 import {
   Instagram,
@@ -131,6 +132,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               >
                 <Phone className="w-5 h-5" />
               </a>
+              {ENABLE_WHATSAPP && <WhatsAppFooterItem variant="icon" />}
             </div>
           </div>
 
@@ -268,6 +270,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   {DISPLAY_EMAIL}
                 </a>
               </li>
+              {ENABLE_WHATSAPP && <WhatsAppFooterItem variant="link" />}
             </ul>
           </div>
         </div>

@@ -3,6 +3,9 @@ import { Page } from '../types';
 import { DISPLAY_PHONE, DISPLAY_EMAIL } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { platformService } from '../services';
+import { ENABLE_WHATSAPP } from '../config/features';
+import { WhatsAppHeaderLink, WhatsAppMobileMenuItem } from './WhatsAppComponents';
 import {
   Menu,
   X,
@@ -68,6 +71,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
               <Mail className="w-3.5 h-3.5" />
               <span>{DISPLAY_EMAIL}</span>
             </a>
+            {ENABLE_WHATSAPP && (
+              <>
+                <span className="text-white/40">|</span>
+                <WhatsAppHeaderLink />
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -241,6 +250,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
                   <span className="text-[#F1C40F] text-[10px] font-mono">VOICE/TEXT</span>
                 </button>
               )}
+
+              {ENABLE_WHATSAPP && <WhatsAppMobileMenuItem />}
 
               <button
                 onClick={() => {

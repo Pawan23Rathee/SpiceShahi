@@ -28,6 +28,9 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { AccountPage } from './pages/AccountPage';
 import { AiChatbotDrawer } from './components/AiChatbotDrawer';
 import { FloatingAiChatButton } from './components/FloatingAiChatButton';
+import { ProductVariantModal } from './components/ProductVariantModal';
+import { ENABLE_WHATSAPP } from './config/features';
+import { WhatsAppFloatingButton } from './components/WhatsAppComponents';
 import { PRODUCTS } from './data/products';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -37,7 +40,7 @@ function AppContent() {
   const [selectedOrderId, setSelectedOrderId] = useState<string>('SS1025');
   const [authRedirectTarget, setAuthRedirectTarget] = useState<Page>('account');
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
-  const { toastMessage } = useCart();
+  const { toastMessage, variantModalProduct, initialPackIndex, closeVariantModal } = useCart();
 
   // Synchronize with URL hash for browser history, back/forward, and direct linking
   useEffect(() => {
@@ -242,8 +245,20 @@ function AppContent() {
         onNavigate={navigateTo}
       />
 
+      {/* Product Variant Bottom Sheet / Modal (Blinkit style) */}
+      <ProductVariantModal
+        product={variantModalProduct}
+        initialPackIndex={initialPackIndex}
+        isOpen={!!variantModalProduct}
+        onClose={closeVariantModal}
+        onNavigate={navigateTo}
+      />
+
       {/* Floating AI Sommelier Button */}
       <FloatingAiChatButton onOpen={() => setIsAiDrawerOpen(true)} />
+
+      {/* Floating WhatsApp Button (conditionally enabled via ENABLE_WHATSAPP) */}
+      {ENABLE_WHATSAPP && <WhatsAppFloatingButton />}
 
       {/* Consistent Footer on every page */}
       <Footer onNavigate={navigateTo} />

@@ -13,6 +13,7 @@ import {
   MapPin,
   Sparkles,
   User,
+  Download,
 } from 'lucide-react';
 
 interface OrderConfirmationPageProps {
@@ -114,6 +115,15 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
 
         {/* Actions Strip */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+          <a
+            href={`/api/orders/${order.id}/invoice-pdf`}
+            download={`SpiceShahi-Invoice-${order.orderNumber}.pdf`}
+            className="px-6 py-3 rounded-xl bg-[#2D5A27] hover:bg-[#23471f] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
+          >
+            <Download className="w-4 h-4 text-[#F1C40F]" />
+            <span>Download Invoice (PDF)</span>
+          </a>
+
           <button
             id="confirmation-view-invoice-btn"
             onClick={() => setShowInvoiceModal(true)}

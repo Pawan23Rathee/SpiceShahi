@@ -1,10 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { CartItem, Product, PackSize } from '../types';
 import { useAuth } from './AuthContext';
+import { cartService, platformService } from '../services';
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product, packSize: PackSize, quantity?: number) => void;
+  addToCart: (
+    product: Product,
+    packSize: PackSize,
+    quantity?: number,
+    options?: { openDrawer?: boolean; customToast?: string }
+  ) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
   clearCart: () => void;
@@ -21,23 +27,21 @@ interface CartContextType {
     outsideHaryana: number;
     freeThreshold: number;
   };
+  variantModalProduct: Product | null;
+  initialPackIndex: number;
+  openVariantModal: (product: Product, initialPackIndex?: number) => void;
+  closeVariantModal: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
-
-// Cleanup legacy shared storage key if still present in browser
-try {
-  localStorage.removeItem('spiceshahi_cart_v1');
-  localStorage.removeItem('cart');
-} catch {
-  // ignore
-}
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { customer, token, isAuthenticated, isLoading: authLoading } = useAuth();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [variantModalProduct, setVariantModalProduct] = useState<Product | null>(null);
+  const [initialPackIndex, setInitialPackIndex] = useState<number>(0);
   const [deliverySettings, setDeliverySettings] = useState({
     haryana: 50,
     outsideHaryana: 100,
@@ -47,18 +51,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Track current loaded customer ID to prevent cross-contamination
   const currentCustomerIdRef = useRef<string | null>(null);
 
-  // Fetch store delivery settings from server
+  // Fetch store delivery settings from server via cartService
   useEffect(() => {
-    fetch('/api/settings')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setDeliverySettings({
-            haryana: data.haryanaDeliveryCharge ?? 50,
-            outsideHaryana: data.outsideHaryanaDeliveryCharge ?? 100,
-            freeThreshold: data.freeDeliveryThreshold ?? 0,
-          });
-        }
+    cartService
+      .fetchDeliverySettings()
+      .then((settings) => {
+        setDeliverySettings(settings);
       })
       .catch((err) => {
         console.warn('Could not fetch store delivery settings, using defaults:', err);
@@ -84,36 +82,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // 3. SIGNED-IN USER: Load user-specific cart for this exact customer ID
     const customerId = customer.id;
     currentCustomerIdRef.current = customerId;
-    const userCartKey = `spiceshahi_cart_${customerId}`;
 
-    // Read local user-scoped storage
-    let initialUserCart: CartItem[] = [];
-    try {
-      const saved = localStorage.getItem(userCartKey);
-      if (saved) {
-        initialUserCart = JSON.parse(saved);
-      }
-    } catch (e) {
-      console.error('Error reading user cart from localStorage:', e);
-    }
+    // Read local customer-scoped cache for instant responsive UI
+    const initialUserCart = cartService.getLocalCart(customerId);
     setItems(initialUserCart);
 
-    // Also fetch server-side persistent cart for this user
+    // Also fetch server-side persistent cart for this user across devices
     if (token) {
-      fetch('/api/customer/cart', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (data && Array.isArray(data.cart) && currentCustomerIdRef.current === customerId) {
-            // If server has cart and local was empty, or server has newer items
-            if (data.cart.length > 0 && initialUserCart.length === 0) {
-              setItems(data.cart);
-              try {
-                localStorage.setItem(userCartKey, JSON.stringify(data.cart));
-              } catch {
-                // ignore
-              }
+      cartService
+        .fetchServerCart(token)
+        .then((serverCart) => {
+          if (serverCart && currentCustomerIdRef.current === customerId) {
+            // If server has saved items from other devices or session
+            if (serverCart.length > 0 || initialUserCart.length === 0) {
+              setItems(serverCart);
+              cartService.saveLocalCart(customerId, serverCart);
             }
           }
         })
@@ -123,28 +106,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [customer?.id, isAuthenticated, authLoading, token]);
 
-  // Save changes to user-specific storage whenever items change
+  // Save changes to user-specific storage and server whenever items change
   const saveUserCart = (newItems: CartItem[]) => {
     if (!customer?.id || !isAuthenticated) {
       return;
     }
-    const userCartKey = `spiceshahi_cart_${customer.id}`;
-    try {
-      localStorage.setItem(userCartKey, JSON.stringify(newItems));
-    } catch (e) {
-      console.error('Could not save user cart to localStorage', e);
-    }
+    const customerId = customer.id;
+    cartService.saveLocalCart(customerId, newItems);
 
-    // Sync to backend user profile
+    // Sync to backend customer profile / cart database
     if (token) {
-      fetch('/api/customer/cart', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ cart: newItems }),
-      }).catch((e) => console.warn('Could not sync cart to backend:', e));
+      cartService.syncCartToServer(token, newItems).catch((e) => {
+        console.warn('Could not sync cart to backend:', e);
+      });
     }
   };
 
@@ -155,11 +129,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 3200);
   };
 
-  const addToCart = (product: Product, packSize: PackSize, quantity = 1) => {
+  const openVariantModal = (product: Product, packIdx = 0) => {
+    setVariantModalProduct(product);
+    setInitialPackIndex(packIdx);
+  };
+
+  const closeVariantModal = () => {
+    setVariantModalProduct(null);
+  };
+
+  const addToCart = (
+    product: Product,
+    packSize: PackSize,
+    quantity = 1,
+    options?: { openDrawer?: boolean; customToast?: string }
+  ) => {
     // If user is not authenticated, prompt login immediately
     if (!isAuthenticated || !customer) {
       showToast('Please sign in or register to add spices to your cart.');
-      window.location.hash = '#/login';
+      platformService.navigateToHash('/login');
       return;
     }
 
@@ -193,8 +181,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return updated;
     });
 
-    showToast(`Added ${quantity} × ${product.name} (${packSize.size}) to cart`);
-    setIsCartOpen(true);
+    const msg = options?.customToast || `Added ${quantity} × ${product.name} (${packSize.size}) to cart`;
+    showToast(msg);
+
+    if (options?.openDrawer) {
+      setIsCartOpen(true);
+    }
   };
 
   const updateQuantity = (itemId: string, quantity: number) => {
@@ -221,7 +213,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearCart = () => {
     setItems([]);
     if (customer?.id) {
-      saveUserCart([]);
+      cartService.clearLocalCart(customer.id);
+      if (token) {
+        cartService.syncCartToServer(token, []);
+      }
     }
   };
 
@@ -231,15 +226,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const subtotal = activeItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const calculateDelivery = (state: string): number => {
-    if (activeItems.length === 0) return 0;
-    if (deliverySettings.freeThreshold > 0 && subtotal >= deliverySettings.freeThreshold) {
-      return 0;
-    }
-    const cleanState = (state || '').trim().toLowerCase();
-    if (cleanState === 'haryana') {
-      return deliverySettings.haryana;
-    }
-    return deliverySettings.outsideHaryana;
+    return cartService.calculateDelivery(state, subtotal, deliverySettings);
   };
 
   return (
@@ -259,6 +246,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         closeCart: () => setIsCartOpen(false),
         toastMessage,
         deliverySettings,
+        variantModalProduct,
+        initialPackIndex,
+        openVariantModal,
+        closeVariantModal,
       }}
     >
       {children}

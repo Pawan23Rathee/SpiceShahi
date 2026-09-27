@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Page, Order, OrderStatus, PaymentStatus, StoreSettings } from '../types';
 import { InvoiceView } from '../components/InvoiceView';
+import { storageService, authService, platformService } from '../services';
 import {
   ShieldCheck,
   Lock,
@@ -62,9 +63,7 @@ function playOrderChime() {
 
 export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNavigate }) => {
   // Auth state
-  const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('spiceshahi_admin_token') || sessionStorage.getItem('spiceshahi_admin_token');
-  });
+  const [token, setToken] = useState<string | null>(() => storageService.getAdminToken());
   const [usernameInput, setUsernameInput] = useState('admin');
   const [passwordInput, setPasswordInput] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -215,7 +214,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
       }
 
       setToken(data.token);
-      localStorage.setItem('spiceshahi_admin_token', data.token);
+      storageService.setAdminToken(data.token);
       requestNotificationPermission();
     } catch (err: any) {
       setLoginError(err.message || 'Login failed');
@@ -226,8 +225,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
 
   const handleLogout = () => {
     setToken(null);
-    localStorage.removeItem('spiceshahi_admin_token');
-    sessionStorage.removeItem('spiceshahi_admin_token');
+    authService.adminLogout();
   };
 
   const handleUpdateOrderStatus = async (orderId: string, newStatus: OrderStatus) => {
@@ -287,7 +285,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
 
   const handleClearTestData = async () => {
     if (!token) return;
-    if (!window.confirm('Clear all simulated and test orders? All real customer orders will remain completely untouched.')) return;
+    if (!platformService.confirm('Clear all simulated and test orders? All real customer orders will remain completely untouched.')) return;
     setIsClearingData(true);
     try {
       const res = await fetch('/api/admin/clear-test-data', {

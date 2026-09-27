@@ -3,6 +3,8 @@ import { Page, Product } from '../types';
 import { PRODUCTS, INSTAGRAM_REELS, TRUST_BADGES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { ReelCard } from '../components/ReelCard';
+import { ENABLE_WHATSAPP } from '../config/features';
+import { WhatsAppHomeCTA } from '../components/WhatsAppComponents';
 import {
   ArrowRight,
   Sparkles,
@@ -207,19 +209,27 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {TRUST_BADGES.map((badge, idx) => {
-              const icons = [
-                <ShieldCheck key="1" className="w-6 h-6 text-[#96281B]" />,
-                <Flame key="2" className="w-6 h-6 text-[#D35400]" />,
-                <Sun key="3" className="w-6 h-6 text-[#F39C12]" />,
-                <Award key="4" className="w-6 h-6 text-[#2D5A27]" />,
-              ];
+              const renderBadgeIcon = () => {
+                switch (idx) {
+                  case 0:
+                    return <ShieldCheck className="w-6 h-6 text-[#96281B]" />;
+                  case 1:
+                    return <Flame className="w-6 h-6 text-[#D35400]" />;
+                  case 2:
+                    return <Sun className="w-6 h-6 text-[#F39C12]" />;
+                  case 3:
+                  default:
+                    return <Award className="w-6 h-6 text-[#2D5A27]" />;
+                }
+              };
+
               return (
                 <div
-                  key={badge.title}
+                  key={`trust-badge-${badge.title}`}
                   className="p-5 rounded-xl bg-white border border-[#E8E4D5] hover:border-[#96281B]/40 transition-colors"
                 >
                   <div className="w-12 h-12 rounded-lg bg-[#FCFAF2] border border-[#E8E4D5] flex items-center justify-center shadow-xs mb-4">
-                    {icons[idx]}
+                    {renderBadgeIcon()}
                   </div>
                   <h3 className="font-serif italic font-bold text-base text-[#2C3E50] mb-1">
                     {badge.title}
@@ -367,6 +377,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             <span>Contact Customer Support</span>
           </button>
         </div>
+
+        {ENABLE_WHATSAPP && <WhatsAppHomeCTA className="mt-6" />}
       </section>
 
       {/* 6. INSTAGRAM REELS & VIDEOS PREVIEW - Artistic Slate */}

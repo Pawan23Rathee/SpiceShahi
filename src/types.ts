@@ -157,6 +157,12 @@ export interface Order {
   razorpayPaymentId?: string;
   razorpaySignature?: string;
   notes?: string;
+  confirmationEmailSent?: boolean;
+  confirmationEmailSentAt?: string;
+  adminEmailSent?: boolean;
+  adminEmailSentAt?: string;
+  invoiceGenerated?: boolean;
+  invoiceFileName?: string;
   createdAt: string;
   updatedAt: string;
 }
