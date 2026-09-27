@@ -215,7 +215,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               ];
               return (
                 <div
-                  key={badge.id}
+                  key={badge.title}
                   className="p-5 rounded-xl bg-white border border-[#E8E4D5] hover:border-[#96281B]/40 transition-colors"
                 >
                   <div className="w-12 h-12 rounded-lg bg-[#FCFAF2] border border-[#E8E4D5] flex items-center justify-center shadow-xs mb-4">

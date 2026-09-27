@@ -704,8 +704,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                       className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E4D5] text-xs text-[#2C3E50] bg-[#FCFAF2]"
                     >
                       {INDIAN_STATES.map((s) => (
-                        <option key={s} value={s}>
-                          {s} {s === 'Haryana' ? '(Delivery: ₹50)' : '(Delivery: ₹100)'}
+                        <option key={s.code} value={s.name}>
+                          {s.name} {s.name === 'Haryana' ? '(Delivery: ₹50)' : '(Delivery: ₹100)'}
                         </option>
                       ))}
                     </select>

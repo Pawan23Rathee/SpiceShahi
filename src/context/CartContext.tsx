@@ -1,51 +1,21 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from 'react';
-
-import {
-  CartItem,
-  Product,
-  PackSize,
-} from '../types';
-
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { CartItem, Product, PackSize } from '../types';
 import { useAuth } from './AuthContext';
 
 interface CartContextType {
   items: CartItem[];
-
-  addToCart: (
-    product: Product,
-    packSize: PackSize,
-    quantity?: number
-  ) => void;
-
-  updateQuantity: (
-    itemId: string,
-    quantity: number
-  ) => void;
-
+  addToCart: (product: Product, packSize: PackSize, quantity?: number) => void;
+  updateQuantity: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
-
   clearCart: () => void;
-
   totalItems: number;
   subtotal: number;
-
-  calculateDelivery: (
-    state: string
-  ) => number;
-
+  calculateDelivery: (state: string) => number;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-
   openCart: () => void;
   closeCart: () => void;
-
   toastMessage: string | null;
-
   deliverySettings: {
     haryana: number;
     outsideHaryana: number;
@@ -53,345 +23,229 @@ interface CartContextType {
   };
 }
 
-const CartContext =
-  createContext<CartContextType | undefined>(
-    undefined
-  );
+const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const getCartKey = (userId: string) =>
-  `spiceshahi_cart_${userId}`;
+// Cleanup legacy shared storage key if still present in browser
+try {
+  localStorage.removeItem('spiceshahi_cart_v1');
+  localStorage.removeItem('cart');
+} catch {
+  // ignore
+}
 
-export const CartProvider: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
-  const {
-    customer,
-    isAuthenticated,
-    isLoading: authLoading,
-  } = useAuth();
-
-  const [items, setItems] =
-    useState<CartItem[]>([]);
-
-  const [
-    loadedUserId,
-    setLoadedUserId,
-  ] = useState<string | null>(null);
-
-  const [isCartOpen, setIsCartOpen] =
-    useState(false);
-
-  const [toastMessage, setToastMessage] =
-    useState<string | null>(null);
-
-  const [
-    deliverySettings,
-    setDeliverySettings,
-  ] = useState({
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { customer, token, isAuthenticated, isLoading: authLoading } = useAuth();
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [deliverySettings, setDeliverySettings] = useState({
     haryana: 50,
     outsideHaryana: 100,
     freeThreshold: 0,
   });
 
-  /*
-   * Load cart ONLY after authentication
-   * state has been resolved.
-   */
-  useEffect(() => {
-    if (authLoading) return;
+  // Track current loaded customer ID to prevent cross-contamination
+  const currentCustomerIdRef = useRef<string | null>(null);
 
-    if (!isAuthenticated || !customer) {
-      setItems([]);
-      setLoadedUserId(null);
-      setIsCartOpen(false);
-      return;
-    }
-
-    const userId = customer.id;
-    const key = getCartKey(userId);
-
-    try {
-      const saved =
-        localStorage.getItem(key);
-
-      const parsed = saved
-        ? JSON.parse(saved)
-        : [];
-
-      setItems(
-        Array.isArray(parsed)
-          ? parsed
-          : []
-      );
-
-      setLoadedUserId(userId);
-    } catch {
-      setItems([]);
-      setLoadedUserId(userId);
-    }
-  }, [
-    authLoading,
-    isAuthenticated,
-    customer?.id,
-  ]);
-
-  /*
-   * Save cart ONLY for authenticated
-   * users.
-   */
-  useEffect(() => {
-    if (
-      authLoading ||
-      !isAuthenticated ||
-      !customer ||
-      loadedUserId !== customer.id
-    ) {
-      return;
-    }
-
-    try {
-      localStorage.setItem(
-        getCartKey(customer.id),
-        JSON.stringify(items)
-      );
-    } catch (error) {
-      console.error(
-        'Could not save cart:',
-        error
-      );
-    }
-  }, [
-    items,
-    customer?.id,
-    isAuthenticated,
-    authLoading,
-    loadedUserId,
-  ]);
-
-  /*
-   * Extra protection when AuthContext
-   * changes because of logout/login.
-   */
-  useEffect(() => {
-    const handleAuthChange = () => {
-      if (!isAuthenticated) {
-        setItems([]);
-        setLoadedUserId(null);
-        setIsCartOpen(false);
-      }
-    };
-
-    window.addEventListener(
-      'spiceshahi-auth-changed',
-      handleAuthChange
-    );
-
-    return () => {
-      window.removeEventListener(
-        'spiceshahi-auth-changed',
-        handleAuthChange
-      );
-    };
-  }, [isAuthenticated]);
-
-  /*
-   * Delivery settings
-   */
+  // Fetch store delivery settings from server
   useEffect(() => {
     fetch('/api/settings')
       .then((res) => res.json())
       .then((data) => {
         if (data) {
           setDeliverySettings({
-            haryana:
-              data.haryanaDeliveryCharge ??
-              50,
-
-            outsideHaryana:
-              data.outsideHaryanaDeliveryCharge ??
-              100,
-
-            freeThreshold:
-              data.freeDeliveryThreshold ??
-              0,
+            haryana: data.haryanaDeliveryCharge ?? 50,
+            outsideHaryana: data.outsideHaryanaDeliveryCharge ?? 100,
+            freeThreshold: data.freeDeliveryThreshold ?? 0,
           });
         }
       })
       .catch((err) => {
-        console.warn(
-          'Could not fetch delivery settings:',
-          err
-        );
+        console.warn('Could not fetch store delivery settings, using defaults:', err);
       });
   }, []);
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-
-    setTimeout(() => {
-      setToastMessage((prev) =>
-        prev === msg ? null : prev
-      );
-    }, 2800);
-  };
-
-  const addToCart = (
-    product: Product,
-    packSize: PackSize,
-    quantity = 1
-  ) => {
-    /*
-     * Do not create a persistent cart
-     * for signed-out users.
-     */
-    if (!isAuthenticated || !customer) {
-      showToast(
-        'Please sign in before adding products to your cart.'
-      );
-
-      setIsCartOpen(false);
-
+  // Synchronize cart strictly based on authenticated user lifecycle
+  useEffect(() => {
+    // 1. While authentication is still determining session, do NOT show any cart
+    if (authLoading) {
+      setItems([]);
+      currentCustomerIdRef.current = null;
       return;
     }
 
-    const itemId =
-      `${product.id}-${packSize.size}`;
+    // 2. SIGNED-OUT USER: Cart MUST be completely empty, badge 0
+    if (!isAuthenticated || !customer || !customer.id) {
+      setItems([]);
+      currentCustomerIdRef.current = null;
+      return;
+    }
 
-    setItems((prev) => {
-      const existing =
-        prev.find(
-          (item) => item.id === itemId
-        );
+    // 3. SIGNED-IN USER: Load user-specific cart for this exact customer ID
+    const customerId = customer.id;
+    currentCustomerIdRef.current = customerId;
+    const userCartKey = `spiceshahi_cart_${customerId}`;
 
-      if (existing) {
-        return prev.map((item) =>
-          item.id === itemId
-            ? {
-                ...item,
-                quantity:
-                  item.quantity + quantity,
+    // Read local user-scoped storage
+    let initialUserCart: CartItem[] = [];
+    try {
+      const saved = localStorage.getItem(userCartKey);
+      if (saved) {
+        initialUserCart = JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error('Error reading user cart from localStorage:', e);
+    }
+    setItems(initialUserCart);
+
+    // Also fetch server-side persistent cart for this user
+    if (token) {
+      fetch('/api/customer/cart', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && Array.isArray(data.cart) && currentCustomerIdRef.current === customerId) {
+            // If server has cart and local was empty, or server has newer items
+            if (data.cart.length > 0 && initialUserCart.length === 0) {
+              setItems(data.cart);
+              try {
+                localStorage.setItem(userCartKey, JSON.stringify(data.cart));
+              } catch {
+                // ignore
               }
+            }
+          }
+        })
+        .catch(() => {
+          // offline or server unreachable, user local cart is preserved
+        });
+    }
+  }, [customer?.id, isAuthenticated, authLoading, token]);
+
+  // Save changes to user-specific storage whenever items change
+  const saveUserCart = (newItems: CartItem[]) => {
+    if (!customer?.id || !isAuthenticated) {
+      return;
+    }
+    const userCartKey = `spiceshahi_cart_${customer.id}`;
+    try {
+      localStorage.setItem(userCartKey, JSON.stringify(newItems));
+    } catch (e) {
+      console.error('Could not save user cart to localStorage', e);
+    }
+
+    // Sync to backend user profile
+    if (token) {
+      fetch('/api/customer/cart', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ cart: newItems }),
+      }).catch((e) => console.warn('Could not sync cart to backend:', e));
+    }
+  };
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage((prev) => (prev === msg ? null : prev));
+    }, 3200);
+  };
+
+  const addToCart = (product: Product, packSize: PackSize, quantity = 1) => {
+    // If user is not authenticated, prompt login immediately
+    if (!isAuthenticated || !customer) {
+      showToast('Please sign in or register to add spices to your cart.');
+      window.location.hash = '#/login';
+      return;
+    }
+
+    const itemId = `${product.id}-${packSize.size}`;
+    setItems((prev) => {
+      const existing = prev.find((item) => item.id === itemId);
+      let updated: CartItem[];
+      if (existing) {
+        updated = prev.map((item) =>
+          item.id === itemId
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
+      } else {
+        const newItem: CartItem = {
+          id: itemId,
+          productId: product.id,
+          productSlug: product.slug,
+          name: product.name,
+          hindiName: product.hindiName,
+          imageUrl: packSize.imageUrl || product.imageUrl,
+          packSize: packSize.size,
+          weightInGrams: packSize.weightInGrams,
+          price: packSize.price,
+          originalPrice: packSize.originalPrice,
+          quantity,
+        };
+        updated = [...prev, newItem];
       }
-
-      const newItem: CartItem = {
-        id: itemId,
-        productId: product.id,
-        productSlug: product.slug,
-        name: product.name,
-        hindiName: product.hindiName,
-        imageUrl:
-          packSize.imageUrl ||
-          product.imageUrl,
-        packSize: packSize.size,
-        weightInGrams:
-          packSize.weightInGrams,
-        price: packSize.price,
-        originalPrice:
-          packSize.originalPrice,
-        quantity,
-      };
-
-      return [...prev, newItem];
+      saveUserCart(updated);
+      return updated;
     });
 
-    showToast(
-      `Added ${quantity} × ${product.name} (${packSize.size}) to cart`
-    );
-
+    showToast(`Added ${quantity} × ${product.name} (${packSize.size}) to cart`);
     setIsCartOpen(true);
   };
 
-  const updateQuantity = (
-    itemId: string,
-    quantity: number
-  ) => {
+  const updateQuantity = (itemId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(itemId);
       return;
     }
-
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === itemId
-          ? {
-              ...item,
-              quantity,
-            }
-          : item
-      )
-    );
+    setItems((prev) => {
+      const updated = prev.map((item) => (item.id === itemId ? { ...item, quantity } : item));
+      saveUserCart(updated);
+      return updated;
+    });
   };
 
-  const removeFromCart = (
-    itemId: string
-  ) => {
-    setItems((prev) =>
-      prev.filter(
-        (item) => item.id !== itemId
-      )
-    );
-
+  const removeFromCart = (itemId: string) => {
+    setItems((prev) => {
+      const updated = prev.filter((item) => item.id !== itemId);
+      saveUserCart(updated);
+      return updated;
+    });
     showToast('Item removed from cart');
   };
 
   const clearCart = () => {
     setItems([]);
-
-    if (customer) {
-      localStorage.removeItem(
-        getCartKey(customer.id)
-      );
+    if (customer?.id) {
+      saveUserCart([]);
     }
   };
 
-  const totalItems =
-    items.reduce(
-      (sum, item) =>
-        sum + item.quantity,
-      0
-    );
+  // If signed out, force items to be strictly 0
+  const activeItems = isAuthenticated && customer ? items : [];
+  const totalItems = activeItems.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = activeItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const subtotal =
-    items.reduce(
-      (sum, item) =>
-        sum +
-        item.price *
-          item.quantity,
-      0
-    );
-
-  const calculateDelivery = (
-    state: string
-  ) => {
-    if (items.length === 0) {
+  const calculateDelivery = (state: string): number => {
+    if (activeItems.length === 0) return 0;
+    if (deliverySettings.freeThreshold > 0 && subtotal >= deliverySettings.freeThreshold) {
       return 0;
     }
-
-    if (
-      deliverySettings.freeThreshold >
-        0 &&
-      subtotal >=
-        deliverySettings.freeThreshold
-    ) {
-      return 0;
+    const cleanState = (state || '').trim().toLowerCase();
+    if (cleanState === 'haryana') {
+      return deliverySettings.haryana;
     }
-
-    const cleanState =
-      (state || '')
-        .trim()
-        .toLowerCase();
-
-    return cleanState === 'haryana'
-      ? deliverySettings.haryana
-      : deliverySettings.outsideHaryana;
+    return deliverySettings.outsideHaryana;
   };
 
   return (
     <CartContext.Provider
       value={{
-        items,
+        items: activeItems,
         addToCart,
         updateQuantity,
         removeFromCart,
@@ -401,10 +255,8 @@ export const CartProvider: React.FC<{
         calculateDelivery,
         isCartOpen,
         setIsCartOpen,
-        openCart: () =>
-          setIsCartOpen(true),
-        closeCart: () =>
-          setIsCartOpen(false),
+        openCart: () => setIsCartOpen(true),
+        closeCart: () => setIsCartOpen(false),
         toastMessage,
         deliverySettings,
       }}
@@ -415,14 +267,9 @@ export const CartProvider: React.FC<{
 };
 
 export function useCart() {
-  const context =
-    useContext(CartContext);
-
+  const context = useContext(CartContext);
   if (!context) {
-    throw new Error(
-      'useCart must be used within CartProvider'
-    );
+    throw new Error('useCart must be used within a CartProvider');
   }
-
   return context;
 }

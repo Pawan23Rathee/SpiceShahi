@@ -27,6 +27,8 @@ import {
   passwordResetTokens,
   getOrdersByCustomer,
   clearTestOrders,
+  getCustomerCart,
+  saveCustomerCart,
 } from './server/storage.js';
 import {
   sendOrderConfirmationEmail,
@@ -493,6 +495,20 @@ async function startServer() {
       customer: sanitized,
       message: 'Default address updated.',
     });
+  });
+
+  // -------------------------------------------------------------
+  // API: Customer Cart - User-Specific Cart Persistence
+  // -------------------------------------------------------------
+  app.get('/api/customer/cart', requireCustomer, (req: AuthRequest, res: Response) => {
+    const cart = getCustomerCart(req.customerUser!.customerId);
+    res.json({ cart });
+  });
+
+  app.put('/api/customer/cart', requireCustomer, (req: AuthRequest, res: Response) => {
+    const { cart } = req.body;
+    saveCustomerCart(req.customerUser!.customerId, Array.isArray(cart) ? cart : []);
+    res.json({ success: true });
   });
 
   // -------------------------------------------------------------

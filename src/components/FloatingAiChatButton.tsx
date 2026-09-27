@@ -9,16 +9,16 @@ export const FloatingAiChatButton: React.FC<FloatingAiChatButtonProps> = ({ onOp
   const [showBubble, setShowBubble] = useState(true);
 
   return (
-    <div className="fixed bottom-8 right-8 z-40 flex flex-col items-end group">
+    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end group">
       {/* Mini Tooltip / Prompt Bubble */}
       {showBubble && (
-        <div className="mb-3 ml-1 max-w-[240px] bg-white border border-[#E8E4D5] shadow-2xl rounded-2xl p-3 text-xs text-[#2C3E50] animate-in fade-in slide-in-from-bottom-2 duration-300 relative">
+        <div className="mb-3 mr-1 max-w-[250px] bg-white border border-[#E8E4D5] shadow-2xl rounded-2xl p-3 text-xs text-[#2C3E50] animate-in fade-in slide-in-from-bottom-2 duration-300 relative">
           <button
             onClick={(e) => {
               e.stopPropagation();
               setShowBubble(false);
             }}
-            className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#E8E4D5] hover:bg-stone-300 rounded-full flex items-center justify-center text-[#2C3E50]"
+            className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-[#E8E4D5] hover:bg-stone-300 rounded-full flex items-center justify-center text-[#2C3E50]"
             title="Dismiss"
           >
             <X className="w-2.5 h-2.5" />

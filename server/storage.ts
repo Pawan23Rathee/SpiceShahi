@@ -351,3 +351,13 @@ export function setDefaultAddress(customerId: string, addressId: string): boolea
   updateCustomer(customerId, { savedAddresses: customer.savedAddresses });
   return true;
 }
+
+// User-Specific Cart Persistence
+export function getCustomerCart(customerId: string): any[] {
+  const customer = getCustomerById(customerId);
+  return (customer as any)?.cart || [];
+}
+
+export function saveCustomerCart(customerId: string, cart: any[]): void {
+  updateCustomer(customerId, { cart } as any);
+}
