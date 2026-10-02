@@ -28,8 +28,10 @@ export const firebaseConfig = {
 export const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth: Auth = getAuth(app);
 
-// Configure Google Auth Provider with account selection
+// Configure Google Auth Provider with email and profile scopes and account selection
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope('email');
+googleProvider.addScope('profile');
 googleProvider.setCustomParameters({
   prompt: 'select_account',
 });

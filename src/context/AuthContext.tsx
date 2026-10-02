@@ -3,6 +3,9 @@ import { Customer, SavedAddress } from '../types';
 import { authService, storageService } from '../services';
 import {
   auth,
+  googleProvider,
+  signInWithPopup,
+  signInWithRedirect,
   signInWithGoogleFirebase,
   getFirebaseErrorMessage,
   getRedirectResult,
@@ -204,18 +207,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       let payload = googleData;
 
-      // If no data passed, trigger Firebase Google Sign-In popup/redirect
+      // If no pre-constructed payload provided, authenticate directly with Firebase
       if (!payload || !payload.email) {
-        const fbUser = await signInWithGoogleFirebase();
-        if (!fbUser.email) {
-          return { success: false, error: 'Google account did not return a valid email address.' };
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+
+        const email = user.email || user.providerData?.[0]?.email;
+        if (!email) {
+          throw new Error('Google account did not return a valid email address.');
         }
+
         payload = {
-          googleId: fbUser.uid,
-          email: fbUser.email,
-          fullName: fbUser.displayName || 'SpiceShahi Customer',
-          profilePhoto: fbUser.photoURL || undefined,
-          mobile: fbUser.phoneNumber || undefined,
+          googleId: user.uid,
+          email: email,
+          fullName: user.displayName || user.providerData?.[0]?.displayName || 'SpiceShahi Customer',
+          profilePhoto: user.photoURL || user.providerData?.[0]?.photoURL || undefined,
+          mobile: user.phoneNumber || user.providerData?.[0]?.phoneNumber || undefined,
         };
       }
 
@@ -229,6 +236,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: true };
     } catch (err: any) {
       console.error('[Firebase Auth] Google login error:', err);
+      if (err.code === 'auth/popup-blocked') {
+        try {
+          await signInWithRedirect(auth, googleProvider);
+          return { success: false, error: 'Redirecting to Google Sign-In...' };
+        } catch (redirErr: any) {
+          return { success: false, error: getFirebaseErrorMessage(redirErr) };
+        }
+      }
       const friendlyMsg = getFirebaseErrorMessage(err);
       return { success: false, error: friendlyMsg };
     }
