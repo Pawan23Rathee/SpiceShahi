@@ -356,8 +356,9 @@ export async function generateInvoicePdf(order: Order, saveToDisk = true): Promi
       drawSumRow('Items Subtotal:', `Rs. ${order.subtotal.toFixed(2)}`);
       drawSumRow('Discount:', 'Rs. 0.00');
 
-      const isHaryana = (order.deliveryState || '').toLowerCase().includes('haryana');
-      const deliveryLabel = isHaryana ? 'Delivery Charge (Haryana):' : 'Delivery Charge (Rest of India):';
+      const deliveryLabel = order.shippingProvider === 'shiprocket'
+        ? `Shipping & Delivery (Shiprocket${order.shippingPincode ? ` - ${order.shippingPincode}` : ''}):`
+        : 'Shipping & Delivery:';
       drawSumRow(deliveryLabel, `Rs. ${order.deliveryCharge.toFixed(2)}`);
 
       // Separator line

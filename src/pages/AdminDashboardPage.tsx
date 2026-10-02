@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Page, Order, OrderStatus, PaymentStatus, StoreSettings, DistributorEnquiry, DistributorEnquiryStatus } from '../types';
 import { InvoiceView } from '../components/InvoiceView';
+import { TrackingModal } from '../components/TrackingModal';
 import { WhatsAppIcon } from '../components/WhatsAppComponents';
 import { storageService, authService, platformService } from '../services';
 import {
@@ -113,6 +114,45 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
     message: string;
     orderId?: string;
   } | null>(null);
+
+  // Shiprocket Tracking & AWB State
+  const [trackingAdminOrder, setTrackingAdminOrder] = useState<Order | null>(null);
+  const [isAssigningAwb, setIsAssigningAwb] = useState(false);
+  const [awbSuccessMsg, setAwbSuccessMsg] = useState<string | null>(null);
+  const [awbErrorMsg, setAwbErrorMsg] = useState<string | null>(null);
+
+  const handleAssignAwb = async (orderId: string) => {
+    if (!token) return;
+    setIsAssigningAwb(true);
+    setAwbSuccessMsg(null);
+    setAwbErrorMsg(null);
+
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}/assign-awb`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to assign AWB via Shiprocket.');
+      }
+
+      setAwbSuccessMsg(`AWB ${data.order?.shiprocketAWB || ''} assigned successfully!`);
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder(data.order);
+      }
+      loadOrders();
+      setTimeout(() => setAwbSuccessMsg(null), 4000);
+    } catch (err: any) {
+      setAwbErrorMsg(err.message || 'Error assigning AWB.');
+      setTimeout(() => setAwbErrorMsg(null), 4000);
+    } finally {
+      setIsAssigningAwb(false);
+    }
+  };
 
   // Check login & load initial data
   useEffect(() => {
@@ -1681,6 +1721,95 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
               </div>
             </div>
 
+            {/* Shiprocket Logistics & Tracking Details */}
+            <div className="p-4 rounded-2xl bg-[#FCFAF2] border border-[#E8E4D5] space-y-3 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#96281B] flex items-center gap-1.5">
+                  <Truck className="w-3.5 h-3.5 text-[#96281B]" />
+                  Shiprocket Logistics & Real-Time Tracking
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                  {selectedOrder.shiprocketStatus || selectedOrder.orderStatus}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+                <div>
+                  <span className="text-[#5D6D7E] block">Courier Partner:</span>
+                  <span className="font-semibold text-[#2C3E50]">
+                    {selectedOrder.shiprocketCourier || 'Shiprocket Partner'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[#5D6D7E] block">AWB Code:</span>
+                  <span className="font-mono font-bold text-[#96281B]">
+                    {selectedOrder.shiprocketAWB || 'Not assigned yet'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[#5D6D7E] block">Shipment ID:</span>
+                  <span className="font-mono text-[#2C3E50]">
+                    {selectedOrder.shiprocketShipmentId || '—'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[#5D6D7E] block">Shiprocket Order ID:</span>
+                  <span className="font-mono text-[#2C3E50]">
+                    {selectedOrder.shiprocketOrderId || '—'}
+                  </span>
+                </div>
+              </div>
+
+              {awbSuccessMsg && (
+                <div className="p-2 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-semibold">
+                  {awbSuccessMsg}
+                </div>
+              )}
+              {awbErrorMsg && (
+                <div className="p-2 bg-rose-50 text-rose-800 rounded-lg text-xs font-semibold">
+                  {awbErrorMsg}
+                </div>
+              )}
+
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setTrackingAdminOrder(selectedOrder)}
+                  className="px-3 py-1.5 bg-[#2D5A27] hover:bg-[#23471f] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                >
+                  <Truck className="w-3.5 h-3.5 text-[#F1C40F]" />
+                  <span>View Live Tracking</span>
+                </button>
+
+                {selectedOrder.shiprocketShipmentId && !selectedOrder.shiprocketAWB && (
+                  <button
+                    type="button"
+                    disabled={isAssigningAwb}
+                    onClick={() => handleAssignAwb(selectedOrder.id)}
+                    className="px-3 py-1.5 bg-[#96281B] hover:bg-[#7D2116] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isAssigningAwb ? 'animate-spin' : ''}`} />
+                    <span>{isAssigningAwb ? 'Assigning AWB...' : 'Generate AWB'}</span>
+                  </button>
+                )}
+
+                {(selectedOrder.shiprocketTrackUrl || selectedOrder.shiprocketAWB) && (
+                  <a
+                    href={
+                      selectedOrder.shiprocketTrackUrl ||
+                      `https://shiprocket.co//tracking/${selectedOrder.shiprocketAWB}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 bg-white border border-[#E8E4D5] hover:bg-[#FCFAF2] text-[#2C3E50] rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                  >
+                    <span>Track on Shiprocket</span>
+                    <ExternalLink className="w-3 h-3 text-[#5D6D7E]" />
+                  </a>
+                )}
+              </div>
+            </div>
+
             {/* Status Update & Actions */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#E8E4D5]">
               <div className="flex items-center gap-2">
@@ -1725,6 +1854,16 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
             <InvoiceView order={viewInvoiceOrder} onClose={() => setViewInvoiceOrder(null)} />
           </div>
         </div>
+      )}
+
+      {/* -------------------------------------------------------------
+          MODAL: SHIPROCKET LIVE TRACKING
+         ------------------------------------------------------------- */}
+      {trackingAdminOrder && (
+        <TrackingModal
+          order={trackingAdminOrder}
+          onClose={() => setTrackingAdminOrder(null)}
+        />
       )}
     </div>
   );

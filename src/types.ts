@@ -164,8 +164,65 @@ export interface Order {
   adminEmailSentAt?: string;
   invoiceGenerated?: boolean;
   invoiceFileName?: string;
+  shiprocketOrderId?: string | number;
+  shiprocketShipmentId?: string | number;
+  shiprocketAWB?: string;
+  shiprocketCourier?: string;
+  shiprocketStatus?: string;
+  shiprocketStatusCode?: number | string;
+  shiprocketEtd?: string;
+  shiprocketTrackUrl?: string;
+  shiprocketActivities?: TrackingActivity[];
+  shiprocketLastSync?: string;
+  shippingCharge?: number;
+  shippingPincode?: string;
+  shippingRate?: number;
+  shippingProvider?: 'shiprocket' | 'standard';
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TrackingActivity {
+  date: string;
+  status: string;
+  activity: string;
+  location?: string;
+  srStatus?: string;
+}
+
+export interface ShipmentTrackingData {
+  orderId: string;
+  orderNumber: string;
+  awbCode?: string;
+  courierName?: string;
+  currentStatus: string;
+  currentStatusCode?: number | string;
+  etd?: string;
+  origin?: string;
+  destination?: string;
+  scans: TrackingActivity[];
+  trackUrl?: string;
+  lastUpdated?: string;
+  isRealtime?: boolean;
+}
+
+export interface CourierOption {
+  courierId: number | string;
+  courierName: string;
+  rate: number;
+  estimatedDeliveryDays?: number | string;
+  etd?: string;
+  minWeight?: number;
+}
+
+export interface ShippingRatesResponse {
+  serviceable: boolean;
+  pincode: string;
+  shippingCharge: number;
+  courierOptions: CourierOption[];
+  packageWeightKg?: number;
+  source?: 'shiprocket' | 'cache';
+  error?: string;
 }
 
 export interface StoreSettings {

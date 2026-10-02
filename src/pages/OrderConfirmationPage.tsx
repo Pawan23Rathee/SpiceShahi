@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Page, Order } from '../types';
 import { InvoiceView } from '../components/InvoiceView';
+import { TrackingModal } from '../components/TrackingModal';
 import {
   CheckCircle2,
   Package,
@@ -28,6 +29,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [showTrackingModal, setShowTrackingModal] = useState(false);
 
   useEffect(() => {
     if (!orderId) {
@@ -115,6 +117,14 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
 
         {/* Actions Strip */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+          <button
+            onClick={() => setShowTrackingModal(true)}
+            className="px-6 py-3 rounded-xl bg-[#96281B] hover:bg-[#7D2116] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
+          >
+            <Truck className="w-4 h-4 text-[#F1C40F]" />
+            <span>Track Shipment (Live)</span>
+          </button>
+
           <a
             href={`/api/orders/${order.id}/invoice-pdf`}
             download={`SpiceShahi-Invoice-${order.orderNumber}.pdf`}
@@ -143,7 +153,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
 
           <button
             onClick={() => onNavigate('products')}
-            className="px-6 py-3 rounded-xl bg-[#96281B] hover:bg-[#7D2116] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
+            className="px-6 py-3 rounded-xl bg-[#FCFAF2] border border-[#E8E4D5] hover:bg-stone-100 text-[#2C3E50] text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
           >
             <span>Continue Shopping</span>
             <ArrowRight className="w-4 h-4" />
@@ -153,13 +163,29 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
 
       {/* Delivery Status & Tracking Banner */}
       <div className="bg-[#F7F3E8] rounded-2xl border border-[#E8E4D5] p-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white border border-[#E8E4D5] flex items-center justify-center text-[#D35400] shrink-0">
+        <div
+          onClick={() => setShowTrackingModal(true)}
+          className="flex items-start gap-3 p-3 bg-white rounded-xl border border-[#E8E4D5] hover:border-[#96281B] transition-all cursor-pointer group shadow-2xs"
+          title="Click to view live tracking timeline"
+        >
+          <div className="w-10 h-10 rounded-xl bg-[#2D5A27]/10 group-hover:bg-[#2D5A27] group-hover:text-white border border-[#E8E4D5] flex items-center justify-center text-[#2D5A27] shrink-0 transition-colors">
             <Truck className="w-5 h-5" />
           </div>
-          <div>
-            <p className="font-bold text-[#2C3E50] text-sm">Estimated Delivery</p>
-            <p className="text-[#5D6D7E] mt-0.5 leading-snug">{deliveryEstimate}</p>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-1">
+              <p className="font-bold text-[#2C3E50] text-sm">Shipment Tracking</p>
+              <span className="text-[10px] font-bold text-[#96281B] group-hover:underline">
+                Live ↗
+              </span>
+            </div>
+            <p className="text-[#5D6D7E] mt-0.5 leading-snug">
+              {order.shiprocketEtd ? `Est: ${order.shiprocketEtd}` : deliveryEstimate}
+            </p>
+            {order.shiprocketAWB && (
+              <span className="inline-block mt-1 font-mono text-[10px] font-bold bg-[#FCFAF2] px-2 py-0.5 rounded border border-[#E8E4D5] text-[#96281B]">
+                AWB: {order.shiprocketAWB}
+              </span>
+            )}
           </div>
         </div>
 
@@ -287,6 +313,14 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
             <InvoiceView order={order} onClose={() => setShowInvoiceModal(false)} />
           </div>
         </div>
+      )}
+
+      {/* Real-Time Tracking Modal */}
+      {showTrackingModal && (
+        <TrackingModal
+          order={order}
+          onClose={() => setShowTrackingModal(false)}
+        />
       )}
     </div>
   );

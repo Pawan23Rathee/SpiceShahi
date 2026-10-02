@@ -184,35 +184,15 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
                 Order Summary
               </h2>
 
-              {/* State Delivery Selector */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-[#2C3E50] uppercase tracking-wider block">
-                  Delivery Destination State:
-                </label>
-                <select
-                  value={selectedState}
-                  onChange={(e) => setSelectedState(e.target.value)}
-                  className="w-full text-xs bg-[#FCFAF2] border border-[#E8E4D5] rounded-xl px-3 py-2.5 text-[#2C3E50] font-medium focus:outline-hidden focus:ring-2 focus:ring-[#96281B]"
-                >
-                  {INDIAN_STATES.map((s) => (
-                    <option key={s.name} value={s.name}>
-                      {s.name} {s.isHaryana ? '(₹' + deliverySettings.haryana + ')' : '(₹' + deliverySettings.outsideHaryana + ')'}
-                    </option>
-                  ))}
-                </select>
-
-                <div className="p-2.5 rounded-lg bg-[#FCFAF2] border border-[#E8E4D5] text-[11px] text-[#5D6D7E]">
-                  {isHaryana ? (
-                    <span className="text-[#2D5A27] font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                      Haryana Delivery Rate: ₹{deliverySettings.haryana}
-                    </span>
-                  ) : (
-                    <span>
-                      Standard Delivery (Outside Haryana): ₹{deliverySettings.outsideHaryana}
-                    </span>
-                  )}
+              {/* Shiprocket Dynamic Delivery Info */}
+              <div className="p-3.5 rounded-xl bg-[#FCFAF2] border border-[#E8E4D5] text-xs text-[#5D6D7E] space-y-1.5">
+                <div className="flex items-center gap-1.5 font-bold text-[#2C3E50]">
+                  <Truck className="w-4 h-4 text-[#96281B]" />
+                  <span>Real-Time Shipping via Shiprocket</span>
                 </div>
+                <p className="text-[11px] text-[#5D6D7E] leading-relaxed">
+                  Courier serviceability and dynamic shipping charges will be automatically calculated based on your delivery PIN code at checkout.
+                </p>
               </div>
 
               {/* Price Calculations */}
@@ -222,14 +202,12 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
                   <span className="font-semibold text-[#2C3E50]">₹{subtotal}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>
-                    Delivery ({isHaryana ? 'Haryana' : 'Outside Haryana'})
-                  </span>
-                  <span className="font-semibold text-[#2C3E50]">₹{deliveryCharge}</span>
+                  <span>Shipping & Delivery</span>
+                  <span className="text-[11px] text-[#2D5A27] font-semibold">Calculated at Checkout</span>
                 </div>
                 <div className="flex justify-between text-base font-bold text-[#2C3E50] pt-3 border-t border-[#E8E4D5]">
-                  <span>Grand Total</span>
-                  <span className="font-serif text-2xl text-[#96281B]">₹{grandTotal}</span>
+                  <span>Total (Excl. Shipping)</span>
+                  <span className="font-serif text-2xl text-[#96281B]">₹{subtotal}</span>
                 </div>
               </div>
 

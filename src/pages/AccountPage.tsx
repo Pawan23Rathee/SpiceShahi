@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Page, Order, SavedAddress } from '../types';
 import { useAuth } from '../context/AuthContext';
+import { TrackingModal } from '../components/TrackingModal';
 import {
   User,
   Package,
@@ -19,6 +20,7 @@ import {
   Clock,
   ChevronRight,
   Eye,
+  Truck,
 } from 'lucide-react';
 
 interface AccountPageProps {
@@ -42,6 +44,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<Order | null>(null);
+  const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
 
   // Address Modal/Form State
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -295,7 +298,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E8E4D5]">
                     <div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <span className="font-mono font-bold text-sm text-[#2C3E50]">
                           #{order.orderNumber}
                         </span>
@@ -303,8 +306,14 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
                           {order.paymentStatus}
                         </span>
                         <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                          {order.orderStatus}
+                          {order.shiprocketStatus || order.orderStatus}
                         </span>
+                        {order.shiprocketAWB && (
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-stone-100 text-[#2C3E50] border border-stone-200 flex items-center gap-1">
+                            <Truck className="w-3 h-3 text-[#96281B]" />
+                            <span>AWB: {order.shiprocketAWB}</span>
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-[#5D6D7E] mt-1 flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5" />
@@ -316,10 +325,22 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
                             year: 'numeric',
                           })}
                         </span>
+                        {order.shiprocketCourier && (
+                          <span className="hidden sm:inline text-stone-400">• Via {order.shiprocketCourier}</span>
+                        )}
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => setTrackingOrder(order)}
+                        className="px-3.5 py-1.5 rounded-lg bg-[#2D5A27] text-white hover:bg-[#23471f] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                        title="Track Real-Time Delivery"
+                      >
+                        <Truck className="w-3.5 h-3.5 text-[#F1C40F]" />
+                        <span>Track Order</span>
+                      </button>
+
                       <button
                         onClick={() => onNavigate('invoice', order.id)}
                         className="px-3.5 py-1.5 rounded-lg border border-[#E8E4D5] text-[#2C3E50] hover:bg-[#FCFAF2] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -360,7 +381,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
                   {/* Expanded Order Details Modal / Drawer */}
                   {selectedOrderDetails?.id === order.id && (
                     <div className="pt-4 border-t border-[#E8E4D5] space-y-4 animate-in fade-in duration-200">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#FCFAF2] p-4 rounded-xl border border-[#E8E4D5] text-xs">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#FCFAF2] p-4 rounded-xl border border-[#E8E4D5] text-xs">
                         <div>
                           <p className="font-bold text-[#96281B] uppercase tracking-wider text-[10px] mb-1">
                             Delivery Address
@@ -391,11 +412,34 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
                             </p>
                           )}
                           <p className="mt-1">
-                            <span className="text-[#5D6D7E]">Delivery State: </span>
+                            <span className="text-[#5D6D7E]">Delivery Rate: </span>
                             <span className="font-semibold">
                               {order.deliveryState} (₹{order.deliveryCharge})
                             </span>
                           </p>
+                        </div>
+
+                        <div>
+                          <p className="font-bold text-[#96281B] uppercase tracking-wider text-[10px] mb-1">
+                            Shipment & Live Tracking
+                          </p>
+                          <p>
+                            <span className="text-[#5D6D7E]">Courier: </span>
+                            <span className="font-semibold">{order.shiprocketCourier || 'Shiprocket Partner'}</span>
+                          </p>
+                          <p>
+                            <span className="text-[#5D6D7E]">AWB: </span>
+                            <span className="font-mono font-semibold text-[#96281B]">
+                              {order.shiprocketAWB || 'Assigned after milling'}
+                            </span>
+                          </p>
+                          <button
+                            onClick={() => setTrackingOrder(order)}
+                            className="mt-2 w-full py-1.5 px-3 bg-[#2D5A27] hover:bg-[#23471f] text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+                          >
+                            <Truck className="w-3.5 h-3.5 text-[#F1C40F]" />
+                            <span>View Live Tracking</span>
+                          </button>
                         </div>
                       </div>
 
@@ -787,6 +831,14 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Real-Time Live Tracking Modal */}
+      {trackingOrder && (
+        <TrackingModal
+          order={trackingOrder}
+          onClose={() => setTrackingOrder(null)}
+        />
       )}
     </div>
   );

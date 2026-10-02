@@ -1,5 +1,113 @@
 [
   {
+    "id": "SS1027",
+    "orderNumber": "SS1027",
+    "customer": {
+      "fullName": "Pawan",
+      "mobile": "8767876787",
+      "email": "ratheepawan666@gmail.com",
+      "addressLine1": "Bahadurgarh",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Bahadurgarh",
+      "state": "Haryana",
+      "pincode": "124507",
+      "country": "India"
+    },
+    "items": [
+      {
+        "productId": "coriander-powder",
+        "name": "SpiceShahi Desi Khushboo Coriander Powder (Dhaniya)",
+        "hindiName": "देसी खुशबू धनिया पाउडर (Dhaniya)",
+        "packSize": "100g Pouch",
+        "weightInGrams": 100,
+        "price": 50,
+        "quantity": 1,
+        "subtotal": 50,
+        "imageUrl": "/images/100g-coriander.png"
+      }
+    ],
+    "subtotal": 50,
+    "deliveryCharge": 50,
+    "deliveryState": "Haryana",
+    "grandTotal": 100,
+    "paymentMethod": "ONLINE_RAZORPAY",
+    "paymentStatus": "PENDING",
+    "orderStatus": "SHIPPED",
+    "razorpayOrderId": "order_TitRpbB1gDfXWv",
+    "createdAt": "2026-10-02T03:35:44.209Z",
+    "updatedAt": "2026-10-02T04:06:13.854Z",
+    "shiprocketStatus": "OUT FOR DELIVERY",
+    "shiprocketStatusCode": 21,
+    "shiprocketAWB": "142857002",
+    "shiprocketCourier": "Delhivery Express",
+    "shiprocketEtd": "2026-10-03",
+    "shiprocketTrackUrl": "https://shiprocket.co//tracking/142857002",
+    "shiprocketActivities": [
+      {
+        "date": "2026-10-02T03:50:00Z",
+        "status": "PICKED UP",
+        "activity": "Shipment picked up by Delhivery agent",
+        "location": "Bahadurgarh Hub",
+        "srStatus": ""
+      },
+      {
+        "date": "2026-10-02T04:00:00Z",
+        "status": "IN TRANSIT",
+        "activity": "Arrived at Rohtak Sorting Center",
+        "location": "Rohtak Hub",
+        "srStatus": ""
+      },
+      {
+        "date": "2026-10-02T05:00:00Z",
+        "status": "OUT FOR DELIVERY",
+        "activity": "Out for delivery with courier rider",
+        "location": "Bahadurgarh Hub",
+        "srStatus": ""
+      }
+    ],
+    "shiprocketLastSync": "2026-10-02T04:06:13.853Z"
+  },
+  {
+    "id": "SS1026",
+    "orderNumber": "SS1026",
+    "customer": {
+      "fullName": "Pawan",
+      "mobile": "8767876787",
+      "email": "ratheepawan666@gmail.com",
+      "addressLine1": "Bahadurgarh",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Bahadurgarh",
+      "state": "Haryana",
+      "pincode": "124507",
+      "country": "India"
+    },
+    "items": [
+      {
+        "productId": "coriander-powder",
+        "name": "SpiceShahi Desi Khushboo Coriander Powder (Dhaniya)",
+        "hindiName": "देसी खुशबू धनिया पाउडर (Dhaniya)",
+        "packSize": "100g Pouch",
+        "weightInGrams": 100,
+        "price": 50,
+        "quantity": 1,
+        "subtotal": 50,
+        "imageUrl": "/images/100g-coriander.png"
+      }
+    ],
+    "subtotal": 50,
+    "deliveryCharge": 50,
+    "deliveryState": "Haryana",
+    "grandTotal": 100,
+    "paymentMethod": "ONLINE_RAZORPAY",
+    "paymentStatus": "PENDING",
+    "orderStatus": "NEW",
+    "razorpayOrderId": "order_TitRVVpJBVCFri",
+    "createdAt": "2026-10-02T03:35:25.814Z",
+    "updatedAt": "2026-10-02T03:35:25.814Z"
+  },
+  {
     "id": "SS1025",
     "orderNumber": "SS1025",
     "customerId": "cust_pawan",
@@ -33,11 +141,14 @@
     "grandTotal": 105,
     "paymentMethod": "ONLINE_RAZORPAY",
     "paymentStatus": "PAID",
-    "orderStatus": "CONFIRMED",
+    "orderStatus": "SHIPPED",
     "razorpayOrderId": "order_TgupNiAF6Jst2f",
     "razorpayPaymentId": "pay_TgupvlTd3ko2V4",
     "razorpaySignature": "821855ef09c5387d0664d11f9e3f8ce60048e7cd3245724c382f11fdcbb3ccf8",
     "createdAt": "2026-09-27T03:38:43.283Z",
-    "updatedAt": "2026-09-27T03:39:32.078Z"
+    "updatedAt": "2026-10-02T03:47:53.350Z",
+    "shiprocketStatus": "IN TRANSIT",
+    "shiprocketAWB": "AWB987654321",
+    "shiprocketCourier": "Delhivery"
   }
 ]

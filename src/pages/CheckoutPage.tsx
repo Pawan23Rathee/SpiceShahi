@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Page, CustomerDetails, SavedAddress } from '../types';
+import React, { useState, useEffect, useRef } from 'react';
+import { Page, CustomerDetails, SavedAddress, CourierOption } from '../types';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { platformService } from '../services';
@@ -56,6 +56,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Dynamic Shiprocket shipping state
+  const [shippingRate, setShippingRate] = useState<number | null>(null);
+  const [isCalculatingShipping, setIsCalculatingShipping] = useState<boolean>(false);
+  const [shippingError, setShippingError] = useState<string | null>(null);
+  const [courierOptions, setCourierOptions] = useState<CourierOption[]>([]);
+  const shippingCacheRef = useRef<Map<string, { rate: number; courierOptions: CourierOption[]; serviceable: boolean; error?: string }>>(new Map());
 
   // Simulated modal for test mode when Razorpay live keys are not set
   const [testModalOrder, setTestModalOrder] = useState<any>(null);
@@ -137,14 +144,98 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
   };
 
   const activeAddress = getActiveAddress();
-  const isHaryana = (activeAddress.state || '').trim().toLowerCase() === 'haryana';
-  const deliveryCharge =
-    items.length === 0
-      ? 0
-      : isHaryana
-      ? deliverySettings.haryana
-      : deliverySettings.outsideHaryana;
+  const deliveryCharge = items.length === 0 ? 0 : (shippingRate ?? 0);
   const grandTotal = subtotal + deliveryCharge;
+
+  // Fetch dynamic shipping rates from backend Shiprocket endpoint
+  const fetchShippingRates = async (pinInput: string, force = false) => {
+    const cleanPin = (pinInput || '').replace(/\D/g, '').slice(0, 6);
+    if (cleanPin.length !== 6) {
+      setShippingRate(null);
+      setShippingError(null);
+      setIsCalculatingShipping(false);
+      return;
+    }
+
+    if (!force && shippingCacheRef.current.has(cleanPin)) {
+      const cached = shippingCacheRef.current.get(cleanPin)!;
+      if (cached.serviceable) {
+        setShippingRate(cached.rate);
+        setCourierOptions(cached.courierOptions);
+        setShippingError(null);
+      } else {
+        setShippingRate(null);
+        setCourierOptions([]);
+        setShippingError(cached.error || 'Sorry, delivery is currently unavailable for this pincode.');
+      }
+      return;
+    }
+
+    setIsCalculatingShipping(true);
+    setShippingError(null);
+
+    try {
+      const res = await fetch('/api/shipping/rates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pincode: cleanPin,
+          items: items.map((i) => ({
+            productId: i.productId,
+            weightInGrams: i.weightInGrams,
+            quantity: i.quantity,
+          })),
+          subtotal,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.serviceable) {
+        setShippingRate(data.shippingCharge);
+        setCourierOptions(data.courierOptions || []);
+        setShippingError(null);
+        shippingCacheRef.current.set(cleanPin, {
+          rate: data.shippingCharge,
+          courierOptions: data.courierOptions || [],
+          serviceable: true,
+        });
+      } else {
+        setShippingRate(null);
+        setCourierOptions([]);
+        const errMsg = data.error || 'Sorry, delivery is currently unavailable for this pincode.';
+        setShippingError(errMsg);
+        shippingCacheRef.current.set(cleanPin, {
+          rate: 0,
+          courierOptions: [],
+          serviceable: false,
+          error: errMsg,
+        });
+      }
+    } catch (err: any) {
+      console.error('Shipping calculation error:', err);
+      setShippingRate(null);
+      setCourierOptions([]);
+      setShippingError('Could not reach shipping rate service. Please check your connection and retry.');
+    } finally {
+      setIsCalculatingShipping(false);
+    }
+  };
+
+  // Debounced rate calculation when delivery PIN code changes
+  useEffect(() => {
+    const pin = activeAddress.pincode ? String(activeAddress.pincode).replace(/\D/g, '').slice(0, 6) : '';
+    if (pin.length === 6) {
+      const timer = setTimeout(() => {
+        fetchShippingRates(pin);
+      }, 600);
+      return () => clearTimeout(timer);
+    } else {
+      setShippingRate(null);
+      setShippingError(null);
+      setIsCalculatingShipping(false);
+    }
+  }, [activeAddress.pincode, items, subtotal]);
 
   // Auto-detect state if pincode is typed in new address
   const handlePincodeChange = (pin: string) => {
@@ -263,6 +354,21 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
       return;
     }
 
+    if (isCalculatingShipping) {
+      setErrorMessage('Please wait a moment while delivery charges are being calculated...');
+      return;
+    }
+
+    if (shippingError) {
+      setErrorMessage(shippingError);
+      return;
+    }
+
+    if (shippingRate === null) {
+      setErrorMessage('Please provide a valid 6-digit delivery PIN code to calculate shipping charges.');
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
@@ -283,7 +389,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
         addressLabel: addressForm.label,
       };
 
-      const res = await fetch('/api/payment/create-order', {
+      const res = await fetch('/api/create-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -299,16 +405,39 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
       const orderData = await res.json();
 
-      // Check if Razorpay script is loaded and we have real key ID
-      if (!orderData.isTestMode && window.Razorpay && orderData.keyId) {
+      // Ensure Razorpay SDK script is loaded
+      if (!window.Razorpay) {
+        await new Promise<void>((resolve) => {
+          const script = document.getElementById('razorpay-checkout-js') as HTMLScriptElement;
+          if (script) {
+            script.addEventListener('load', () => resolve());
+            setTimeout(resolve, 1500);
+          } else {
+            const newScript = document.createElement('script');
+            newScript.id = 'razorpay-checkout-js';
+            newScript.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            newScript.onload = () => resolve();
+            newScript.onerror = () => resolve();
+            document.body.appendChild(newScript);
+          }
+        });
+      }
+
+      const razorpayKey =
+        orderData.key_id ||
+        orderData.keyId ||
+        (import.meta as any).env?.VITE_RAZORPAY_KEY_ID;
+
+      // Launch Razorpay Standard Checkout modal
+      if (window.Razorpay && razorpayKey) {
         const options = {
-          key: orderData.keyId,
+          key: razorpayKey,
           amount: orderData.amount,
-          currency: 'INR',
+          currency: orderData.currency || 'INR',
           name: 'SpiceShahi Spices & Masalas',
-          description: `Order #${orderData.orderNumber}`,
+          description: `Order #${orderData.orderNumber || orderData.orderId}`,
           image: '/images/spiceshahi-logo.jpg',
-          order_id: orderData.razorpayOrderId,
+          order_id: orderData.order_id || orderData.razorpayOrderId,
           prefill: {
             name: activeAddress.fullName,
             email: activeAddress.email,
@@ -319,23 +448,27 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
           },
           handler: async (response: any) => {
             try {
-              const verifyRes = await fetch('/api/payment/verify', {
+              setIsProcessing(true);
+              const verifyRes = await fetch('/api/verify-payment', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
+                  order_id: response.razorpay_order_id,
+                  payment_id: response.razorpay_payment_id,
+                  signature: response.razorpay_signature,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
                   orderId: orderData.orderId,
-                  razorpayOrderId: response.razorpay_order_id,
-                  razorpayPaymentId: response.razorpay_payment_id,
-                  razorpaySignature: response.razorpay_signature,
                 }),
               });
 
-              if (!verifyRes.ok) {
-                const vErr = await verifyRes.json();
-                throw new Error(vErr.error || 'Payment signature verification failed.');
+              const verifyData = await verifyRes.json();
+              if (!verifyRes.ok || !verifyData.success) {
+                throw new Error(verifyData.error || 'Payment signature verification failed.');
               }
 
               clearCart();
@@ -348,6 +481,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
           modal: {
             ondismiss: () => {
               setIsProcessing(false);
+              setErrorMessage('Payment was cancelled or closed. You can retry whenever you are ready.');
             },
           },
         };
@@ -361,7 +495,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
         });
         rzp.open();
       } else {
-        // Fallback test mode simulation when live Razorpay keys are not in environment
+        // Fallback test mode simulation if script could not be initialized
         setTestModalOrder(orderData);
         setIsProcessing(false);
       }
@@ -460,7 +594,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                     Select Delivery Address
                   </h2>
                   <p className="text-xs text-[#5D6D7E]">
-                    Delivery: Haryana ₹50 • Rest of India ₹100
+                    Real-time courier serviceability & dynamic shipping via Shiprocket
                   </p>
                 </div>
               </div>
@@ -475,7 +609,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {customer.savedAddresses.map((addr) => {
                     const isSelected = selectedAddressId === addr.id;
-                    const addrIsHaryana = addr.state.trim().toLowerCase() === 'haryana';
                     return (
                       <div
                         key={addr.id}
@@ -490,14 +623,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                           <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-white border border-[#E8E4D5] text-[#96281B]">
                             {addr.label || 'Home'}
                           </span>
-                          <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                              addrIsHaryana
-                                ? 'bg-green-50 text-green-700'
-                                : 'bg-amber-50 text-amber-700'
-                            }`}
-                          >
-                            {addrIsHaryana ? 'Haryana (₹50)' : 'Other State (₹100)'}
+                          <span className="text-[10px] font-semibold text-[#5D6D7E] bg-stone-100 px-2 py-0.5 rounded">
+                            PIN: {addr.pincode}
                           </span>
                         </div>
                         <p className="text-xs font-bold text-[#2C3E50]">{addr.fullName}</p>
@@ -708,7 +835,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                     >
                       {INDIAN_STATES.map((s) => (
                         <option key={s.code} value={s.name}>
-                          {s.name} {s.name === 'Haryana' ? '(Delivery: ₹50)' : '(Delivery: ₹100)'}
+                          {s.name}
                         </option>
                       ))}
                     </select>
@@ -776,16 +903,44 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                 <div className="flex items-center gap-1.5">
                   <Truck className="w-3.5 h-3.5 text-[#96281B]" />
                   <span>
-                    Delivery ({activeAddress.state || 'Haryana'}):
+                    Delivery {activeAddress.pincode ? `(PIN ${activeAddress.pincode})` : ''}:
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-[#2C3E50]">₹{deliveryCharge}</span>
-                  <span className="text-[10px] text-[#96281B] block font-semibold">
-                    {isHaryana ? 'Haryana Local Rate' : 'National Dispatch'}
-                  </span>
+                  {isCalculatingShipping ? (
+                    <span className="text-[11px] text-[#D35400] font-semibold animate-pulse">Calculating shipping...</span>
+                  ) : shippingError ? (
+                    <span className="text-[10px] text-red-600 font-semibold block">Unavailable</span>
+                  ) : shippingRate !== null ? (
+                    <>
+                      <span className="font-bold text-[#2C3E50]">₹{shippingRate}</span>
+                      <span className="text-[10px] text-[#2D5A27] block font-semibold">
+                        Shiprocket {courierOptions.length > 0 && courierOptions[0].courierName ? `(${courierOptions[0].courierName})` : ''}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-[#5D6D7E] italic">Calculated at PIN entry</span>
+                  )}
                 </div>
               </div>
+
+              {shippingError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center justify-between animate-in fade-in">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                    <span>{shippingError}</span>
+                  </div>
+                  {activeAddress.pincode && activeAddress.pincode.length === 6 && (
+                    <button
+                      type="button"
+                      onClick={() => fetchShippingRates(activeAddress.pincode, true)}
+                      className="text-[11px] font-bold text-[#96281B] hover:underline cursor-pointer ml-2 shrink-0"
+                    >
+                      Retry
+                    </button>
+                  )}
+                </div>
+              )}
 
               <div className="flex items-center justify-between pt-3 border-t border-[#E8E4D5] text-sm font-bold text-[#2C3E50]">
                 <span>Grand Total</span>
@@ -804,11 +959,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             <button
               id="checkout-pay-razorpay-btn"
               onClick={handleProceedToPayment}
-              disabled={isProcessing}
+              disabled={isProcessing || isCalculatingShipping}
               className="w-full py-4 bg-[#96281B] hover:bg-[#7D2116] disabled:bg-stone-300 text-white rounded-2xl font-bold text-xs uppercase tracking-widest shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               {isProcessing ? (
                 <span>Securing Payment Order...</span>
+              ) : isCalculatingShipping ? (
+                <span>Calculating Shipping Rate...</span>
               ) : (
                 <>
                   <CreditCard className="w-4 h-4" />
