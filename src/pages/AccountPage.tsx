@@ -188,26 +188,26 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
       {/* Account Hero Bar */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E8E4D5] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-linear-to-tr from-[#96281B] to-[#D35400] text-white flex items-center justify-center font-serif text-2xl font-bold shadow-md">
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-[#E8E4D5] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-linear-to-tr from-[#96281B] to-[#D35400] text-white flex items-center justify-center font-serif text-xl sm:text-2xl font-bold shadow-md shrink-0">
             {customer.fullName.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-serif font-bold text-[#2C3E50]">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-lg sm:text-2xl font-serif font-bold text-[#2C3E50] truncate">
                 {customer.fullName}
               </h1>
               {customer.googleId && (
-                <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200">
+                <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200 shrink-0">
                   Google Linked
                 </span>
               )}
             </div>
-            <p className="text-xs text-[#5D6D7E] flex items-center gap-2 mt-0.5">
-              <span>{customer.email}</span>
+            <p className="text-xs text-[#5D6D7E] flex items-center gap-2 mt-0.5 flex-wrap">
+              <span className="truncate">{customer.email}</span>
               {customer.mobile && <span>• {customer.mobile}</span>}
             </p>
           </div>
@@ -218,7 +218,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
             logout();
             onNavigate('home');
           }}
-          className="px-4 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer self-start sm:self-auto"
+          className="px-4 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer self-start sm:self-auto shrink-0"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>
@@ -226,10 +226,10 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-[#E8E4D5] gap-4 sm:gap-8">
+      <div className="flex border-b border-[#E8E4D5] gap-2 sm:gap-8 overflow-x-auto scrollbar-none pb-0.5">
         <button
           onClick={() => setActiveTab('orders')}
-          className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors border-b-2 -mb-px ${
+          className={`pb-3 sm:pb-4 text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 cursor-pointer transition-colors border-b-2 -mb-px shrink-0 whitespace-nowrap ${
             activeTab === 'orders'
               ? 'border-[#96281B] text-[#96281B]'
               : 'border-transparent text-[#5D6D7E] hover:text-[#2C3E50]'
@@ -241,7 +241,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
 
         <button
           onClick={() => setActiveTab('addresses')}
-          className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors border-b-2 -mb-px ${
+          className={`pb-3 sm:pb-4 text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 cursor-pointer transition-colors border-b-2 -mb-px shrink-0 whitespace-nowrap ${
             activeTab === 'addresses'
               ? 'border-[#96281B] text-[#96281B]'
               : 'border-transparent text-[#5D6D7E] hover:text-[#2C3E50]'
@@ -253,7 +253,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({ onNavigate }) => {
 
         <button
           onClick={() => setActiveTab('profile')}
-          className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer transition-colors border-b-2 -mb-px ${
+          className={`pb-3 sm:pb-4 text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 cursor-pointer transition-colors border-b-2 -mb-px shrink-0 whitespace-nowrap ${
             activeTab === 'profile'
               ? 'border-[#96281B] text-[#96281B]'
               : 'border-transparent text-[#5D6D7E] hover:text-[#2C3E50]'

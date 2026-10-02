@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Product, PackSize } from '../types';
 import { useCart } from '../context/CartContext';
-import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppOrderButton } from './WhatsAppComponents';
 import {
   Eye,
   Flame,
@@ -72,14 +70,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
       </div>
 
       {/* Content */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-        <div>
+      <div className="p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-3 sm:space-y-4 min-w-0">
+        <div className="min-w-0">
           {/* Category & Hindi Name */}
-          <div className="flex items-center justify-between gap-2 text-xs mb-1.5">
-            <span className="text-[#D35400] font-bold uppercase tracking-widest text-[10px] bg-[#F39C12]/15 px-2 py-0.5 rounded">
+          <div className="flex items-center justify-between gap-2 text-xs mb-1.5 flex-wrap">
+            <span className="text-[#D35400] font-bold uppercase tracking-widest text-[10px] bg-[#F39C12]/15 px-2 py-0.5 rounded shrink-0">
               {product.categoryLabel}
             </span>
-            <span className="text-[#5D6D7E] font-serif italic text-xs font-medium">
+            <span className="text-[#5D6D7E] font-serif italic text-xs font-medium truncate">
               {product.hindiName}
             </span>
           </div>
@@ -87,24 +85,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
           {/* Product Name */}
           <h3
             onClick={() => onSelectProduct(product.slug)}
-            className="font-serif italic font-bold text-lg text-[#2C3E50] group-hover:text-[#96281B] transition-colors cursor-pointer line-clamp-1"
+            className="font-serif italic font-bold text-base sm:text-lg text-[#2C3E50] group-hover:text-[#96281B] transition-colors cursor-pointer line-clamp-2 break-words"
           >
             {product.name}
           </h3>
 
           {/* Short Description */}
-          <p className="text-xs text-[#5D6D7E] line-clamp-2 mt-1.5 leading-relaxed">
+          <p className="text-xs text-[#5D6D7E] line-clamp-2 mt-1.5 leading-relaxed break-words">
             {product.shortDesc}
           </p>
 
           {/* Aroma Notes Feature */}
-          <div className="mt-3 p-2.5 rounded-lg bg-white border border-[#E8E4D5] text-[11px] text-[#2C3E50] flex items-start gap-1.5">
+          <div className="mt-2.5 sm:mt-3 p-2 sm:p-2.5 rounded-lg bg-white border border-[#E8E4D5] text-[11px] text-[#2C3E50] flex items-start gap-1.5 min-w-0">
             <span className="text-[#D35400] font-bold shrink-0">Khushboo:</span>
-            <span className="line-clamp-1 italic text-[#5D6D7E]">{product.aromaNotes}</span>
+            <span className="line-clamp-1 italic text-[#5D6D7E] break-words">{product.aromaNotes}</span>
           </div>
 
           {/* Pack Size Pills */}
-          <div className="mt-3.5">
+          <div className="mt-3 sm:mt-3.5">
             <span className="text-[10px] uppercase tracking-wider text-[#5D6D7E] font-bold block mb-1.5">
               Available Packs:
             </span>
@@ -119,7 +117,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
                       e.stopPropagation();
                       setSelectedPackIndex(idx);
                     }}
-                    className={`px-2.5 py-1 text-[11px] font-semibold rounded-md border transition-all cursor-pointer ${
+                    className={`px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-semibold rounded-md border transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-[#96281B] text-white border-[#96281B] shadow-xs'
                         : 'bg-white text-[#2C3E50] border-[#E8E4D5] hover:border-[#96281B]/40'
@@ -134,11 +132,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
         </div>
 
         {/* Pricing & Actions */}
-        <div className="pt-3 border-t border-[#E8E4D5] space-y-3">
-          <div className="flex items-baseline justify-between">
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-serif font-bold text-2xl text-[#96281B]">
+        <div className="pt-3 border-t border-[#E8E4D5] space-y-3 min-w-0">
+          <div className="flex items-baseline justify-between gap-2 flex-wrap">
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
+                <span className="font-serif font-bold text-xl sm:text-2xl text-[#96281B]">
                   ₹{currentPack.price}
                 </span>
                 {currentPack.originalPrice && (
@@ -152,8 +150,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
               </div>
             </div>
 
-            <div className="flex items-center text-[11px] text-[#2D5A27] font-bold gap-1 bg-[#2D5A27]/10 px-2 py-0.5 rounded">
-              <Check className="w-3.5 h-3.5" />
+            <div className="flex items-center text-[10px] sm:text-[11px] text-[#2D5A27] font-bold gap-1 bg-[#2D5A27]/10 px-2 py-0.5 rounded shrink-0">
+              <Check className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               <span>In Stock</span>
             </div>
           </div>
@@ -164,26 +162,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
               id={`add-to-cart-${product.slug}`}
               type="button"
               onClick={handleOpenVariantModal}
-              className="w-full py-2.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md bg-[#96281B] hover:bg-[#7D2116] text-white shadow-[#96281B]/20 cursor-pointer active:scale-[0.99]"
+              className="w-full py-2.5 px-3 sm:px-4 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md bg-[#96281B] hover:bg-[#7D2116] text-white shadow-[#96281B]/20 cursor-pointer active:scale-[0.99]"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>Add to Cart</span>
             </button>
           </div>
 
-          {/* Optional Direct WhatsApp Ordering Button */}
-          {ENABLE_WHATSAPP && (
-            <div>
-              <WhatsAppOrderButton
-                productName={product.name}
-                packSize={currentPack.size}
-                price={currentPack.price}
-              />
-            </div>
-          )}
-
           {/* Secondary Action: View Product Details */}
-          <div className="pt-1">
+          <div className="pt-0.5">
             <button
               type="button"
               onClick={() => onSelectProduct(product.slug)}

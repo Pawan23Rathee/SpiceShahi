@@ -85,8 +85,8 @@ export const TrackingModal: React.FC<TrackingModalProps> = ({ order, onClose }) 
   ];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs p-4 sm:p-6 flex items-center justify-center animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-[#E8E4D5] max-h-[92vh] overflow-y-auto relative">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs p-2.5 sm:p-6 flex items-center justify-center animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 space-y-4 sm:space-y-6 shadow-2xl border border-[#E8E4D5] max-h-[92vh] overflow-y-auto relative">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-[#E8E4D5]">
           <div className="flex items-center gap-3">

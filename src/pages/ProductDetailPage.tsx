@@ -5,8 +5,6 @@ import { ProductCard } from '../components/ProductCard';
 import { getFriendlyToastText } from '../components/ProductVariantModal';
 import { useCart } from '../context/CartContext';
 import { platformService } from '../services';
-import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppOrderButton } from '../components/WhatsAppComponents';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -72,9 +70,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   };
 
   return (
-    <div className="space-y-16 pb-16 pt-6">
+    <div className="space-y-10 sm:space-y-16 pb-12 sm:pb-16 pt-4 sm:pt-6">
       {/* Breadcrumb & Back Navigation */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <button
             onClick={() => onNavigate('products')}
@@ -96,15 +94,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       </div>
 
       {/* Main Product Showcase Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
           {/* Left: Large Product Image Gallery */}
-          <div className="lg:col-span-6 space-y-4">
+          <div className="lg:col-span-6 space-y-4 w-full min-w-0">
             <div className="relative aspect-4/3 sm:aspect-1/1 rounded-3xl overflow-hidden bg-[#FCFAF2] border border-[#E8E4D5] shadow-lg group">
               <img
                 src={currentPack.imageUrl || product.imageUrl}
                 alt={`${product.name} — ${currentPack.size}`}
-                className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-contain p-4 sm:p-6 group-hover:scale-105 transition-transform duration-700"
               />
 
               {/* Badges on image */}
@@ -118,14 +116,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               )}
 
               {product.curcuminOrOilContent && (
-                <div className="absolute bottom-4 left-4 bg-[#2C3E50]/90 backdrop-blur-xs text-[#FCFAF2] px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-white/10 shadow-sm">
+                <div className="absolute bottom-4 left-4 bg-[#2C3E50]/90 backdrop-blur-xs text-[#FCFAF2] px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-white/10 shadow-sm max-w-[80%] truncate">
                   {product.curcuminOrOilContent}
                 </div>
               )}
             </div>
 
             {/* Farm Origin Strip */}
-            <div className="p-4 rounded-2xl bg-white border border-[#E8E4D5] flex items-center justify-between text-xs text-[#5D6D7E] shadow-xs">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-[#E8E4D5] flex flex-col sm:flex-row sm:items-center justify-between text-xs text-[#5D6D7E] shadow-xs gap-1.5">
               <span className="font-medium">Origin: <strong className="text-[#2C3E50]">{product.origin}</strong></span>
               <span className="text-[#2D5A27] font-bold flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
@@ -213,7 +211,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <label className="text-[11px] uppercase font-bold tracking-[0.18em] text-[#2C3E50] block">
                 Select Pack Size:
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
                 {product.packSizes.map((pack, idx) => {
                   const isSelected = selectedPackIndex === idx;
                   return (
@@ -221,13 +219,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       key={pack.size}
                       id={`pack-size-btn-${idx}`}
                       onClick={() => setSelectedPackIndex(idx)}
-                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                      className={`p-3 sm:p-3.5 rounded-xl border text-left transition-all cursor-pointer min-w-0 ${
                         isSelected
                           ? 'border-[#96281B] bg-[#96281B]/5 ring-2 ring-[#96281B] shadow-sm'
                           : 'border-[#E8E4D5] bg-white hover:border-[#96281B]/40'
                       }`}
                     >
-                      <p className="text-xs font-bold text-[#2C3E50]">{pack.size}</p>
+                      <p className="text-xs font-bold text-[#2C3E50] truncate">{pack.size}</p>
                       <p className="text-sm font-serif italic font-bold text-[#96281B] mt-0.5">
                         ₹{pack.price}
                       </p>
@@ -243,12 +241,12 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             </div>
 
             {/* Price Display & E-commerce Checkout Action */}
-            <div className="bg-white p-6 rounded-2xl border border-[#E8E4D5] space-y-5 shadow-xs">
-              <div className="flex items-baseline justify-between">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-[#E8E4D5] space-y-4 sm:space-y-5 shadow-xs">
+              <div className="flex items-baseline justify-between gap-2 flex-wrap">
                 <div>
                   <span className="text-xs text-[#5D6D7E]">Price for {currentPack.size}</span>
-                  <div className="flex items-baseline gap-2 mt-0.5">
-                    <span className="font-serif italic font-bold text-3xl text-[#2C3E50]">
+                  <div className="flex items-baseline gap-2 mt-0.5 flex-wrap">
+                    <span className="font-serif italic font-bold text-2xl sm:text-3xl text-[#2C3E50]">
                       ₹{currentPack.price * quantity}
                     </span>
                     {currentPack.originalPrice && (
@@ -275,25 +273,27 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
               {/* Quantity Stepper & Buttons */}
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <span className="text-xs font-bold text-[#2C3E50] uppercase tracking-wider">
                     Quantity:
                   </span>
                   <div className="flex items-center border border-[#E8E4D5] rounded-xl bg-[#FCFAF2]">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="p-2.5 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-l-xl transition-colors"
+                      className="p-2 sm:p-2.5 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-l-xl transition-colors cursor-pointer"
                       title="Decrease"
+                      aria-label="Decrease quantity"
                     >
                       <Minus className="w-4 h-4" />
                     </button>
-                    <span className="px-4 text-sm font-bold text-[#2C3E50]">
+                    <span className="px-3 sm:px-4 text-sm font-bold text-[#2C3E50]">
                       {quantity}
                     </span>
                     <button
                       onClick={() => setQuantity((q) => q + 1)}
-                      className="p-2.5 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-r-xl transition-colors"
+                      className="p-2 sm:p-2.5 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-r-xl transition-colors cursor-pointer"
                       title="Increase"
+                      aria-label="Increase quantity"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -333,21 +333,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
-
-                {ENABLE_WHATSAPP && (
-                  <WhatsAppOrderButton
-                    productName={product.name}
-                    packSize={currentPack.size}
-                    price={currentPack.price}
-                    quantity={quantity}
-                    variant="detail"
-                    className="w-full"
-                  />
-                )}
               </div>
 
               {/* Delivery info snippet */}
-              <div className="p-3 bg-[#FCFAF2] rounded-xl border border-[#E8E4D5] text-xs text-[#5D6D7E] flex items-center justify-between">
+              <div className="p-3 bg-[#FCFAF2] rounded-xl border border-[#E8E4D5] text-xs text-[#5D6D7E] flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                 <span className="flex items-center gap-1.5 font-medium text-[#2C3E50]">
                   <Truck className="w-4 h-4 text-[#D35400]" />
                   State Delivery:
@@ -375,8 +364,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       </div>
 
       {/* Description & Culinary Uses Tabbed Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-3xl p-8 border border-[#E8E4D5] shadow-xs space-y-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-[#E8E4D5] shadow-xs space-y-6 sm:space-y-8">
           <div>
             <span className="text-[10px] uppercase tracking-widest text-[#D35400] font-bold block mb-1">
               Heritage Method

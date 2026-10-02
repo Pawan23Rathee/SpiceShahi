@@ -483,7 +483,7 @@ export const DistributorPage: React.FC<DistributorPageProps> = ({ onNavigate }) 
 
           {/* Right Column: Interactive Form or Success State */}
           <div className="lg:col-span-8">
-            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8E4D5] shadow-xl">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-10 border border-[#E8E4D5] shadow-xl">
               {submittedEnquiryId ? (
                 /* Success View */
                 <div className="text-center py-8 space-y-5 animate-in fade-in zoom-in-95 duration-300">

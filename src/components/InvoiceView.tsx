@@ -16,9 +16,9 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ order, settings, onClo
   };
 
   return (
-    <div className="bg-white text-[#2C3E50] p-6 sm:p-10 rounded-3xl border border-[#E8E4D5] shadow-xl max-w-4xl mx-auto my-6 print:m-0 print:p-8 print:shadow-none print:border-none print:rounded-none">
+    <div className="bg-white text-[#2C3E50] p-3.5 sm:p-10 rounded-2xl sm:rounded-3xl border border-[#E8E4D5] shadow-xl max-w-4xl mx-auto my-3 sm:my-6 print:m-0 print:p-8 print:shadow-none print:border-none print:rounded-none">
       {/* Header Actions (hidden on print) */}
-      <div className="flex items-center justify-between pb-6 mb-6 border-b border-[#E8E4D5] print:hidden">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 sm:pb-6 mb-4 sm:mb-6 border-b border-[#E8E4D5] print:hidden">
         {onClose ? (
           <button
             onClick={onClose}
@@ -31,7 +31,7 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ order, settings, onClo
           <div />
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <a
             href={`/api/orders/${order.id}/invoice-pdf`}
             download={`SpiceShahi-Invoice-${order.orderNumber}.pdf`}

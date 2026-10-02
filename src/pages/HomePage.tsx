@@ -3,8 +3,6 @@ import { Page, Product } from '../types';
 import { PRODUCTS, INSTAGRAM_REELS, TRUST_BADGES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import { ReelCard } from '../components/ReelCard';
-import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppHomeCTA } from '../components/WhatsAppComponents';
 import {
   ArrowRight,
   Sparkles,
@@ -31,29 +29,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
     <div className="space-y-16 pb-16">
       {/* 1. HERO SECTION - Artistic Flair */}
       <section className="relative overflow-hidden bg-[#FCFAF2] border-b border-[#E8E4D5]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 py-12 lg:py-20 relative">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-12 py-8 sm:py-12 lg:py-20 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Hero Content */}
             <div className="lg:col-span-7 flex flex-col justify-center z-10">
-              <div className="inline-block self-start px-3 py-1 bg-[#F39C12]/20 text-[#D35400] text-[10px] font-bold uppercase tracking-[0.2em] rounded mb-6">
+              <div className="inline-block self-start px-3 py-1 bg-[#F39C12]/20 text-[#D35400] text-[10px] font-bold uppercase tracking-[0.2em] rounded mb-4 sm:mb-6">
                 100% Pure & Organic
               </div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif italic leading-[1.1] text-[#2C3E50] mb-6">
+              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-serif italic leading-[1.15] sm:leading-[1.1] text-[#2C3E50] mb-4 sm:mb-6 break-words">
                 Pure Spices, <br />
                 <span className="text-[#96281B]">Real Aroma.</span>
               </h1>
 
-              <p className="text-base sm:text-lg leading-relaxed text-[#5D6D7E] max-w-md mb-8">
+              <p className="text-sm sm:text-lg leading-relaxed text-[#5D6D7E] max-w-md mb-6 sm:mb-8">
                 Experience the richness of farm-to-home freshness. Hand-picked, sun-dried, and stone-ground to preserve the natural soul and essential oils of Indian masalas.
               </p>
 
               {/* Action Buttons - Artistic Flair */}
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-4">
                 <button
                   id="hero-shop-now-btn"
                   onClick={() => onNavigate('products')}
-                  className="bg-[#96281B] text-white px-8 py-4 rounded-lg font-bold shadow-lg shadow-[#96281B]/20 hover:bg-[#7D2116] transition-all cursor-pointer"
+                  className="bg-[#96281B] text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold shadow-lg shadow-[#96281B]/20 hover:bg-[#7D2116] transition-all cursor-pointer text-center text-xs uppercase tracking-wider"
                 >
                   Shop Now
                 </button>
@@ -61,7 +59,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 <button
                   id="hero-view-products-btn"
                   onClick={() => onNavigate('products')}
-                  className="border-2 border-[#96281B] text-[#96281B] px-8 py-4 rounded-lg font-bold hover:bg-[#96281B]/5 transition-all cursor-pointer"
+                  className="border-2 border-[#96281B] text-[#96281B] px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold hover:bg-[#96281B]/5 transition-all cursor-pointer text-center text-xs uppercase tracking-wider"
                 >
                   View Products
                 </button>
@@ -69,7 +67,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 <button
                   id="hero-ai-sommelier-btn"
                   onClick={() => onNavigate('ai-sommelier')}
-                  className="px-6 py-4 rounded-lg bg-[#2C3E50] text-[#FCFAF2] font-bold text-sm flex items-center gap-2 hover:bg-[#1E2B37] transition-all cursor-pointer shadow-sm"
+                  className="px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-[#2C3E50] text-[#FCFAF2] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#1E2B37] transition-all cursor-pointer shadow-sm text-center"
                 >
                   <Sparkles className="w-4 h-4 text-[#F1C40F]" />
                   <span>AI Spice Advisor</span>
@@ -78,36 +76,36 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             </div>
 
             {/* Right Hero Artistic Visual Composition */}
-            <div className="lg:col-span-5 relative flex items-center justify-center py-6 sm:py-10">
+            <div className="lg:col-span-5 relative flex items-center justify-center py-4 sm:py-10 overflow-hidden sm:overflow-visible">
               {/* Concentric Golden Ring */}
-              <div className="absolute top-6 right-6 sm:top-10 sm:right-10 w-64 sm:w-80 h-64 sm:h-80 rounded-full border-[16px] border-[#F1C40F]/15 pointer-events-none" />
+              <div className="absolute top-4 right-4 sm:top-10 sm:right-10 w-40 sm:w-80 h-40 sm:h-80 rounded-full border-[8px] sm:border-[16px] border-[#F1C40F]/15 pointer-events-none" />
 
               {/* Main Tilted Crimson Card */}
-              <div className="w-[280px] sm:w-[380px] lg:w-[420px] h-[340px] sm:h-[420px] bg-[#96281B] rounded-[48px] sm:rounded-[60px] rotate-[8deg] sm:rotate-[10deg] overflow-hidden shadow-2xl flex items-center justify-center p-6 relative group transition-transform duration-500 hover:rotate-3">
-                <div className="w-full h-full border-2 border-white/20 rounded-[36px] sm:rounded-[44px] flex flex-col items-center justify-center text-center relative overflow-hidden p-6">
+              <div className="w-[240px] sm:w-[380px] lg:w-[420px] max-w-full h-[300px] sm:h-[420px] bg-[#96281B] rounded-[30px] sm:rounded-[60px] rotate-0 sm:rotate-[10deg] overflow-hidden shadow-2xl flex items-center justify-center p-3.5 sm:p-6 relative group transition-transform duration-500 hover:rotate-3">
+                <div className="w-full h-full border-2 border-white/20 rounded-[24px] sm:rounded-[44px] flex flex-col items-center justify-center text-center relative overflow-hidden p-3 sm:p-6">
                   <img
                     src="/images/spiceshahi-hero.jpg"
                     alt="SpiceShahi Authentic Indian Spices"
                     className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="text-white/40 font-serif italic text-6xl sm:text-7xl opacity-20 pointer-events-none select-none">
+                  <div className="text-white/40 font-serif italic text-4xl sm:text-7xl opacity-20 pointer-events-none select-none">
                     Shahi
                   </div>
                   <div className="absolute inset-0 bg-linear-to-tr from-[#96281B] via-transparent to-transparent opacity-70" />
 
-                  <div className="relative z-10 text-white space-y-2 text-center">
-                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] px-3 py-1 bg-white/15 rounded-full backdrop-blur-xs">
+                  <div className="relative z-10 text-white space-y-1.5 sm:space-y-2 text-center">
+                    <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-[0.2em] px-2.5 py-0.5 sm:px-3 sm:py-1 bg-white/15 rounded-full backdrop-blur-xs">
                       Pure Cold-Ground Spices
                     </span>
-                    <h3 className="font-serif italic font-bold text-2xl sm:text-3xl text-white">
+                    <h3 className="font-serif italic font-bold text-lg sm:text-3xl text-white">
                       SpiceShahi Purity
                     </h3>
-                    <p className="text-xs text-white/80 max-w-[200px] mx-auto leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-white/80 max-w-[200px] mx-auto leading-relaxed">
                       100% natural, slow-ground to preserve volatile oils and sacred color
                     </p>
                     <button
                       onClick={() => onSelectProduct('turmeric-powder')}
-                      className="mt-2 px-5 py-2 rounded-full bg-white text-[#96281B] text-xs font-bold uppercase tracking-wider hover:bg-[#FCFAF2] transition-colors shadow-sm cursor-pointer"
+                      className="mt-1 sm:mt-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-white text-[#96281B] text-[11px] sm:text-xs font-bold uppercase tracking-wider hover:bg-[#FCFAF2] transition-colors shadow-sm cursor-pointer"
                     >
                       Explore Spice
                     </button>
@@ -116,12 +114,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               </div>
 
               {/* Tilted Circle Badge - Artistic Flair */}
-              <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-8 w-36 h-36 sm:w-52 sm:h-52 bg-[#2D5A27] rounded-full flex flex-col items-center justify-center text-white text-center p-4 shadow-xl rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
-                <div className="text-2xl sm:text-3xl font-serif italic mb-0.5">No</div>
-                <div className="text-[9px] sm:text-xs uppercase tracking-tighter opacity-90 leading-tight">
+              <div className="absolute -bottom-1 -left-1 sm:-bottom-6 sm:-left-8 w-24 h-24 sm:w-52 sm:h-52 bg-[#2D5A27] rounded-full flex flex-col items-center justify-center text-white text-center p-2 sm:p-4 shadow-xl rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
+                <div className="text-base sm:text-3xl font-serif italic mb-0.5">No</div>
+                <div className="text-[7px] sm:text-xs uppercase tracking-tighter opacity-90 leading-tight">
                   Preservatives <br />Added
                 </div>
-                <div className="text-[8px] sm:text-[9px] uppercase tracking-widest text-[#F1C40F] font-bold mt-1">
+                <div className="text-[6px] sm:text-[9px] uppercase tracking-widest text-[#F1C40F] font-bold mt-0.5 sm:mt-1">
                   100% Pure
                 </div>
               </div>
@@ -131,8 +129,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
       </section>
 
       {/* 2. FEATURED SELECTION STRIP - Artistic Flair Design Pattern */}
-      <section className="bg-white border-y border-[#E8E4D5] flex flex-col lg:flex-row px-6 sm:px-12 py-8 items-center gap-8 overflow-hidden max-w-7xl mx-auto rounded-2xl shadow-xs">
-        <div className="min-w-[160px] text-center lg:text-left">
+      <section className="bg-white border-y border-[#E8E4D5] flex flex-col lg:flex-row px-4 sm:px-12 py-6 sm:py-8 items-center gap-6 sm:gap-8 overflow-hidden max-w-7xl mx-auto rounded-2xl shadow-xs">
+        <div className="w-full lg:w-auto lg:min-w-[160px] text-center lg:text-left">
           <h3 className="font-serif italic text-2xl text-[#96281B] leading-tight">
             Featured<br className="hidden lg:block" /> Selection
           </h3>
@@ -378,20 +376,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             <span>Contact Customer Support</span>
           </button>
         </div>
-
-        {ENABLE_WHATSAPP && <WhatsAppHomeCTA className="mt-6" />}
       </section>
 
       {/* 6. GROW WITH SPICESHAHI - DISTRIBUTOR & WHOLESALE PROGRAM */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-linear-to-r from-[#2C3E50] via-[#243342] to-[#1a252f] rounded-3xl p-8 sm:p-12 text-white border border-[#F1C40F]/30 shadow-2xl relative overflow-hidden">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="bg-linear-to-r from-[#2C3E50] via-[#243342] to-[#1a252f] rounded-3xl p-5 sm:p-12 text-white border border-[#F1C40F]/30 shadow-2xl relative overflow-hidden">
           <div className="relative z-10 max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F1C40F]/15 text-[#F1C40F] border border-[#F1C40F]/30 text-[11px] font-bold uppercase tracking-widest">
               <Building2 className="w-3.5 h-3.5" />
               <span>Grow With SpiceShahi</span>
             </div>
 
-            <h2 className="font-serif italic font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+            <h2 className="font-serif italic font-bold text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight">
               Become a SpiceShahi Distributor
             </h2>
 
@@ -399,11 +395,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               Bring authentic SpiceShahi spices to customers in your city. Partner with us for wholesale and distribution opportunities. Enjoy protected territory allocations, high dealer trade margins, and direct mill dispatches from Bahadurgarh.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
               <button
                 id="home-distributor-cta-btn"
                 onClick={() => onNavigate('distributor')}
-                className="px-7 py-3.5 rounded-xl bg-[#96281B] hover:bg-[#7D2116] text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer"
+                className="px-6 sm:px-7 py-3.5 rounded-xl bg-[#96281B] hover:bg-[#7D2116] text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer text-center"
               >
                 <span>Become a Distributor</span>
                 <ArrowRight className="w-4 h-4 text-[#F1C40F]" />
@@ -411,7 +407,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
               <button
                 onClick={() => onNavigate('distributor')}
-                className="px-6 py-3.5 rounded-xl border border-white/40 hover:border-white text-white hover:bg-white/10 font-bold text-xs uppercase tracking-widest transition-all cursor-pointer"
+                className="px-6 py-3.5 rounded-xl border border-white/40 hover:border-white text-white hover:bg-white/10 font-bold text-xs uppercase tracking-widest transition-all cursor-pointer text-center"
               >
                 <span>Wholesale Enquiry</span>
               </button>
@@ -421,8 +417,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
       </section>
 
       {/* 7. INSTAGRAM REELS & VIDEOS PREVIEW - Artistic Slate */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#2C3E50] rounded-2xl p-8 sm:p-12 text-white overflow-hidden relative border border-[#E8E4D5]/20">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="bg-[#2C3E50] rounded-2xl p-5 sm:p-12 text-white overflow-hidden relative border border-[#E8E4D5]/20">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 relative z-10">
             <div>
               <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#F1C40F]">

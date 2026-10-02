@@ -40,10 +40,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-[#2C3E50] text-[#FCFAF2] pt-16 pb-12 border-t-4 border-[#96281B]">
+    <footer className="bg-[#2C3E50] text-[#FCFAF2] pt-10 sm:pt-16 pb-8 sm:pb-12 border-t-4 border-[#96281B]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Feature Pillars */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-12 border-b border-slate-600">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 pb-8 sm:pb-12 border-b border-slate-600">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[#243342] border border-slate-600 flex items-center justify-center text-[#F1C40F]">
               <ShieldCheck className="w-5 h-5" />

@@ -86,40 +86,40 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
     : '4 – 6 Business Days (Standard Inter-State Delivery)';
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+    <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12 space-y-6 sm:space-y-10">
       {/* Celebration Header */}
-      <div className="bg-white rounded-3xl border border-[#E8E4D5] p-8 sm:p-12 text-center shadow-md space-y-4 relative overflow-hidden">
-        <div className="w-20 h-20 rounded-full bg-[#2D5A27]/15 mx-auto flex items-center justify-center text-[#2D5A27] animate-in zoom-in-75 duration-300">
-          <CheckCircle2 className="w-12 h-12" />
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#E8E4D5] p-5 sm:p-12 text-center shadow-md space-y-4 relative overflow-hidden">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#2D5A27]/15 mx-auto flex items-center justify-center text-[#2D5A27] animate-in zoom-in-75 duration-300">
+          <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
 
         <div className="space-y-2">
-          <span className="inline-block px-3 py-1 bg-[#2D5A27]/10 text-[#2D5A27] text-xs font-bold uppercase tracking-widest rounded-full border border-[#2D5A27]/20">
+          <span className="inline-block px-3 py-1 bg-[#2D5A27]/10 text-[#2D5A27] text-[11px] sm:text-xs font-bold uppercase tracking-widest rounded-full border border-[#2D5A27]/20">
             Payment Verified • Status: {order.paymentStatus}
           </span>
-          <h1 className="font-serif italic font-bold text-3xl sm:text-5xl text-[#2C3E50]">
+          <h1 className="font-serif italic font-bold text-2xl sm:text-4xl lg:text-5xl text-[#2C3E50]">
             Order Placed Successfully 🎉
           </h1>
-          <p className="text-sm text-[#5D6D7E] max-w-lg mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#5D6D7E] max-w-lg mx-auto leading-relaxed">
             Thank you, <strong className="text-[#2C3E50]">{order.customer.fullName}</strong>! Your order for pure, traditionally crafted spices has been received and queued for immediate grinding and dispatch.
           </p>
         </div>
 
         {/* Order Number Badge */}
-        <div className="inline-flex items-center gap-3 bg-[#FCFAF2] border border-[#E8E4D5] px-6 py-3 rounded-2xl">
+        <div className="inline-flex items-center gap-2 sm:gap-3 bg-[#FCFAF2] border border-[#E8E4D5] px-4 sm:px-6 py-2 sm:py-3 rounded-2xl flex-wrap justify-center">
           <span className="text-xs uppercase tracking-wider text-[#5D6D7E] font-bold">
             Order Reference:
           </span>
-          <span className="font-serif font-bold text-2xl text-[#96281B]">
+          <span className="font-serif font-bold text-xl sm:text-2xl text-[#96281B]">
             #{order.orderNumber}
           </span>
         </div>
 
         {/* Actions Strip */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 pt-3 sm:pt-4">
           <button
             onClick={() => setShowTrackingModal(true)}
-            className="px-6 py-3 rounded-xl bg-[#96281B] hover:bg-[#7D2116] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
+            className="w-full sm:w-auto px-5 sm:px-6 py-3 rounded-xl bg-[#96281B] hover:bg-[#7D2116] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
           >
             <Truck className="w-4 h-4 text-[#F1C40F]" />
             <span>Track Shipment (Live)</span>
@@ -128,7 +128,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
           <a
             href={`/api/orders/${order.id}/invoice-pdf`}
             download={`SpiceShahi-Invoice-${order.orderNumber}.pdf`}
-            className="px-6 py-3 rounded-xl bg-[#2D5A27] hover:bg-[#23471f] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
+            className="w-full sm:w-auto px-5 sm:px-6 py-3 rounded-xl bg-[#2D5A27] hover:bg-[#23471f] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
           >
             <Download className="w-4 h-4 text-[#F1C40F]" />
             <span>Download Invoice (PDF)</span>
@@ -137,7 +137,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
           <button
             id="confirmation-view-invoice-btn"
             onClick={() => setShowInvoiceModal(true)}
-            className="px-6 py-3 rounded-xl bg-[#2C3E50] hover:bg-[#1a252f] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
+            className="w-full sm:w-auto px-5 sm:px-6 py-3 rounded-xl bg-[#2C3E50] hover:bg-[#1a252f] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
           >
             <FileText className="w-4 h-4 text-[#F1C40F]" />
             <span>View & Print Invoice</span>
@@ -145,7 +145,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
 
           <button
             onClick={() => onNavigate('account')}
-            className="px-6 py-3 rounded-xl border border-[#96281B] text-[#96281B] hover:bg-[#96281B] hover:text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
+            className="w-full sm:w-auto px-5 sm:px-6 py-3 rounded-xl border border-[#96281B] text-[#96281B] hover:bg-[#96281B] hover:text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <User className="w-4 h-4" />
             <span>View My Orders & Account</span>

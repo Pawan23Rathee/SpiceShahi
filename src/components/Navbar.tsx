@@ -48,15 +48,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
   return (
     <>
       {/* Top Announcement Bar */}
-      <div className="bg-[#96281B] text-[#FCFAF2] text-xs sm:text-sm py-2 px-4 border-b border-[#7D2116]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2 mx-auto sm:mx-0">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#F1C40F] animate-pulse"></span>
-            <span className="font-medium tracking-wide">
+      <div className="bg-[#96281B] text-[#FCFAF2] text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 border-b border-[#7D2116] overflow-hidden">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 mx-auto sm:mx-0 text-center sm:text-left min-w-0">
+            <span className="inline-block w-2 h-2 rounded-full bg-[#F1C40F] animate-pulse shrink-0"></span>
+            <span className="font-medium tracking-wide truncate">
               Fresh Harvest Batch • 100% Cold-Ground & Pure Masalas
             </span>
           </div>
-          <div className="hidden md:flex items-center gap-4 text-xs text-[#F1C40F]/90">
+          <div className="hidden md:flex items-center gap-4 text-xs text-[#F1C40F]/90 shrink-0">
             <a
               href={`tel:${DISPLAY_PHONE.replace(/\s+/g, '')}`}
               className="hover:text-white flex items-center gap-1.5 transition-colors"
@@ -84,32 +84,32 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
 
       {/* Main Header */}
       <header className="sticky top-0 z-40 bg-[#FCFAF2]/95 backdrop-blur-md border-b border-[#E8E4D5] shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-          <div className="flex items-center justify-between h-20">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-12">
+          <div className="flex items-center justify-between h-16 sm:h-20 gap-2">
             {/* Logo */}
             <button
               id="nav-logo-btn"
               onClick={() => handleNavClick('home')}
-              className="flex items-center gap-3 text-left group focus:outline-hidden cursor-pointer"
+              className="flex items-center gap-2 sm:gap-3 text-left group focus:outline-hidden cursor-pointer min-w-0 shrink"
             >
               <img
                 src="/images/spiceshahi-logo.jpg"
                 alt="SpiceShahi Logo"
-                className="w-12 h-12 rounded-full object-cover shadow-sm border border-[#F39C12]/40 group-hover:scale-105 transition-transform duration-200"
+                className="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border border-[#F39C12]/40 group-hover:scale-105 transition-transform duration-200 shrink-0"
                 referrerPolicy="no-referrer"
               />
-              <div className="flex flex-col">
-                <span className="text-2xl font-serif font-bold tracking-tight text-[#96281B] flex items-center gap-1.5">
+              <div className="flex flex-col min-w-0">
+                <span className="text-lg sm:text-2xl font-serif font-bold tracking-tight text-[#96281B] flex items-center gap-1.5 truncate">
                   SpiceShahi
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.18em] text-[#5D6D7E] font-semibold -mt-0.5">
+                <span className="hidden sm:block text-[10px] uppercase tracking-[0.18em] text-[#5D6D7E] font-semibold -mt-0.5 truncate">
                   Desi Khushboo Spices
                 </span>
               </div>
             </button>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
+            <nav className="hidden lg:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest shrink-0">
               {navLinks.map((link) => {
                 const isActive = currentPage === link.page;
                 return (
@@ -129,55 +129,57 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
               })}
             </nav>
 
-            {/* Right Actions: Cart, Account, Shop Online, Ask AI */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Cart Button with Count Badge */}
-              <button
-                id="navbar-cart-btn"
-                onClick={openCart}
-                className="relative p-2.5 rounded-full bg-white border border-[#E8E4D5] hover:border-[#96281B] text-[#2C3E50] hover:text-[#96281B] shadow-xs transition-all cursor-pointer flex items-center justify-center group"
-                aria-label={`Open Cart (${totalItems} items)`}
-              >
-                <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-[#96281B] text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md animate-in zoom-in-50 duration-200">
-                    {totalItems}
-                  </span>
-                )}
-              </button>
-
-              {/* Customer Account Button */}
-              <button
-                id="navbar-account-btn"
-                onClick={() => handleNavClick(isAuthenticated ? 'account' : 'login')}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#E8E4D5] bg-white hover:border-[#96281B] text-xs font-semibold text-[#2C3E50] hover:text-[#96281B] transition-colors cursor-pointer"
-                title={isAuthenticated ? `My Account (${customer?.fullName})` : 'Sign In / Register'}
-              >
-                <User className="w-3.5 h-3.5 text-[#96281B]" />
-                <span className="truncate max-w-[110px]">
-                  {isAuthenticated ? customer?.fullName.split(' ')[0] : 'Sign In'}
-                </span>
-              </button>
-
+            {/* Right Actions: Cart, Account, AI, Shop, Hamburger */}
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               {/* Ask AI Sommelier Button */}
               {onOpenAiDrawer && (
                 <button
                   id="navbar-ask-ai-btn"
                   onClick={onOpenAiDrawer}
-                  className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-full bg-linear-to-r from-[#96281B] to-[#D35400] text-white text-xs font-bold uppercase tracking-wider shadow-xs hover:opacity-95 transition-all cursor-pointer border border-[#F1C40F]/30"
+                  className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-full bg-linear-to-r from-[#96281B] to-[#D35400] text-white text-xs font-bold uppercase tracking-wider shadow-xs hover:opacity-95 transition-all cursor-pointer border border-[#F1C40F]/30"
                   title="Ask Shahi Sommelier AI Chatbot"
+                  aria-label="Ask Shahi Sommelier AI Chatbot"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-[#F1C40F] animate-pulse" />
-                  <span>Ask AI</span>
+                  <Sparkles className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#F1C40F] animate-pulse shrink-0" />
+                  <span className="hidden md:inline">Ask AI</span>
                 </button>
               )}
+
+              {/* Customer Account Button */}
+              <button
+                id="navbar-account-btn"
+                onClick={() => handleNavClick(isAuthenticated ? 'account' : 'login')}
+                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-full border border-[#E8E4D5] bg-white hover:border-[#96281B] text-xs font-semibold text-[#2C3E50] hover:text-[#96281B] transition-colors cursor-pointer"
+                title={isAuthenticated ? `My Account (${customer?.fullName})` : 'Sign In / Register'}
+                aria-label={isAuthenticated ? `My Account (${customer?.fullName})` : 'Sign In / Register'}
+              >
+                <User className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#96281B] shrink-0" />
+                <span className="hidden sm:inline truncate max-w-[110px]">
+                  {isAuthenticated ? customer?.fullName.split(' ')[0] : 'Sign In'}
+                </span>
+              </button>
+
+              {/* Cart Button with Count Badge */}
+              <button
+                id="navbar-cart-btn"
+                onClick={openCart}
+                className="relative p-2 sm:p-2.5 rounded-full bg-white border border-[#E8E4D5] hover:border-[#96281B] text-[#2C3E50] hover:text-[#96281B] shadow-xs transition-all cursor-pointer flex items-center justify-center group"
+                aria-label={`Open Cart (${totalItems} items)`}
+              >
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-[#96281B] text-white text-[10px] sm:text-[11px] font-bold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center shadow-md animate-in zoom-in-50 duration-200">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
 
               {/* Shop Online (Desktop) */}
               <div className="hidden sm:flex items-center gap-2">
                 <button
                   id="nav-shop-online-btn"
                   onClick={() => handleNavClick('products')}
-                  className="px-5 py-2.5 bg-[#96281B] text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-[#7D2116] transition-colors shadow-sm cursor-pointer"
+                  className="px-4 lg:px-5 py-2 sm:py-2.5 bg-[#96281B] text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-[#7D2116] transition-colors shadow-sm cursor-pointer whitespace-nowrap"
                 >
                   Shop Spices
                 </button>
@@ -187,10 +189,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
               <button
                 id="mobile-menu-toggle-btn"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-lg text-[#2C3E50] hover:bg-[#E8E4D5] transition-colors focus:outline-hidden"
+                className="lg:hidden p-2 rounded-lg text-[#2C3E50] hover:bg-[#E8E4D5] transition-colors focus:outline-hidden cursor-pointer"
                 aria-label="Toggle navigation menu"
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
               </button>
             </div>
           </div>
@@ -198,7 +200,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
 
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-[#E8E4D5] bg-[#FCFAF2] px-6 pt-4 pb-6 space-y-3 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden border-t border-[#E8E4D5] bg-[#FCFAF2] px-4 sm:px-6 pt-4 pb-6 space-y-3 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
             {navLinks.map((link) => {
               const isActive = currentPage === link.page;
               return (

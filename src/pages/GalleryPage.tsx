@@ -27,18 +27,18 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
   return (
     <div className="space-y-12 pb-16">
       {/* Header Section - Artistic Flair */}
-      <section className="bg-[#2C3E50] text-[#FCFAF2] py-16 border-b border-[#E8E4D5]/20">
-        <div className="max-w-7xl mx-auto px-6 text-center max-w-3xl space-y-4">
+      <section className="bg-[#2C3E50] text-[#FCFAF2] py-10 sm:py-16 border-b border-[#E8E4D5]/20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#F1C40F]/15 border border-[#F1C40F]/30 text-[#F1C40F] text-[10px] font-bold uppercase tracking-[0.2em]">
             <Instagram className="w-3.5 h-3.5" />
             <span>Official Instagram Hub</span>
           </div>
 
-          <h1 className="font-serif italic font-bold text-4xl sm:text-5xl text-[#FCFAF2] tracking-tight">
+          <h1 className="font-serif italic font-bold text-2xl sm:text-4xl lg:text-5xl text-[#FCFAF2] tracking-tight">
             Instagram Reels & Spice Stories
           </h1>
 
-          <p className="text-base text-slate-300 leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 leading-relaxed">
             Take a visual tour through our sun-drenched harvest fields, traditional cold stone mills, nitrogen packaging sessions, and fragrant home kitchen recipes.
           </p>
 
@@ -58,7 +58,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = () => {
       </section>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         {/* Category Filters */}
         <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           {categories.map((cat) => {

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Page } from '../types';
 import { useCart } from '../context/CartContext';
 import { INDIAN_STATES } from '../data/indianStates';
-import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppCartHelp, WhatsAppCartOrderButton } from '../components/WhatsAppComponents';
 import {
   ShoppingBag,
   ArrowRight,
@@ -43,9 +41,9 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
   const grandTotal = subtotal + deliveryCharge;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-[#E8E4D5]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-[#E8E4D5]">
         <div>
           <button
             onClick={() => onNavigate('products')}
@@ -54,7 +52,7 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Continue Shopping</span>
           </button>
-          <h1 className="font-serif italic font-bold text-3xl sm:text-4xl text-[#2C3E50]">
+          <h1 className="font-serif italic font-bold text-2xl sm:text-4xl text-[#2C3E50]">
             Shopping Cart
           </h1>
           <p className="text-xs text-[#5D6D7E] mt-1">
@@ -73,12 +71,12 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
       </div>
 
       {items.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-[#E8E4D5] shadow-xs space-y-5">
-          <div className="w-20 h-20 rounded-full bg-[#F39C12]/15 mx-auto flex items-center justify-center text-[#D35400]">
-            <ShoppingBag className="w-10 h-10" />
+        <div className="text-center py-12 sm:py-20 px-4 bg-white rounded-3xl border border-[#E8E4D5] shadow-xs space-y-5">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#F39C12]/15 mx-auto flex items-center justify-center text-[#D35400]">
+            <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 opacity-60" />
           </div>
           <div className="space-y-1 max-w-sm mx-auto">
-            <h2 className="font-serif italic font-bold text-2xl text-[#2C3E50]">
+            <h2 className="font-serif italic font-bold text-xl sm:text-2xl text-[#2C3E50]">
               Your Cart is Currently Empty
             </h2>
             <p className="text-xs text-[#5D6D7E]">
@@ -93,30 +91,30 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
           {/* Items List */}
-          <div className="lg:col-span-8 space-y-4">
+          <div className="lg:col-span-8 space-y-4 min-w-0">
             <div className="bg-white rounded-2xl border border-[#E8E4D5] shadow-xs divide-y divide-[#E8E4D5] overflow-hidden">
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  className="p-3.5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 min-w-0"
                 >
-                  <div className="flex items-center gap-4 min-w-0">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 w-full sm:w-auto">
                     <img
                       src={item.imageUrl}
                       alt={item.name}
-                      className="w-20 h-20 object-contain rounded-xl bg-[#FCFAF2] border border-[#E8E4D5] p-2 shrink-0"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-xl bg-[#FCFAF2] border border-[#E8E4D5] p-1.5 sm:p-2 shrink-0"
                     />
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <h3
                         onClick={() => onNavigate('product-detail', item.productSlug)}
-                        className="font-serif font-bold text-base text-[#2C3E50] hover:text-[#96281B] transition-colors cursor-pointer truncate"
+                        className="font-serif font-bold text-sm sm:text-base text-[#2C3E50] hover:text-[#96281B] transition-colors cursor-pointer line-clamp-2 break-words"
                       >
                         {item.name}
                       </h3>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs bg-[#F7F3E8] px-2.5 py-0.5 rounded-md font-semibold text-[#2C3E50] border border-[#E8E4D5]">
+                        <span className="text-xs bg-[#F7F3E8] px-2.5 py-0.5 rounded-md font-semibold text-[#2C3E50] border border-[#E8E4D5] shrink-0">
                           {item.packSize}
                         </span>
                         <span className="text-xs font-serif font-bold text-[#96281B]">
@@ -126,37 +124,40 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-0 border-[#E8E4D5]">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-0 border-[#E8E4D5] shrink-0">
                     {/* Stepper */}
                     <div className="flex items-center border border-[#E8E4D5] rounded-xl bg-[#FCFAF2]">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-2 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-l-xl transition-colors"
+                        className="p-1.5 sm:p-2 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-l-xl transition-colors cursor-pointer"
                         title="Decrease"
+                        aria-label="Decrease quantity"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="px-3 text-xs font-bold text-[#2C3E50] min-w-[24px] text-center">
+                      <span className="px-2.5 sm:px-3 text-xs font-bold text-[#2C3E50] min-w-[24px] text-center">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-2 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-r-xl transition-colors"
+                        className="p-1.5 sm:p-2 hover:bg-[#E8E4D5]/60 text-[#2C3E50] rounded-r-xl transition-colors cursor-pointer"
                         title="Increase"
+                        aria-label="Increase quantity"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
                     {/* Total & Remove */}
-                    <div className="text-right min-w-[70px]">
-                      <div className="font-serif font-bold text-base text-[#2C3E50]">
+                    <div className="text-right min-w-[60px] sm:min-w-[70px]">
+                      <div className="font-serif font-bold text-sm sm:text-base text-[#2C3E50]">
                         ₹{item.price * item.quantity}
                       </div>
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="text-[11px] text-stone-400 hover:text-[#96281B] transition-colors flex items-center gap-1 justify-end mt-0.5 ml-auto"
+                        className="text-[11px] text-stone-400 hover:text-[#96281B] transition-colors flex items-center gap-1 justify-end mt-0.5 ml-auto cursor-pointer"
                         title="Remove"
+                        aria-label="Remove item"
                       >
                         <Trash2 className="w-3 h-3" />
                         <span>Remove</span>
@@ -168,18 +169,18 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Farm direct guarantee card */}
-            <div className="p-4 bg-[#F7F3E8] rounded-2xl border border-[#E8E4D5] flex items-center justify-between text-xs text-[#5D6D7E]">
+            <div className="p-3 sm:p-4 bg-[#F7F3E8] rounded-2xl border border-[#E8E4D5] flex items-center justify-between text-xs text-[#5D6D7E]">
               <span className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#2D5A27]" />
-                <strong className="text-[#2C3E50]">100% Purity Guarantee:</strong> Zero artificial colors, metanil yellow, or synthetic additives.
+                <ShieldCheck className="w-4 h-4 text-[#2D5A27] shrink-0" />
+                <span className="leading-relaxed"><strong className="text-[#2C3E50]">100% Purity Guarantee:</strong> Zero artificial colors, metanil yellow, or synthetic additives.</span>
               </span>
-              <span className="text-[#2D5A27] font-bold hidden sm:inline">SRS Global Enterprises</span>
+              <span className="text-[#2D5A27] font-bold hidden sm:inline shrink-0 ml-2">SRS Global Enterprises</span>
             </div>
           </div>
 
           {/* Right: Order Summary */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white rounded-2xl border border-[#E8E4D5] p-6 shadow-xs space-y-5">
+          <div className="lg:col-span-4 space-y-6 w-full">
+            <div className="bg-white rounded-2xl border border-[#E8E4D5] p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5">
               <h2 className="font-serif italic font-bold text-xl text-[#2C3E50] pb-3 border-b border-[#E8E4D5]">
                 Order Summary
               </h2>
@@ -220,31 +221,6 @@ export const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-
-              {ENABLE_WHATSAPP && (
-                <WhatsAppCartOrderButton
-                  items={items.map((i) => ({
-                    name: i.name,
-                    packSize: i.packSize,
-                    quantity: i.quantity,
-                    price: i.price,
-                  }))}
-                  subtotal={subtotal}
-                />
-              )}
-
-              {ENABLE_WHATSAPP && (
-                <WhatsAppCartHelp
-                  totalItems={totalItems}
-                  grandTotal={grandTotal}
-                  items={items.map((i) => ({
-                    name: i.name,
-                    packSize: i.packSize,
-                    quantity: i.quantity,
-                    price: i.price,
-                  }))}
-                />
-              )}
 
               <div className="text-center pt-2">
                 <span className="text-[11px] text-[#5D6D7E] flex items-center justify-center gap-1">

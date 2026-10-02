@@ -108,7 +108,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-[10px] uppercase font-bold text-emerald-800 tracking-widest">
-                      WhatsApp Orders & Support
+                      WhatsApp Customer Support
                     </h3>
                     <a
                       href={WHATSAPP_CONFIG.getWhatsAppUrl()}
@@ -211,7 +211,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
 
           {/* Right: Contact Form */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-2xl border border-[#E8E4D5] p-6 sm:p-10 shadow-sm">
+            <div className="bg-white rounded-2xl border border-[#E8E4D5] p-4 sm:p-10 shadow-sm">
               <div className="mb-6">
                 <span className="inline-block px-3 py-1 bg-[#F39C12]/20 text-[#D35400] text-[10px] font-bold uppercase tracking-[0.2em] rounded">
                   Send an Inquiry

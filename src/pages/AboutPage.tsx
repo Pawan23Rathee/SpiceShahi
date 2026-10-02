@@ -72,30 +72,30 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="space-y-16 pb-16">
+    <div className="space-y-12 sm:space-y-16 pb-16">
       {/* Hero Banner - Artistic Flair */}
-      <section className="bg-[#FCFAF2] border-b border-[#E8E4D5] py-16">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-4">
+      <section className="bg-[#FCFAF2] border-b border-[#E8E4D5] py-10 sm:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-3 sm:space-y-4">
           <span className="inline-block px-3 py-1 bg-[#F39C12]/20 text-[#D35400] text-[10px] font-bold uppercase tracking-[0.2em] rounded">
             Our Heritage & Philosophy
           </span>
-          <h1 className="font-serif italic font-bold text-4xl sm:text-5xl text-[#2C3E50] tracking-tight leading-tight">
+          <h1 className="font-serif italic font-bold text-2xl sm:text-4xl lg:text-5xl text-[#2C3E50] tracking-tight leading-tight">
             We Treat Spices as <span className="text-[#96281B]">Sacred Medicine</span>, Not Just Powder
           </h1>
-          <p className="text-base sm:text-lg text-[#5D6D7E] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-lg text-[#5D6D7E] max-w-2xl mx-auto leading-relaxed">
             In an era of mass commercialization and chemical dyes, SpiceShahi preserves India’s heirloom spice varieties and traditional cold-grinding methods.
           </p>
         </div>
       </section>
 
       {/* Origin Story Section */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-6 space-y-5">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="lg:col-span-6 space-y-4 sm:space-y-5">
             <span className="inline-block px-3 py-1 bg-[#F39C12]/20 text-[#D35400] text-[10px] font-bold uppercase tracking-[0.2em] rounded">
               Why We Started
             </span>
-            <h2 className="font-serif italic font-bold text-3xl sm:text-4xl text-[#2C3E50] leading-tight">
+            <h2 className="font-serif italic font-bold text-2xl sm:text-4xl text-[#2C3E50] leading-tight">
               A Quest to Reclaim India’s Sacred Kitchen Heritage
             </h2>
             <p className="text-[#5D6D7E] leading-relaxed text-sm sm:text-base">
@@ -108,7 +108,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               <strong className="text-[#2C3E50]">SpiceShahi</strong> (SRS Global Enterprises) was established in Bahadurgarh, Haryana to change that forever. We forge direct ties with farmers who still cultivate native heirloom seeds with love and pride, delivering authentic, traditionally crafted masalas to modern homes.
             </p>
 
-            <div className="p-4 rounded-xl bg-white border border-[#E8E4D5] text-[#2C3E50] text-sm font-medium flex items-center gap-3">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-[#E8E4D5] text-[#2C3E50] text-xs sm:text-sm font-medium flex items-center gap-3">
               <span className="w-3 h-3 rounded-full bg-[#2D5A27] shrink-0"></span>
               <span className="italic">Our motto: If it doesn’t release mouthwatering desi khushboo in warm ghee, it doesn’t deserve the SpiceShahi seal.</span>
             </div>
@@ -119,11 +119,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               <img
                 src="/images/spiceshahi-hero.jpg"
                 alt="SpiceShahi Handcrafted Spices"
-                className="w-full h-[440px] object-cover"
+                className="w-full h-[320px] sm:h-[440px] object-cover"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent flex items-end p-8 text-white">
+              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent flex items-end p-5 sm:p-8 text-white">
                 <div>
-                  <p className="font-serif italic font-bold text-xl">Pure Desi Khushboo</p>
+                  <p className="font-serif italic font-bold text-lg sm:text-xl">Pure Desi Khushboo</p>
                   <p className="text-xs text-[#FCFAF2]/80">Nothing added. Nothing taken away.</p>
                 </div>
               </div>
@@ -133,21 +133,21 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Sourcing & Milling Process */}
-      <section className="bg-white py-16 border-y border-[#E8E4D5]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12">
-          <div className="text-center max-w-2xl mx-auto mb-14">
+      <section className="bg-white py-12 sm:py-16 border-y border-[#E8E4D5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
             <span className="inline-block px-3 py-1 bg-[#F39C12]/20 text-[#D35400] text-[10px] font-bold uppercase tracking-[0.2em] rounded">
               The Journey
             </span>
-            <h2 className="font-serif italic font-bold text-3xl sm:text-4xl text-[#2C3E50] mt-2">
+            <h2 className="font-serif italic font-bold text-2xl sm:text-4xl text-[#2C3E50] mt-2">
               From Sacred Soil to Resealable Freshness
             </h2>
-            <p className="text-sm text-[#5D6D7E] mt-3">
+            <p className="text-xs sm:text-sm text-[#5D6D7E] mt-2 sm:mt-3">
               Every step is designed to protect raw essential oils and natural botanical colors.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {steps.map((s, idx) => (
               <div
                 key={idx}
@@ -181,21 +181,21 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Core Values */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-12">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
           <span className="inline-block px-3 py-1 bg-[#F39C12]/20 text-[#D35400] text-[10px] font-bold uppercase tracking-[0.2em] rounded">
             Our Pillars
           </span>
-          <h2 className="font-serif italic font-bold text-3xl sm:text-4xl text-[#2C3E50] mt-2">
+          <h2 className="font-serif italic font-bold text-2xl sm:text-4xl text-[#2C3E50] mt-2">
             The SpiceShahi Standards
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {values.map((v, i) => (
             <div
               key={i}
-              className="bg-white p-6 rounded-xl border border-[#E8E4D5] space-y-3 hover:border-[#96281B] transition-colors"
+              className="bg-white p-5 sm:p-6 rounded-xl border border-[#E8E4D5] space-y-2 sm:space-y-3 hover:border-[#96281B] transition-colors"
             >
               <div className="p-3 rounded-lg bg-[#FCFAF2] inline-block border border-[#E8E4D5]">
                 {v.icon}
@@ -208,19 +208,19 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Bottom Call to Action - Artistic Flair */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-12">
-        <div className="bg-[#2C3E50] rounded-2xl p-8 sm:p-12 text-[#FCFAF2] text-center max-w-4xl mx-auto space-y-6 border border-[#E8E4D5]/20">
-          <h3 className="font-serif italic font-bold text-3xl sm:text-4xl text-[#FCFAF2]">
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+        <div className="bg-[#2C3E50] rounded-2xl p-6 sm:p-12 text-[#FCFAF2] text-center max-w-4xl mx-auto space-y-4 sm:space-y-6 border border-[#E8E4D5]/20">
+          <h3 className="font-serif italic font-bold text-2xl sm:text-4xl text-[#FCFAF2]">
             Taste the Difference in Your Very Next Meal
           </h3>
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
             Order your fresh spice pouch today and experience true aroma delivered directly to your doorstep.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 pt-2">
             <button
               onClick={() => onNavigate('products')}
-              className="px-8 py-3.5 rounded-lg bg-[#96281B] hover:bg-[#7D2116] text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-all cursor-pointer shadow-md shadow-[#96281B]/20"
+              className="px-6 sm:px-8 py-3.5 rounded-lg bg-[#96281B] hover:bg-[#7D2116] text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-[#96281B]/20 text-center"
             >
               <span>Explore All Spices</span>
               <ArrowRight className="w-4 h-4" />
@@ -228,7 +228,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
             <button
               onClick={() => onNavigate('contact')}
-              className="px-8 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-all shadow-md cursor-pointer border border-white/20"
+              className="px-6 sm:px-8 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer border border-white/20 text-center"
             >
               <PhoneCall className="w-4 h-4" />
               <span>Contact Us</span>

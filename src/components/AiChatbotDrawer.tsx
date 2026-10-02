@@ -257,10 +257,10 @@ export const AiChatbotDrawer: React.FC<AiChatbotDrawerProps> = ({
         className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-300"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-        <div className="w-screen max-w-lg bg-[#FCFAF2] border-l border-[#E8E4D5] shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+      <div className="fixed inset-y-0 right-0 w-full sm:max-w-lg max-w-full flex pl-0 sm:pl-10">
+        <div className="w-full bg-[#FCFAF2] border-l border-[#E8E4D5] shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
           {/* Header */}
-          <div className="px-6 py-4 border-b border-[#E8E4D5] flex items-center justify-between bg-white">
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#E8E4D5] flex items-center justify-between bg-white shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-linear-to-tr from-[#96281B] to-[#D35400] flex items-center justify-center text-white shadow-md">
                 <ChefHat className="w-5 h-5 text-[#F1C40F]" />

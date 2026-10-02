@@ -4,8 +4,6 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { platformService } from '../services';
 import { INDIAN_STATES, getStateFromPincode } from '../data/indianStates';
-import { ENABLE_WHATSAPP } from '../config/features';
-import { WhatsAppCheckoutHelp, WhatsAppCheckoutDirectButton } from '../components/WhatsAppComponents';
 import {
   ShieldCheck,
   Truck,
@@ -540,60 +538,60 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Top Breadcrumb */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <button
           onClick={() => onNavigate('cart')}
-          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5D6D7E] hover:text-[#96281B] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5D6D7E] hover:text-[#96281B] transition-colors cursor-pointer self-start"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Cart</span>
         </button>
-        <span className="text-xs text-[#5D6D7E]">
-          Secure Checkout • Authenticated as <strong>{customer.email}</strong>
+        <span className="text-[11px] sm:text-xs text-[#5D6D7E] break-words">
+          Secure Checkout • Authenticated as <strong className="text-[#2C3E50]">{customer.email}</strong>
         </span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* Left Column: Delivery Address & Customer Info */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-4 sm:space-y-6 min-w-0 w-full">
           {/* Customer Summary Card */}
-          <div className="bg-white rounded-3xl p-6 border border-[#E8E4D5] shadow-xs flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#FCFAF2] border border-[#E8E4D5] flex items-center justify-center text-[#96281B]">
-                <User className="w-5 h-5" />
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-[#E8E4D5] shadow-xs flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FCFAF2] border border-[#E8E4D5] flex items-center justify-center text-[#96281B] shrink-0">
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <p className="text-xs font-bold text-[#2C3E50]">
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-[#2C3E50] truncate">
                   Ordering as: <span className="text-[#96281B]">{customer.fullName}</span>
                 </p>
-                <p className="text-[11px] text-[#5D6D7E] flex items-center gap-1">
-                  <Mail className="w-3 h-3" />
-                  <span>{customer.email}</span>
+                <p className="text-[11px] text-[#5D6D7E] flex items-center gap-1 truncate">
+                  <Mail className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{customer.email}</span>
                 </p>
               </div>
             </div>
             <button
               onClick={() => onNavigate('account')}
-              className="text-xs font-bold text-[#96281B] hover:underline cursor-pointer"
+              className="text-xs font-bold text-[#96281B] hover:underline cursor-pointer shrink-0"
             >
               My Account
             </button>
           </div>
 
           {/* Delivery Address Section */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E8E4D5] shadow-xs space-y-6">
-            <div className="flex items-center justify-between border-b border-[#E8E4D5] pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-[#96281B]/10 text-[#96281B] flex items-center justify-center">
-                  <MapPin className="w-5 h-5" />
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-[#E8E4D5] shadow-xs space-y-4 sm:space-y-6 min-w-0">
+            <div className="flex items-center justify-between border-b border-[#E8E4D5] pb-3 sm:pb-4">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#96281B]/10 text-[#96281B] flex items-center justify-center shrink-0">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div>
-                  <h2 className="text-base font-serif font-bold text-[#2C3E50]">
+                <div className="min-w-0">
+                  <h2 className="text-sm sm:text-base font-serif font-bold text-[#2C3E50]">
                     Select Delivery Address
                   </h2>
-                  <p className="text-xs text-[#5D6D7E]">
+                  <p className="text-[11px] sm:text-xs text-[#5D6D7E] truncate">
                     Real-time courier serviceability & dynamic shipping via Shiprocket
                   </p>
                 </div>
@@ -613,13 +611,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                       <div
                         key={addr.id}
                         onClick={() => setSelectedAddressId(addr.id)}
-                        className={`p-4 rounded-2xl border cursor-pointer transition-all relative ${
+                        className={`p-3.5 sm:p-4 rounded-2xl border cursor-pointer transition-all relative min-w-0 ${
                           isSelected
                             ? 'bg-[#FCFAF2] border-[#96281B] shadow-sm ring-2 ring-[#96281B]'
                             : 'bg-white border-[#E8E4D5] hover:border-stone-400'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-1.5 gap-2 flex-wrap">
                           <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-white border border-[#E8E4D5] text-[#96281B]">
                             {addr.label || 'Home'}
                           </span>
@@ -627,8 +625,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                             PIN: {addr.pincode}
                           </span>
                         </div>
-                        <p className="text-xs font-bold text-[#2C3E50]">{addr.fullName}</p>
-                        <p className="text-[11px] text-[#5D6D7E] leading-relaxed">
+                        <p className="text-xs font-bold text-[#2C3E50] truncate">{addr.fullName}</p>
+                        <p className="text-[11px] text-[#5D6D7E] leading-relaxed break-words">
                           {addr.addressLine1}
                           {addr.addressLine2 ? `, ${addr.addressLine2}` : ''}
                         </p>
@@ -649,7 +647,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         : 'border-[#E8E4D5] text-[#5D6D7E] hover:border-stone-400'
                     }`}
                   >
-                    <Plus className="w-6 h-6 mb-1" />
+                    <Plus className="w-5 h-5 sm:w-6 sm:h-6 mb-1" />
                     <span className="text-xs font-bold uppercase tracking-wider">
                       + Deliver to a New Address
                     </span>
@@ -661,7 +659,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             {/* New Address Form (if selected or no saved addresses) */}
             {selectedAddressId === 'new' && (
               <div className="pt-4 border-t border-[#E8E4D5] space-y-4 animate-in fade-in duration-200">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-[#2C3E50]">
                     Enter New Shipping Details
                   </h3>
@@ -683,7 +681,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-[#2C3E50] mb-1">
                       Recipient Full Name *
@@ -696,7 +694,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         if (formErrors.fullName) setFormErrors((p) => ({ ...p, fullName: '' }));
                       }}
                       placeholder="e.g. Pawan Rathee"
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] ${
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] box-border ${
                         formErrors.fullName ? 'border-red-500' : 'border-[#E8E4D5]'
                       }`}
                     />
@@ -717,7 +715,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         if (formErrors.mobile) setFormErrors((p) => ({ ...p, mobile: '' }));
                       }}
                       placeholder="e.g. 9812345678"
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] ${
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] box-border ${
                         formErrors.mobile ? 'border-red-500' : 'border-[#E8E4D5]'
                       }`}
                     />
@@ -739,7 +737,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                       if (formErrors.addressLine1) setFormErrors((p) => ({ ...p, addressLine1: '' }));
                     }}
                     placeholder="House 107, Arya Nagar"
-                    className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] ${
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] box-border ${
                       formErrors.addressLine1 ? 'border-red-500' : 'border-[#E8E4D5]'
                     }`}
                   />
@@ -748,7 +746,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-[#2C3E50] mb-1">
                       Address Line 2 (Apartment, Floor, Suite)
@@ -760,7 +758,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         setAddressForm((p) => ({ ...p, addressLine2: e.target.value }))
                       }
                       placeholder="Optional"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E4D5] text-xs text-[#2C3E50] bg-[#FCFAF2]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E4D5] text-xs text-[#2C3E50] bg-[#FCFAF2] box-border"
                     />
                   </div>
 
@@ -775,12 +773,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         setAddressForm((p) => ({ ...p, landmark: e.target.value }))
                       }
                       placeholder="Near Community Center"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E4D5] text-xs text-[#2C3E50] bg-[#FCFAF2]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E4D5] text-xs text-[#2C3E50] bg-[#FCFAF2] box-border"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-[#2C3E50] mb-1">
                       PIN Code *
@@ -791,7 +789,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                       value={addressForm.pincode}
                       onChange={(e) => handlePincodeChange(e.target.value)}
                       placeholder="124507"
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] ${
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] box-border ${
                         formErrors.pincode ? 'border-red-500' : 'border-[#E8E4D5]'
                       }`}
                     />
@@ -812,7 +810,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         if (formErrors.city) setFormErrors((p) => ({ ...p, city: '' }));
                       }}
                       placeholder="Bahadurgarh"
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] ${
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#2C3E50] bg-[#FCFAF2] box-border ${
                         formErrors.city ? 'border-red-500' : 'border-[#E8E4D5]'
                       }`}
                     />
@@ -831,7 +829,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         setAddressForm((p) => ({ ...p, state: e.target.value }));
                         if (formErrors.state) setFormErrors((p) => ({ ...p, state: '' }));
                       }}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E4D5] text-xs text-[#2C3E50] bg-[#FCFAF2]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E4D5] text-xs text-[#2C3E50] bg-[#FCFAF2] box-border"
                     >
                       {INDIAN_STATES.map((s) => (
                         <option key={s.code} value={s.name}>
@@ -842,7 +840,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 pt-2">
+                <div className="flex items-start gap-2.5 pt-2">
                   <input
                     type="checkbox"
                     id="saveForFuture"
@@ -850,9 +848,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                     onChange={(e) =>
                       setAddressForm((p) => ({ ...p, saveForFuture: e.target.checked }))
                     }
-                    className="rounded border-[#E8E4D5] text-[#96281B] focus:ring-[#96281B]"
+                    className="mt-0.5 rounded border-[#E8E4D5] text-[#96281B] focus:ring-[#96281B] shrink-0"
                   />
-                  <label htmlFor="saveForFuture" className="text-xs text-[#2C3E50] cursor-pointer">
+                  <label htmlFor="saveForFuture" className="text-xs text-[#2C3E50] cursor-pointer leading-tight break-words">
                     Save this address to my customer profile for future orders
                   </label>
                 </div>
@@ -862,16 +860,16 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Right Column: Order Summary & Payment */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E8E4D5] shadow-xs space-y-6">
-            <h2 className="text-base font-serif font-bold text-[#2C3E50] border-b border-[#E8E4D5] pb-4">
+        <div className="lg:col-span-5 space-y-6 w-full min-w-0">
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-[#E8E4D5] shadow-xs space-y-4 sm:space-y-6 min-w-0">
+            <h2 className="text-sm sm:text-base font-serif font-bold text-[#2C3E50] border-b border-[#E8E4D5] pb-3 sm:pb-4">
               Order Summary ({totalItems} {totalItems === 1 ? 'item' : 'items'})
             </h2>
 
             {/* Items List */}
-            <div className="space-y-3 max-h-60 overflow-y-auto pr-1 divide-y divide-[#E8E4D5]/60">
+            <div className="space-y-3 max-h-60 overflow-y-auto pr-1 divide-y divide-[#E8E4D5]/60 min-w-0">
               {items.map((item) => (
-                <div key={item.id} className="pt-2 first:pt-0 flex items-center justify-between text-xs">
+                <div key={item.id} className="pt-2 first:pt-0 flex items-center justify-between text-xs gap-2 min-w-0">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <img
                       src={item.imageUrl}
@@ -893,20 +891,20 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Calculations Breakdown */}
-            <div className="space-y-2.5 pt-4 border-t border-[#E8E4D5] text-xs">
+            <div className="space-y-2.5 pt-3 sm:pt-4 border-t border-[#E8E4D5] text-xs">
               <div className="flex items-center justify-between text-[#5D6D7E]">
                 <span>Items Subtotal</span>
                 <span className="font-bold text-[#2C3E50]">₹{subtotal}</span>
               </div>
 
-              <div className="flex items-center justify-between text-[#5D6D7E]">
-                <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-between text-[#5D6D7E] gap-2 flex-wrap">
+                <div className="flex items-center gap-1.5 shrink-0">
                   <Truck className="w-3.5 h-3.5 text-[#96281B]" />
                   <span>
                     Delivery {activeAddress.pincode ? `(PIN ${activeAddress.pincode})` : ''}:
                   </span>
                 </div>
-                <div className="text-right">
+                <div className="text-right shrink-0">
                   {isCalculatingShipping ? (
                     <span className="text-[11px] text-[#D35400] font-semibold animate-pulse">Calculating shipping...</span>
                   ) : shippingError ? (
@@ -925,10 +923,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
               </div>
 
               {shippingError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center justify-between animate-in fade-in">
-                  <div className="flex items-center gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center justify-between gap-2 animate-in fade-in">
+                  <div className="flex items-center gap-2 min-w-0">
                     <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-                    <span>{shippingError}</span>
+                    <span className="break-words leading-tight">{shippingError}</span>
                   </div>
                   {activeAddress.pincode && activeAddress.pincode.length === 6 && (
                     <button
@@ -951,7 +949,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             {errorMessage && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-xs text-red-700 animate-in fade-in">
                 <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-                <span>{errorMessage}</span>
+                <span className="break-words leading-tight">{errorMessage}</span>
               </div>
             )}
 
@@ -975,45 +973,18 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             </button>
 
             {/* Security Guarantee */}
-            <div className="pt-2 text-center text-[11px] text-[#5D6D7E] flex items-center justify-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#2D5A27]" />
+            <div className="pt-2 text-center text-[11px] text-[#5D6D7E] flex items-center justify-center gap-1.5 flex-wrap">
+              <ShieldCheck className="w-4 h-4 text-[#2D5A27] shrink-0" />
               <span>100% Encrypted & Authenticated Transaction</span>
             </div>
-
-            {ENABLE_WHATSAPP && (
-              <WhatsAppCheckoutDirectButton
-                customerDetails={{
-                  fullName: activeAddress.fullName,
-                  mobile: activeAddress.mobile,
-                  addressLine1: [activeAddress.addressLine1, activeAddress.addressLine2, activeAddress.landmark].filter(Boolean).join(', '),
-                  city: activeAddress.city,
-                  state: activeAddress.state,
-                  pincode: activeAddress.pincode,
-                }}
-                items={items.map((i) => ({
-                  name: i.name,
-                  packSize: i.packSize,
-                  quantity: i.quantity,
-                  price: i.price,
-                }))}
-                subtotal={subtotal}
-                deliveryCharge={deliveryCharge}
-                grandTotal={grandTotal}
-                className="mt-3"
-              />
-            )}
-
-            {ENABLE_WHATSAPP && (
-              <WhatsAppCheckoutHelp className="mt-2" />
-            )}
           </div>
         </div>
       </div>
 
       {/* Test Mode Simulation Modal (shown when live Razorpay keys are not in environment) */}
       {testModalOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 border border-[#E8E4D5] shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-4 sm:p-8 border border-[#E8E4D5] shadow-2xl space-y-4 sm:space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-linear-to-tr from-[#96281B] to-[#D35400] text-white flex items-center justify-center shadow-md">
                 <CreditCard className="w-6 h-6 text-[#F1C40F]" />

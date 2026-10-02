@@ -30,8 +30,6 @@ import { DistributorPage } from './pages/DistributorPage';
 import { AiChatbotDrawer } from './components/AiChatbotDrawer';
 import { FloatingAiChatButton } from './components/FloatingAiChatButton';
 import { ProductVariantModal } from './components/ProductVariantModal';
-import { ENABLE_WHATSAPP } from './config/features';
-import { WhatsAppFloatingButton } from './components/WhatsAppComponents';
 import { PRODUCTS } from './data/products';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -266,10 +264,10 @@ function AppContent() {
       />
 
       {/* Floating AI Sommelier Button */}
-      <FloatingAiChatButton onOpen={() => setIsAiDrawerOpen(true)} />
-
-      {/* Floating WhatsApp Button (conditionally enabled via ENABLE_WHATSAPP) */}
-      {ENABLE_WHATSAPP && <WhatsAppFloatingButton />}
+      <FloatingAiChatButton
+        onOpen={() => setIsAiDrawerOpen(true)}
+        currentPage={currentPage}
+      />
 
       {/* Consistent Footer on every page */}
       <Footer onNavigate={navigateTo} />

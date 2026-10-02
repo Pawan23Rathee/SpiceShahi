@@ -63,10 +63,10 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
       </section>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         {/* Controls: Search, Categories & Sort */}
-        <div className="bg-white p-5 rounded-xl border border-[#E8E4D5] shadow-xs space-y-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#E8E4D5] shadow-xs space-y-3 sm:space-y-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
             {/* Search Input */}
             <div className="relative w-full md:max-w-md">
               <Search className="w-4 h-4 text-[#5D6D7E] absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -80,8 +80,8 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
             </div>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-              <span className="text-xs text-[#5D6D7E] font-medium">Sort by:</span>
+            <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+              <span className="text-xs text-[#5D6D7E] font-medium shrink-0">Sort by:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
@@ -95,14 +95,14 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
           </div>
 
           {/* Category Chips */}
-          <div className="flex flex-wrap gap-2 pt-2 border-t border-[#E8E4D5]">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-2 border-t border-[#E8E4D5]">
             {categories.map((cat) => {
               const isSelected = selectedCategory === cat.id;
               return (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-[#96281B] text-white shadow-xs'
                       : 'bg-[#FCFAF2] text-[#5D6D7E] hover:text-[#2C3E50] border border-[#E8E4D5]'
@@ -116,7 +116,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
         </div>
 
         {/* Results Counter */}
-        <div className="flex items-center justify-between text-xs text-[#5D6D7E] px-1">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-[#5D6D7E] gap-2 px-1">
           <p>
             Showing <strong className="text-[#2C3E50]">{filteredProducts.length}</strong> authentic products
             {selectedCategory !== 'all' && ` in ${categories.find((c) => c.id === selectedCategory)?.label}`}
@@ -124,7 +124,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
 
           <button
             onClick={() => onNavigate('contact')}
-            className="text-[#96281B] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+            className="text-[#96281B] hover:underline font-bold flex items-center gap-1 cursor-pointer self-start sm:self-auto"
           >
             <span>Need bulk/wholesale quantities? Contact Us</span>
           </button>
@@ -132,7 +132,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}

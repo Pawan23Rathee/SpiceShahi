@@ -27,6 +27,11 @@
   --color-spice-charcoal: #2C3E50;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 html {
   scroll-behavior: smooth;
   font-family: var(--font-sans);

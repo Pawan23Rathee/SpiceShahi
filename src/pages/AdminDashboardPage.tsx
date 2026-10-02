@@ -638,10 +638,10 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-[#E8E4D5] space-x-8 text-xs font-bold uppercase tracking-wider">
+      <div className="flex border-b border-[#E8E4D5] gap-4 sm:gap-8 overflow-x-auto scrollbar-none text-xs font-bold uppercase tracking-wider pb-0.5">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`pb-3 border-b-2 transition-all cursor-pointer ${
+          className={`pb-3 border-b-2 transition-all cursor-pointer shrink-0 whitespace-nowrap ${
             activeTab === 'overview'
               ? 'border-[#96281B] text-[#96281B]'
               : 'border-transparent text-[#5D6D7E] hover:text-[#2C3E50]'
@@ -654,7 +654,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
             setActiveTab('orders');
             loadOrders();
           }}
-          className={`pb-3 border-b-2 transition-all cursor-pointer ${
+          className={`pb-3 border-b-2 transition-all cursor-pointer shrink-0 whitespace-nowrap ${
             activeTab === 'orders'
               ? 'border-[#96281B] text-[#96281B]'
               : 'border-transparent text-[#5D6D7E] hover:text-[#2C3E50]'
@@ -667,7 +667,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
             setActiveTab('distributors');
             loadDistributorEnquiries();
           }}
-          className={`pb-3 border-b-2 transition-all cursor-pointer flex items-center gap-1.5 ${
+          className={`pb-3 border-b-2 transition-all cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
             activeTab === 'distributors'
               ? 'border-[#96281B] text-[#96281B]'
               : 'border-transparent text-[#5D6D7E] hover:text-[#2C3E50]'
@@ -682,7 +682,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
         </button>
         <button
           onClick={() => setActiveTab('settings')}
-          className={`pb-3 border-b-2 transition-all cursor-pointer ${
+          className={`pb-3 border-b-2 transition-all cursor-pointer shrink-0 whitespace-nowrap ${
             activeTab === 'settings'
               ? 'border-[#96281B] text-[#96281B]'
               : 'border-transparent text-[#5D6D7E] hover:text-[#2C3E50]'
