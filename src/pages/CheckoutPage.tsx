@@ -296,13 +296,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 max-w-sm mx-auto">
           <button
-            onClick={() => onNavigate('login')}
+            onClick={() => onNavigate('login', 'checkout')}
             className="w-full py-3.5 px-6 bg-[#96281B] hover:bg-[#7D2116] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md transition-colors cursor-pointer"
           >
             Sign In with Email / Google
           </button>
           <button
-            onClick={() => onNavigate('register')}
+            onClick={() => onNavigate('register', 'checkout')}
             className="w-full py-3.5 px-6 bg-white hover:bg-stone-50 border border-[#E8E4D5] text-[#2C3E50] rounded-xl font-bold text-xs uppercase tracking-widest transition-colors cursor-pointer"
           >
             Register New Account

@@ -41,6 +41,7 @@ import {
   sendAdminOrderNotificationEmail,
   sendDistributorNotificationEmail,
   sendDistributorAcknowledgementEmail,
+  sendPasswordResetEmail,
 } from './server/email.js';
 import {
   generateInvoicePdf,
@@ -72,10 +73,10 @@ const CUSTOMER_SECRET = process.env.CUSTOMER_SECRET || 'spiceshahi-customer-jwt-
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
-// Initialize Razorpay SDK client
+// Initialize Razorpay SDK client safely with fallback to avoid crash when env vars are unset
 const razorpay = new Razorpay({
-  key_id: RAZORPAY_KEY_ID,
-  key_secret: RAZORPAY_KEY_SECRET,
+  key_id: RAZORPAY_KEY_ID || 'rzp_test_dummy_key',
+  key_secret: RAZORPAY_KEY_SECRET || 'dummy_secret',
 });
 
 // Server-Sent Events clients for real-time admin notifications
@@ -207,6 +208,17 @@ async function startServer() {
   });
 
   // -------------------------------------------------------------
+  // API: Customer Authentication - Google Client Config
+  // -------------------------------------------------------------
+  app.get('/api/auth/google/config', (req: Request, res: Response) => {
+    const clientId = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID || '';
+    res.json({
+      clientId,
+      isConfigured: Boolean(clientId),
+    });
+  });
+
+  // -------------------------------------------------------------
   // API: Customer Authentication - Register
   // -------------------------------------------------------------
   app.post('/api/auth/register', (req: Request, res: Response) => {
@@ -223,6 +235,14 @@ async function startServer() {
         return res.status(400).json({ error: 'Please enter a valid email address.' });
       }
 
+      const cleanMobile = String(mobile).replace(/\D/g, '');
+      const indianMobileRegex = /^[6-9]\d{9}$/;
+      if (!indianMobileRegex.test(cleanMobile)) {
+        return res.status(400).json({
+          error: 'Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.',
+        });
+      }
+
       if (password.length < 6) {
         return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
       }
@@ -235,7 +255,7 @@ async function startServer() {
       const newCustomer = createCustomer({
         fullName: fullName.trim(),
         email: emailTrim,
-        mobile: mobile.trim(),
+        mobile: cleanMobile,
         password,
       });
 
@@ -295,33 +315,71 @@ async function startServer() {
   });
 
   // -------------------------------------------------------------
-  // API: Customer Authentication - Google Login
+  // API: Customer Authentication - Google Login (Google Identity Services)
   // -------------------------------------------------------------
-  app.post('/api/auth/google', (req: Request, res: Response) => {
+  app.post('/api/auth/google', async (req: Request, res: Response) => {
     try {
-      const { googleId, email, fullName, profilePhoto, mobile } = req.body;
-      if (!email || !googleId) {
-        return res.status(400).json({ error: 'Google account details (email and ID) are required.' });
+      const { credential, googleId, email, fullName, profilePhoto, mobile } = req.body;
+
+      let verifiedGoogleId = googleId;
+      let verifiedEmail = email;
+      let verifiedName = fullName;
+      let verifiedPhoto = profilePhoto;
+
+      // When Google Identity Services ID Token (credential) is supplied, cryptographically verify with Google
+      if (credential) {
+        try {
+          const verifyUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`;
+          const tokenRes = await fetch(verifyUrl);
+          if (!tokenRes.ok) {
+            return res.status(401).json({ error: 'Google credential token verification failed or expired.' });
+          }
+
+          const tokenData: any = await tokenRes.json();
+
+          // Verify audience if GOOGLE_CLIENT_ID is configured
+          const configuredClientId = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID;
+          if (configuredClientId && tokenData.aud && tokenData.aud !== configuredClientId) {
+            console.warn('[Google Auth] Token audience mismatch:', tokenData.aud, 'expected:', configuredClientId);
+            return res.status(401).json({ error: 'Google authentication client mismatch.' });
+          }
+
+          if (!tokenData.sub || !tokenData.email) {
+            return res.status(400).json({ error: 'Incomplete user profile returned by Google Identity Services.' });
+          }
+
+          verifiedGoogleId = tokenData.sub;
+          verifiedEmail = tokenData.email;
+          verifiedName = tokenData.name || tokenData.given_name || verifiedName || 'Google Customer';
+          verifiedPhoto = tokenData.picture || verifiedPhoto;
+        } catch (verifyErr: any) {
+          console.error('[Google Auth] Error verifying token with Google:', verifyErr);
+          return res.status(500).json({ error: 'Could not communicate with Google verification servers.' });
+        }
       }
 
-      const emailTrim = email.trim().toLowerCase();
-      let customer = getCustomerByGoogleId(googleId) || getCustomerByEmail(emailTrim);
+      if (!verifiedEmail || !verifiedGoogleId) {
+        return res.status(400).json({ error: 'Verified Google account details (email and ID) are required.' });
+      }
+
+      const emailTrim = verifiedEmail.trim().toLowerCase();
+      let customer = getCustomerByGoogleId(verifiedGoogleId) || getCustomerByEmail(emailTrim);
 
       if (customer) {
-        // Update customer with googleId and photo if needed
+        // Link Google ID and update photo if not present
         customer = updateCustomer(customer.id, {
-          googleId,
-          profilePhoto: profilePhoto || customer.profilePhoto,
-          fullName: customer.fullName || fullName || 'Google User',
+          googleId: verifiedGoogleId,
+          profilePhoto: verifiedPhoto || customer.profilePhoto,
+          fullName: customer.fullName || verifiedName || 'SpiceShahi Customer',
         })!;
       } else {
-        // Create new customer profile for first-time Google sign in
+        // Create new customer profile for first-time Google sign-in
         customer = createCustomer({
-          fullName: (fullName || 'SpiceShahi Customer').trim(),
+          fullName: (verifiedName || 'SpiceShahi Customer').trim(),
           email: emailTrim,
           mobile: (mobile || '').trim(),
-          googleId,
-          profilePhoto,
+          googleId: verifiedGoogleId,
+          profilePhoto: verifiedPhoto,
         });
       }
 
@@ -342,32 +400,33 @@ async function startServer() {
   // -------------------------------------------------------------
   // API: Customer Authentication - Forgot Password
   // -------------------------------------------------------------
-  app.post('/api/auth/forgot-password', (req: Request, res: Response) => {
+  app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
       if (!email) {
         return res.status(400).json({ error: 'Email address is required.' });
       }
 
-      const customer = getCustomerByEmail(email.trim());
-      if (!customer) {
-        // Security best practice: don't reveal if email exists, return generic success
-        return res.json({
-          success: true,
-          message: 'If an account exists with this email, password reset instructions have been dispatched.',
-        });
+      const emailTrim = email.trim().toLowerCase();
+      const customer = getCustomerByEmail(emailTrim);
+
+      if (customer) {
+        const resetToken = crypto.randomBytes(16).toString('hex');
+        const expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
+        passwordResetTokens.set(resetToken, { email: customer.email, expiresAt });
+
+        console.log(`[Password Reset] Generated reset token for ${customer.email}: ${resetToken}`);
+
+        // Dispatch email via Nodemailer email service
+        sendPasswordResetEmail(customer.email, customer.fullName, resetToken).catch((err) =>
+          console.error('[Password Reset] Failed to dispatch email:', err)
+        );
       }
 
-      const resetToken = crypto.randomBytes(16).toString('hex');
-      const expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
-      passwordResetTokens.set(resetToken, { email: customer.email, expiresAt });
-
-      console.log(`[Password Reset] Generated reset token for ${customer.email}: ${resetToken}`);
-
-      res.json({
+      // Security requirement: do not expose whether an email exists in a way that leaks customer information
+      return res.json({
         success: true,
-        resetToken, // Provided for user-friendly testing in UI
-        message: `Password reset instructions have been generated for ${customer.email}.`,
+        message: 'If an account exists with this email address, password reset instructions have been dispatched.',
       });
     } catch (err: any) {
       console.error('Forgot password error:', err);

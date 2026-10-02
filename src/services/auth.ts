@@ -70,11 +70,12 @@ export class AuthService {
    * Google OAuth login / registration
    */
   async loginWithGoogle(data: {
-    googleId: string;
-    email: string;
-    fullName: string;
+    googleId?: string;
+    email?: string;
+    fullName?: string;
     profilePhoto?: string;
     mobile?: string;
+    credential?: string;
   }): Promise<AuthResult> {
     const res = await apiClient.post('/api/auth/google', data);
     if (!res.ok || !res.data?.token || !res.data?.customer) {

@@ -120,9 +120,9 @@ function AppContent() {
       setCurrentPage('invoice');
       window.location.hash = `#/invoice/${targetId}`;
     } else {
-      if (page === 'login' && slugOrId) {
+      if ((page === 'login' || page === 'register') && slugOrId) {
         setAuthRedirectTarget(slugOrId as Page);
-      } else if (page === 'login') {
+      } else if (page === 'login' && !slugOrId) {
         setAuthRedirectTarget('account');
       }
       setCurrentPage(page);

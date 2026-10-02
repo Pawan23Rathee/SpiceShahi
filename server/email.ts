@@ -861,3 +861,85 @@ https://spiceshahi.in
     html: htmlContent,
   });
 }
+
+/**
+ * Sends Password Reset Email to customer with secure reset token
+ */
+export async function sendPasswordResetEmail(
+  email: string,
+  fullName: string,
+  resetToken: string
+): Promise<boolean> {
+  const fromEmail = process.env.FROM_EMAIL || 'contact@spiceshahi.in';
+  const fromName = process.env.FROM_NAME || 'SpiceShahi';
+  const sender = `"${fromName}" <${fromEmail}>`;
+
+  const subject = `Password Reset Request - SpiceShahi`;
+  const textContent = `Hello ${fullName},
+
+We received a request to reset your password for your SpiceShahi account.
+
+Your Password Reset Token: ${resetToken}
+
+Enter this token on the password reset page to create your new password. This token expires in 1 hour.
+
+If you did not make this request, you can safely ignore this email.
+
+Warm regards,
+SpiceShahi Customer Care
+SRS Global Enterprises, Bahadurgarh, Haryana
+`;
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FCFAF2; margin: 0; padding: 24px; color: #2C3E50; }
+    .card { max-width: 560px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #E8E4D5; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .header { background-color: #96281B; padding: 24px; text-align: center; }
+    .header h1 { color: #FCFAF2; font-family: serif; margin: 0; font-size: 24px; }
+    .header p { color: #F1C40F; margin: 4px 0 0; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+    .content { padding: 32px 24px; }
+    .token-box { background-color: #F7F3E8; border: 1px dashed #D35400; padding: 18px; text-align: center; border-radius: 12px; margin: 24px 0; }
+    .token-label { font-size: 11px; text-transform: uppercase; color: #5D6D7E; font-weight: bold; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+    .token-value { font-family: monospace; font-size: 24px; font-weight: bold; color: #96281B; letter-spacing: 2px; }
+    .footer { background-color: #FCFAF2; padding: 16px; text-align: center; border-top: 1px solid #E8E4D5; font-size: 11px; color: #7F8C8D; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h1>SpiceShahi</h1>
+      <p>Pure Spices, Real Aroma</p>
+    </div>
+    <div class="content">
+      <h2 style="font-size: 18px; color: #2C3E50; margin-top: 0;">Password Reset Instructions</h2>
+      <p style="font-size: 14px; line-height: 1.6; color: #5D6D7E;">Hello <strong>${fullName}</strong>,</p>
+      <p style="font-size: 14px; line-height: 1.6; color: #5D6D7E;">We received a request to reset the password for your SpiceShahi customer account. Use the verification token below to proceed with setting a new password:</p>
+      
+      <div class="token-box">
+        <span class="token-label">Your Secure Reset Token</span>
+        <span class="token-value">${resetToken}</span>
+      </div>
+
+      <p style="font-size: 13px; line-height: 1.5; color: #7F8C8D;">This token will expire in 1 hour. If you did not request a password reset, please disregard this email.</p>
+    </div>
+    <div class="footer">
+      © ${new Date().getFullYear()} SpiceShahi • SRS Global Enterprises, Bahadurgarh, Haryana
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  return sendEmail({
+    from: sender,
+    to: email,
+    subject,
+    text: textContent,
+    html: htmlContent,
+  });
+}
+

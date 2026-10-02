@@ -90,7 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
             <button
               id="nav-logo-btn"
               onClick={() => handleNavClick('home')}
-              className="flex items-center gap-2 sm:gap-3 text-left group focus:outline-hidden cursor-pointer min-w-0 shrink"
+              className="flex items-center gap-2 sm:gap-3 text-left group focus:outline-hidden cursor-pointer shrink-0"
             >
               <img
                 src="/images/spiceshahi-logo.jpg"
@@ -98,18 +98,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
                 className="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border border-[#F39C12]/40 group-hover:scale-105 transition-transform duration-200 shrink-0"
                 referrerPolicy="no-referrer"
               />
-              <div className="flex flex-col min-w-0">
-                <span className="text-lg sm:text-2xl font-serif font-bold tracking-tight text-[#96281B] flex items-center gap-1.5 truncate">
+              <div className="flex flex-col shrink-0">
+                <span className="text-lg sm:text-2xl font-serif font-bold tracking-tight text-[#96281B] flex items-center gap-1.5 whitespace-nowrap">
                   SpiceShahi
                 </span>
-                <span className="hidden sm:block text-[10px] uppercase tracking-[0.18em] text-[#5D6D7E] font-semibold -mt-0.5 truncate">
+                <span className="hidden sm:block text-[10px] uppercase tracking-[0.18em] text-[#5D6D7E] font-semibold -mt-0.5 whitespace-nowrap">
                   Desi Khushboo Spices
                 </span>
               </div>
             </button>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest shrink-0">
+            <nav className="hidden lg:flex items-center gap-3 xl:gap-5 2xl:gap-7 text-xs xl:text-[13px] 2xl:text-sm font-medium uppercase tracking-wider shrink-0">
               {navLinks.map((link) => {
                 const isActive = currentPage === link.page;
                 return (
@@ -149,11 +149,20 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onOpenA
               <button
                 id="navbar-account-btn"
                 onClick={() => handleNavClick(isAuthenticated ? 'account' : 'login')}
-                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-full border border-[#E8E4D5] bg-white hover:border-[#96281B] text-xs font-semibold text-[#2C3E50] hover:text-[#96281B] transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-full border border-[#E8E4D5] bg-white hover:border-[#96281B] text-xs font-semibold text-[#2C3E50] hover:text-[#96281B] transition-colors cursor-pointer shrink-0"
                 title={isAuthenticated ? `My Account (${customer?.fullName})` : 'Sign In / Register'}
                 aria-label={isAuthenticated ? `My Account (${customer?.fullName})` : 'Sign In / Register'}
               >
-                <User className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#96281B] shrink-0" />
+                {customer?.profilePhoto ? (
+                  <img
+                    src={customer.profilePhoto}
+                    alt=""
+                    className="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full object-cover shrink-0"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <User className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#96281B] shrink-0" />
+                )}
                 <span className="hidden sm:inline truncate max-w-[110px]">
                   {isAuthenticated ? customer?.fullName.split(' ')[0] : 'Sign In'}
                 </span>

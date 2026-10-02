@@ -1,6 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Customer, SavedAddress } from '../types';
 import { authService, storageService } from '../services';
+import {
+  auth,
+  signInWithGoogleFirebase,
+  getFirebaseErrorMessage,
+  getRedirectResult,
+  onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile as updateFirebaseProfile,
+  User as FirebaseUser,
+} from '../lib/firebase';
 
 interface AuthContextType {
   customer: Customer | null;
@@ -14,14 +26,14 @@ interface AuthContextType {
     mobile: string;
     password: string;
   }) => Promise<{ success: boolean; error?: string }>;
-  loginWithGoogle: (data: {
-    googleId: string;
-    email: string;
-    fullName: string;
+  loginWithGoogle: (data?: {
+    googleId?: string;
+    email?: string;
+    fullName?: string;
     profilePhoto?: string;
     mobile?: string;
   }) => Promise<{ success: boolean; error?: string }>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   updateProfile: (fullName: string, mobile: string) => Promise<{ success: boolean; error?: string }>;
   addAddress: (address: Omit<SavedAddress, 'id' | 'createdAt'>) => Promise<{ success: boolean; error?: string }>;
@@ -37,6 +49,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(() => storageService.getAuthToken());
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const saveSession = (newToken: string, newCustomer: Customer) => {
+    setToken(newToken);
+    setCustomer(newCustomer);
+    storageService.setAuthToken(newToken);
+    storageService.setCustomerUser(newCustomer);
+  };
+
   // Restore and verify customer session from persistent storage on mount
   useEffect(() => {
     const savedToken = storageService.getAuthToken();
@@ -46,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(savedToken);
       setCustomer(savedUser);
 
-      // Verify with backend
+      // Verify session with backend
       authService
         .getProfile(savedToken)
         .then((res) => {
@@ -58,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         })
         .catch(() => {
-          // If offline, keep local user state so user isn't abruptly booted
+          // If offline, keep local user state
         })
         .finally(() => {
           setIsLoading(false);
@@ -66,26 +85,82 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       setIsLoading(false);
     }
+
+    // 2. Check for Firebase Redirect Result (for mobile / redirect auth flows)
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result && result.user && result.user.email) {
+          const fbUser = result.user;
+          const res = await authService.loginWithGoogle({
+            googleId: fbUser.uid,
+            email: fbUser.email,
+            fullName: fbUser.displayName || 'SpiceShahi Customer',
+            profilePhoto: fbUser.photoURL || undefined,
+            mobile: fbUser.phoneNumber || undefined,
+          });
+          if (res.success && res.token && res.customer) {
+            saveSession(res.token, res.customer);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('[Firebase Auth] Redirect result handling:', err);
+      });
+
+    // 3. Listen to Firebase Auth state changes
+    const unsubscribe = onAuthStateChanged(auth, async (fbUser: FirebaseUser | null) => {
+      if (fbUser && fbUser.email) {
+        const curToken = storageService.getAuthToken();
+        const curCustomer = storageService.getCustomerUser();
+
+        // If local session is missing or points to another user, sync with backend
+        if (!curToken || !curCustomer || curCustomer.email.toLowerCase() !== fbUser.email.toLowerCase()) {
+          try {
+            const res = await authService.loginWithGoogle({
+              googleId: fbUser.uid,
+              email: fbUser.email,
+              fullName: fbUser.displayName || 'SpiceShahi Customer',
+              profilePhoto: fbUser.photoURL || undefined,
+              mobile: fbUser.phoneNumber || undefined,
+            });
+            if (res.success && res.token && res.customer) {
+              saveSession(res.token, res.customer);
+            }
+          } catch (syncErr) {
+            console.error('[Firebase Auth] Sync error onAuthStateChanged:', syncErr);
+          }
+        }
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const saveSession = (newToken: string, newCustomer: Customer) => {
-    setToken(newToken);
-    setCustomer(newCustomer);
-    storageService.setAuthToken(newToken);
-    storageService.setCustomerUser(newCustomer);
-  };
-
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.warn('[Firebase Auth] Sign out notice:', e);
+    }
     setToken(null);
     setCustomer(null);
     authService.logout();
   };
 
   const login = async (email: string, password: string) => {
+    // 1. Try Firebase Authentication first
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (fbErr: any) {
+      console.warn('[Firebase Auth] Notice signing in with Firebase:', fbErr?.code || fbErr?.message);
+    }
+
+    // 2. Authoritative backend login and session generation
     const res = await authService.login(email, password);
     if (!res.success || !res.token || !res.customer) {
-      return { success: false, error: res.error || 'Login failed.' };
+      return { success: false, error: res.error || 'Login failed. Please check your credentials.' };
     }
+
     saveSession(res.token, res.customer);
     return { success: true };
   };
@@ -96,27 +171,67 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     mobile: string;
     password: string;
   }) => {
+    // 1. Authoritative backend registration
     const res = await authService.register(data);
     if (!res.success || !res.token || !res.customer) {
       return { success: false, error: res.error || 'Registration failed.' };
     }
+
+    // 2. Synchronize with Firebase Authentication
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      if (userCredential.user) {
+        await updateFirebaseProfile(userCredential.user, {
+          displayName: data.fullName,
+        });
+      }
+    } catch (fbErr: any) {
+      // If user exists in Firebase or other notice, non-blocking
+      console.warn('[Firebase Auth] Notice during registration sync:', fbErr?.code || fbErr?.message);
+    }
+
     saveSession(res.token, res.customer);
     return { success: true };
   };
 
-  const loginWithGoogle = async (googleData: {
-    googleId: string;
-    email: string;
-    fullName: string;
+  const loginWithGoogle = async (googleData?: {
+    googleId?: string;
+    email?: string;
+    fullName?: string;
     profilePhoto?: string;
     mobile?: string;
   }) => {
-    const res = await authService.loginWithGoogle(googleData);
-    if (!res.success || !res.token || !res.customer) {
-      return { success: false, error: res.error || 'Google login failed.' };
+    try {
+      let payload = googleData;
+
+      // If no data passed, trigger Firebase Google Sign-In popup/redirect
+      if (!payload || !payload.email) {
+        const fbUser = await signInWithGoogleFirebase();
+        if (!fbUser.email) {
+          return { success: false, error: 'Google account did not return a valid email address.' };
+        }
+        payload = {
+          googleId: fbUser.uid,
+          email: fbUser.email,
+          fullName: fbUser.displayName || 'SpiceShahi Customer',
+          profilePhoto: fbUser.photoURL || undefined,
+          mobile: fbUser.phoneNumber || undefined,
+        };
+      }
+
+      // Sync with backend customer storage
+      const res = await authService.loginWithGoogle(payload);
+      if (!res.success || !res.token || !res.customer) {
+        return { success: false, error: res.error || 'Google login failed.' };
+      }
+
+      saveSession(res.token, res.customer);
+      return { success: true };
+    } catch (err: any) {
+      console.error('[Firebase Auth] Google login error:', err);
+      const friendlyMsg = getFirebaseErrorMessage(err);
+      return { success: false, error: friendlyMsg };
     }
-    saveSession(res.token, res.customer);
-    return { success: true };
   };
 
   const refreshProfile = async () => {
